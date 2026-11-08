@@ -7,7 +7,7 @@ Lê:
   media/video/*.jpg        a imagem de capa de cada vídeo
   media/capa/*.jpg         as imagens paradas do filme da capa (o primeiro fotograma de cada corte,
                            feitas pelo scripts/filme.py)
-  media/marca/logo.png     o logótipo, com transparência (o do Facebook da Mimices, com o branco tirado)
+  media/marca/logo.png     o logótipo, com transparência (o círculo da Dream Art, com o fundo cinzento tirado)
   content/produtos/*.json  para saber a primeira fotografia de cada artigo (o cartão de partilha)
 
 Escreve em .cache/imagens/ (fica entre publicações; cada ficheiro leva no nome um resumo do
@@ -39,7 +39,7 @@ LARGURAS = [360, 540, 720, 960, 1280, 1600]
 QUALIDADE_AVIF = 55
 QUALIDADE_WEBP = 80
 PARTILHA = (1200, 630)
-CREME = (247, 243, 238)          # --linho: o fundo claro das secções do site (o #F7F3EE)
+CREME = (246, 242, 232)          # o creme das letras do logótipo da Dream Art (#F6F2E8): o fundo do cartão de partilha
 FORMATOS = ('avif', 'webp') if features.check('avif') else ('webp',)
 VERSAO = f'v1-{LARGURAS}-{QUALIDADE_AVIF}-{QUALIDADE_WEBP}-{PARTILHA}'
 
@@ -134,10 +134,10 @@ def cartao_produto(nome, origem):
 def cartao_logotipo(logo):
     """O cartão da página inicial e das páginas sem artigo: só o logótipo, ao centro."""
     h = resumo(logo, __file__, extra='cartao-logo')
-    destino = os.path.join(CACHE, f'mimices-{h}-partilha.jpg')
+    destino = os.path.join(CACHE, f'dreamart-{h}-partilha.jpg')
     if not os.path.exists(destino):
         marca = Image.open(logo).convert('RGBA')
-        alto = min(460, marca.height)   # nunca aumentar o logótipo (o do Facebook, recortado, tem 463 px)
+        alto = min(460, marca.height)   # nunca aumentar o logótipo (o círculo da Dream Art tem 1010 px)
         largo = round(marca.width * alto / marca.height)
         marca = marca.resize((largo, alto), Image.LANCZOS)
         cartao = Image.new('RGBA', PARTILHA, CREME + (255,))
