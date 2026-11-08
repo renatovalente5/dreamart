@@ -1,38 +1,29 @@
-# Constrói o site da Mimices e publica-o na Cloudflare, em https://mimices.pt.
+# Constrói o site da Dream Art e publica-o na Cloudflare, em dreamart.pt — QUANDO O HOUVER.
 #
-# O site é o Worker «mimices-site» (wrangler.jsonc): os ficheiros que o build escreve em _site/,
-# nos Custom Domains mimices.pt e www.mimices.pt (o www vai para o domínio sem www, e os vídeos
-# respondem por intervalos para o iPhone: worker/www.js).
+# O site é o Worker «dreamart-site» (wrangler.jsonc): os ficheiros que o build escreve em _site/,
+# nos Custom Domains do domínio e do www (o www vai para o domínio sem www, e os vídeos respondem
+# por intervalos para o iPhone: worker/www.js). Os termos do GitHub Pages proíbem lá uma loja; por
+# isso a loja a sério vive aqui, e o Pages fica com a pré-visualização (pre-visualizacao.yml).
 #
-# ABERTO AOS MOTORES DE BUSCA desde 19 out 2026 (--producao): o Renato mandou abrir sem NIF («Sim abre já
-# o site sem NIF… A Susana responsabiliza-se») — a Mimices não tem atividade aberta, e a morada é só a
-# localidade (Azeitão). Antes, de 16 a 19 out, construía-se com --dominio (noindex e «[por confirmar]»).
-# O --producao RECUSA publicar se faltar um dado que as regras pedem (regras.mjs), e o SITE_PRODUCAO do
-# painel passa a "1" (o test-config do painel confere-o contra este passo).
+# AINDA NÃO CORRE SOZINHO: só à mão (workflow_dispatch). Falta o domínio (dreamart.pt, aprovado pela
+# cliente a 8 nov 2026; o Renato compra-o no fim) e faltam dados que a lei pede (a morada completa, o
+# prazo, o pagamento), e o --producao RECUSA publicar enquanto faltarem (regras.mjs). Quando o domínio existir: comprar, pôr a zona na Cloudflare, ligar os Custom
+# Domains com um `wrangler deploy --config wrangler.jsonc` à mão (uma vez), passar o `on:` para
+# push + schedule como no pre-visualizacao.yml, e pôr o SITE_PRODUCAO do painel a "1".
 #
-# Até 16 out 2026 publicava a pré-visualização no GitHub Pages (renatovalente5.github.io/mimices,
-# com --base=/mimices). Os termos do Pages não deixam lá uma loja: a pré-visualização reencaminha
-# agora para o domínio (reencaminhar-pre-visualizacao.yml).
-#
-# O PAINEL (renatovalente5/mimices-painel) acompanha este workflow: o job «publicar» acabado bem
-# quer dizer «publicado»; o nome do passo que falha aparece à dona (por isso os nomes são em
+# O PAINEL (renatovalente5/dreamart-painel) acompanhará este workflow: o job «publicar» acabado
+# bem quer dizer «publicado»; o nome do passo que falha aparece à dona (por isso os nomes são em
 # português); as razões de uma publicação parada são as anotações ::error do build.
 #
 # Precisa do segredo CLOUDFLARE_API_TOKEN e da variável CLOUDFLARE_ACCOUNT_ID. O token é do
 # Renato, com Account › Workers Scripts: Edit e Account › Account Settings: Read, e NADA das
-# zonas: os Custom Domains ligaram-se uma vez, à mão, e este workflow publica sem rotas (ver o
+# zonas: os Custom Domains ligam-se uma vez, à mão, e este workflow publica sem rotas (ver o
 # passo «Preparar o site»). Sem o token a publicação FALHA, de propósito: melhor um CI vermelho do
 # que edições que nunca chegam ao site.
-name: Publicar o site
+name: Publicar o site na Cloudflare
 
 on:
-  push:
-    branches: [main]
   workflow_dispatch:
-  # Todos os dias às 00:15 de Lisboa (23:15 UTC no inverno): as promoções e o aviso do topo
-  # têm data de fim, e o site só muda quando se publica.
-  schedule:
-    - cron: '15 23 * * *'
 
 permissions: {}
 
@@ -67,8 +58,12 @@ jobs:
           restore-keys: imagens-
       - name: Conferir as fotografias
         run: python scripts/imagens.py --verificar
+      - name: Preparar as imagens
+        run: python scripts/imagens.py
+      - name: Testar o gerador
+        run: node scripts/testar.mjs
       - name: Construir
-        run: node scripts/build.mjs --producao
+        run: node scripts/build.mjs --producao --sem-imagens
       # O que o job «publicar» precisa, num ficheiro só: o site, o script do www e a
       # configuração do Worker. O job «publicar» não faz checkout: nenhum código do
       # repositório corre ao lado do token.
@@ -114,14 +109,14 @@ jobs:
           test -f _site/index.html || { echo "FALTA _site/index.html"; exit 1; }
           test -f _site/404.html   || { echo "FALTA _site/404.html"; exit 1; }
           test -z "$(find _site -name '*.md')" || { echo ".md NÃO devia ser publicado"; exit 1; }
-          # A configuração do Worker SEM as rotas: os Custom Domains (mimices.pt e o www) ficam
+          # A configuração do Worker SEM as rotas: os Custom Domains (o domínio e o www) ficam
           # ligados ao Worker, e um deploy sem rotas não lhes toca (provado na Pokóto Wood a 11 out
           # 2026: «No targets deployed», e os dois continuaram lá). Assim o token só publica Workers.
           # Os comentários do wrangler.jsonc são linhas inteiras (é o que isto tira).
           node -e '
             const fs = require("fs");
             const c = JSON.parse(fs.readFileSync("wrangler.jsonc", "utf8").replace(/^\s*\/\/.*$/gm, ""));
-            if (c.name !== "mimices-site" || c.assets?.directory !== "./_site") throw new Error("o wrangler.jsonc não é o do site");
+            if (c.name !== "dreamart-site" || c.assets?.directory !== "./_site") throw new Error("o wrangler.jsonc não é o do site");
             delete c.routes;
             fs.writeFileSync("wrangler.json", JSON.stringify(c, null, 2) + "\n");
           '

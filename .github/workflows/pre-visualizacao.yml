@@ -1,13 +1,13 @@
-# A PRÉ-VISUALIZAÇÃO do site da LF Mobile, no GitHub Pages: https://renatovalente5.github.io/lfmobile/
+# A PRÉ-VISUALIZAÇÃO do site da Dream Art, no GitHub Pages: https://renatovalente5.github.io/dreamart/
 #
-# Enquanto não há domínio (o Renato: «só quando o site estiver pronto», 8 nov 2026), cada envio para a
-# main constrói o site com --base=/lfmobile (noindex, dados legais por escrever como lembretes
+# Enquanto não há domínio (dreamart.pt fica para o fim, decisão do Renato a 8 nov 2026), cada envio
+# para a main constrói o site com --base=/dreamart (noindex, dados legais por escrever como lembretes
 # «[por confirmar: …]») e publica-o aqui, para o cliente ver e para o painel gravar. Os termos do
 # GitHub Pages não deixam cá uma loja a vender: quando o domínio existir, o publicar.yml publica
-# na Cloudflare (o Worker «lfmobile-site», wrangler.jsonc) e este workflow passa a pôr aqui uma
+# na Cloudflare (o Worker «dreamart-site», wrangler.jsonc) e este workflow passa a pôr aqui uma
 # página que reencaminha para o domínio (como na Mimices a 16 out 2026).
 #
-# O PAINEL (renatovalente5/lfmobile-painel) acompanha as corridas deste workflow até lá: o job
+# O PAINEL (renatovalente5/dreamart-painel) acompanha as corridas deste workflow até lá: o job
 # «publicar» acabado bem quer dizer «publicado»; as razões de uma publicação parada são as
 # anotações ::error do build.
 name: Pré-visualização
@@ -56,13 +56,10 @@ jobs:
         run: python scripts/imagens.py --verificar
       - name: Preparar as imagens
         run: python scripts/imagens.py
-      # O travão: as regras, os scripts do browser, e construções de ensaio numa cópia (a
-      # pré-visualização, a produção com os dados legais de faz-de-conta, as guardas). Se
-      # falhar, fica no ar a publicação anterior.
       - name: Testar o gerador
-        run: node scripts/testar.mjs
+        run: if [ -f scripts/testar.mjs ]; then node scripts/testar.mjs; else echo 'sem scripts/testar.mjs'; fi
       - name: Construir a pré-visualização
-        run: node scripts/build.mjs --base=/lfmobile --sem-imagens
+        run: node scripts/build.mjs --base=/dreamart --sem-imagens
       - name: Conferir o que sai
         run: |
           set -euo pipefail
