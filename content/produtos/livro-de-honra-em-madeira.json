@@ -1,0 +1,28 @@
+{
+  "nome": "Livro de honra em madeira",
+  "nomeCurto": "Livro de honra",
+  "fotos": [
+    "livro-de-honra-em-madeira"
+  ],
+  "resumo": "Livro de honra com capa de madeira gravada com o nome e a data.",
+  "descricao": "Um livro de honra com capa de madeira gravada com o nome e a data, para guardar as mensagens de quem esteve presente.\n\nNa fotografia, para uma profissão de fé.",
+  "preco": 40,
+  "precoAnterior": null,
+  "promocaoAte": "",
+  "inclui": [],
+  "medidas": [],
+  "opcoes": [],
+  "personalizacao": {
+    "nome": true,
+    "data": true,
+    "frase": false,
+    "rotuloNome": "Nomes ou iniciais",
+    "rotuloData": "Data da celebração"
+  },
+  "quantidadeMinima": 1,
+  "categoria": "livros-de-honra",
+  "video": "",
+  "novidade": false,
+  "publicado": true,
+  "ordem": 1
+}

@@ -1,0 +1,28 @@
+{
+  "nome": "Caixa de lápis, afia e bloco de desenhos",
+  "nomeCurto": "Lápis e bloco",
+  "fotos": [
+    "caixa-de-lapis-e-bloco"
+  ],
+  "resumo": "Lápis de cor, afia e bloco de desenhos para colorir, com laço e capa personalizada.",
+  "descricao": "Uma caixa de lápis de cor com afia e um bloco de desenhos para colorir, com laço e a capa personalizada com o nome e a data.\n\nPara entreter os mais pequenos durante a festa.",
+  "preco": 2.7,
+  "precoAnterior": null,
+  "promocaoAte": "",
+  "inclui": [],
+  "medidas": [],
+  "opcoes": [],
+  "personalizacao": {
+    "nome": true,
+    "data": true,
+    "frase": false,
+    "rotuloNome": "Nome",
+    "rotuloData": "Data da celebração"
+  },
+  "quantidadeMinima": 1,
+  "categoria": "lembrancas",
+  "video": "",
+  "novidade": false,
+  "publicado": true,
+  "ordem": 12
+}

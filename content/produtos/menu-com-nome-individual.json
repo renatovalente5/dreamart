@@ -1,0 +1,28 @@
+{
+  "nome": "Menu com nome individual",
+  "nomeCurto": "Menu individual",
+  "fotos": [
+    "menu-com-nome-individual"
+  ],
+  "resumo": "Menu individual com o nome de cada convidado, para pôr em cada prato.",
+  "descricao": "Um menu individual com o nome de cada convidado, para pôr em cada lugar da mesa.\n\nOs nomes dos convidados e o menu enviam-se depois pelo WhatsApp.",
+  "preco": 1.3,
+  "precoAnterior": null,
+  "promocaoAte": "",
+  "inclui": [],
+  "medidas": [],
+  "opcoes": [],
+  "personalizacao": {
+    "nome": false,
+    "data": true,
+    "frase": true,
+    "rotuloData": "Data da celebração",
+    "rotuloFrase": "Notas (opcional)"
+  },
+  "quantidadeMinima": 1,
+  "categoria": "menus-e-mesas",
+  "video": "",
+  "novidade": false,
+  "publicado": true,
+  "ordem": 1
+}

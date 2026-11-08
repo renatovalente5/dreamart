@@ -1,0 +1,28 @@
+{
+  "nome": "Presépio pintado à mão",
+  "nomeCurto": "Presépio",
+  "fotos": [
+    "presepio-pintado-a-mao"
+  ],
+  "resumo": "Presépio pintado à mão, numa caixa com a sua mensagem de Natal.",
+  "descricao": "Um presépio pintado à mão, numa caixa com uma mensagem de Natal personalizada, para surpreender alguém especial.",
+  "preco": 5,
+  "precoAnterior": null,
+  "promocaoAte": "",
+  "inclui": [],
+  "medidas": [],
+  "opcoes": [],
+  "personalizacao": {
+    "nome": true,
+    "data": false,
+    "frase": true,
+    "rotuloNome": "Para quem é",
+    "rotuloFrase": "Mensagem de Natal (opcional)"
+  },
+  "quantidadeMinima": 1,
+  "categoria": "colecoes",
+  "video": "",
+  "novidade": true,
+  "publicado": true,
+  "ordem": 2
+}

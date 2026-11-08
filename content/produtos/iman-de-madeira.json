@@ -1,0 +1,28 @@
+{
+  "nome": "Íman de madeira",
+  "nomeCurto": "Íman de madeira",
+  "fotos": [
+    "iman-de-madeira"
+  ],
+  "resumo": "Íman de madeira gravado, com o nome e a data.",
+  "descricao": "Um íman de madeira gravado, personalizado com o nome e a data.",
+  "preco": 2.2,
+  "precoAnterior": null,
+  "promocaoAte": "",
+  "inclui": [],
+  "medidas": [],
+  "opcoes": [],
+  "personalizacao": {
+    "nome": true,
+    "data": true,
+    "frase": false,
+    "rotuloNome": "Nome",
+    "rotuloData": "Data da celebração"
+  },
+  "quantidadeMinima": 1,
+  "categoria": "lembrancas",
+  "video": "",
+  "novidade": false,
+  "publicado": true,
+  "ordem": 14
+}

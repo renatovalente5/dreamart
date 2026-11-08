@@ -1,0 +1,28 @@
+{
+  "nome": "Vela margarida",
+  "nomeCurto": "Vela margarida",
+  "fotos": [
+    "vela-margarida"
+  ],
+  "resumo": "Vela em forma de margarida, embrulhada em tule com laço e etiqueta personalizada.",
+  "descricao": "Uma vela em forma de margarida, embrulhada em tule, com laço e uma etiqueta personalizada com o nome e a data.",
+  "preco": 2.5,
+  "precoAnterior": null,
+  "promocaoAte": "",
+  "inclui": [],
+  "medidas": [],
+  "opcoes": [],
+  "personalizacao": {
+    "nome": true,
+    "data": true,
+    "frase": false,
+    "rotuloNome": "Nome",
+    "rotuloData": "Data da celebração"
+  },
+  "quantidadeMinima": 1,
+  "categoria": "lembrancas",
+  "video": "",
+  "novidade": false,
+  "publicado": true,
+  "ordem": 4
+}

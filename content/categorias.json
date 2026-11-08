@@ -1,0 +1,66 @@
+[
+  {
+    "slug": "lembrancas",
+    "nome": "Lembranças",
+    "titulo": "Lembranças",
+    "resumo": "Velas, potes de mel, anjinhos em gesso perfumado, sabonetes e outras lembranças para batizados, casamentos, comunhões e aniversários, personalizadas com os nomes e a data.",
+    "foto": "vela-aromatica-personalizada",
+    "nomeMenu": "Lembranças"
+  },
+  {
+    "slug": "convites",
+    "nome": "Convites",
+    "titulo": "Convites",
+    "resumo": "Convites de casamento, de batizado e de comunhão, personalizados com os nomes, a data e os pormenores da celebração.",
+    "foto": "convite-de-casamento",
+    "nomeMenu": "Convites"
+  },
+  {
+    "slug": "conjuntos-de-batizado",
+    "nome": "Conjuntos de batizado",
+    "titulo": "Conjuntos de batizado",
+    "resumo": "A caixa, a toalha bordada, a vela e a concha, em linho, com o nome e a data do batizado. Cada conjunto é pensado e feito à mão.",
+    "foto": "conjunto-de-batizado-verde-agua",
+    "nomeMenu": "Conjuntos de batizado"
+  },
+  {
+    "slug": "livros-de-honra",
+    "nome": "Livros de honra",
+    "titulo": "Livros de honra",
+    "resumo": "Livros de honra personalizados, para guardar as mensagens de quem esteve presente.",
+    "foto": "livro-de-honra-em-madeira",
+    "nomeMenu": "Livros de honra"
+  },
+  {
+    "slug": "menus-e-mesas",
+    "nome": "Menus e mesas",
+    "titulo": "Menus e mesas",
+    "resumo": "Menus com o nome de cada convidado e outros pormenores para a mesa.",
+    "foto": "menu-com-nome-individual",
+    "nomeMenu": "Menus e mesas"
+  },
+  {
+    "slug": "padrinhos",
+    "nome": "Padrinhos",
+    "titulo": "Para os padrinhos",
+    "resumo": "Presentes personalizados para os padrinhos e as madrinhas.",
+    "foto": "caixa-padrinho-pascoa",
+    "nomeMenu": "Padrinhos"
+  },
+  {
+    "slug": "decoracao-e-eventos",
+    "nome": "Decoração e eventos",
+    "titulo": "Decoração e eventos",
+    "resumo": "Decoração para batizados, comunhões, chás de bebé e outras festas.",
+    "foto": "decoracao-de-mesa",
+    "nomeMenu": "Decoração e eventos"
+  },
+  {
+    "slug": "colecoes",
+    "nome": "Coleções",
+    "titulo": "Coleção de Natal",
+    "resumo": "Presentes de Natal com a sua mensagem, feitos à mão para este Natal.",
+    "foto": "vela-floco-de-neve-e-iman",
+    "nomeMenu": "Coleções"
+  }
+]

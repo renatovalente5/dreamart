@@ -1,0 +1,28 @@
+{
+  "nome": "Convite de casamento",
+  "nomeCurto": "Convite de casamento",
+  "fotos": [
+    "convite-de-casamento"
+  ],
+  "resumo": "Convite de casamento personalizado com os vossos nomes, a data, a cerimónia e a receção.",
+  "descricao": "Um convite de casamento personalizado com os vossos nomes, a data e os pormenores da cerimónia e da receção.\n\nNa fotografia: convite recortado com o monograma dos noivos, envelope com forro de flores e lacre. O texto, as cores e os acabamentos combinam-se convosco pelo WhatsApp.",
+  "preco": 3.1,
+  "precoAnterior": null,
+  "promocaoAte": "",
+  "inclui": [],
+  "medidas": [],
+  "opcoes": [],
+  "personalizacao": {
+    "nome": true,
+    "data": true,
+    "frase": false,
+    "rotuloNome": "Nomes dos noivos",
+    "rotuloData": "Data do casamento"
+  },
+  "quantidadeMinima": 1,
+  "categoria": "convites",
+  "video": "",
+  "novidade": false,
+  "publicado": true,
+  "ordem": 1
+}

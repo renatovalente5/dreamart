@@ -1,0 +1,28 @@
+{
+  "nome": "Convite livro",
+  "nomeCurto": "Convite livro",
+  "fotos": [
+    "convite-livro"
+  ],
+  "resumo": "Convite que abre como um livro, com fita e ilustração, personalizado.",
+  "descricao": "Um convite que abre como um livro, com fita e ilustração, personalizado com o nome e os pormenores da celebração.\n\nNa fotografia, para uma primeira comunhão.",
+  "preco": 2.2,
+  "precoAnterior": null,
+  "promocaoAte": "",
+  "inclui": [],
+  "medidas": [],
+  "opcoes": [],
+  "personalizacao": {
+    "nome": true,
+    "data": true,
+    "frase": false,
+    "rotuloNome": "Nome",
+    "rotuloData": "Data da celebração"
+  },
+  "quantidadeMinima": 1,
+  "categoria": "convites",
+  "video": "",
+  "novidade": false,
+  "publicado": true,
+  "ordem": 3
+}

@@ -1,0 +1,27 @@
+{
+  "nome": "Caixa de batizado em linho com o nome bordado",
+  "nomeCurto": "Caixa de batizado",
+  "fotos": [
+    "caixa-de-batizado-em-linho"
+  ],
+  "resumo": "Caixa de batizado forrada a linho, com o nome bordado e laço.",
+  "descricao": "Uma caixa de batizado forrada a linho, com o nome bordado e laço, para guardar as recordações do dia.",
+  "preco": 60,
+  "precoAnterior": null,
+  "promocaoAte": "",
+  "inclui": [],
+  "medidas": [],
+  "opcoes": [],
+  "personalizacao": {
+    "nome": true,
+    "data": false,
+    "frase": false,
+    "rotuloNome": "Nome a bordar"
+  },
+  "quantidadeMinima": 1,
+  "categoria": "conjuntos-de-batizado",
+  "video": "",
+  "novidade": false,
+  "publicado": true,
+  "ordem": 3
+}

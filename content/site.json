@@ -1,0 +1,70 @@
+{
+  "marca": "Dream Art",
+  "descricao": "Lembranças, convites e conjuntos de batizado personalizados, feitos à mão em Rio Tinto, para batizados, casamentos, comunhões e outras celebrações.",
+  "assinatura": "Mais do que criar peças, criamos memórias.",
+  "fundadores": "",
+  "contactos": {
+    "whatsapp": "914 995 783",
+    "telefone": "914 995 783",
+    "email": "dreamartatelier@gmail.com",
+    "instagram": "dreamartatelier",
+    "facebook": "dreamartatelier",
+    "horario": ""
+  },
+  "local": {
+    "localidade": "Rio Tinto",
+    "distrito": "Porto"
+  },
+  "empresa": {
+    "nome": "Luís Miguel da Silva Monteiro",
+    "tipo": "Empresário em nome individual",
+    "nif": "252896580",
+    "morada": "",
+    "codigoPostal": "4435-397",
+    "localidade": "Rio Tinto",
+    "concelho": "Gondomar",
+    "iva": ""
+  },
+  "aviso": {
+    "texto": "",
+    "ate": "",
+    "ligacao": ""
+  },
+  "entrega": {
+    "zonas": [
+      {
+        "id": "levantamento",
+        "nome": "Levantamento em Rio Tinto",
+        "curto": "Levantamento em Rio Tinto",
+        "morada": false
+      },
+      {
+        "id": "continente",
+        "nome": "Envio para Portugal Continental",
+        "curto": "Portugal Continental",
+        "morada": true
+      },
+      {
+        "id": "ilhas",
+        "nome": "Envio para a Madeira e os Açores",
+        "curto": "Madeira e Açores",
+        "morada": true
+      },
+      {
+        "id": "europa",
+        "nome": "Envio para outros países da Europa",
+        "curto": "Outros países da Europa",
+        "morada": true
+      }
+    ],
+    "portes": {
+      "continente": null,
+      "ilhas": null,
+      "europa": null,
+      "gratisAPartirDe": null
+    },
+    "prazo": "",
+    "pagamento": "",
+    "levantamento": ""
+  }
+}

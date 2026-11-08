@@ -1,0 +1,28 @@
+{
+  "nome": "Anjinho menino a rezar",
+  "nomeCurto": "Anjinho menino",
+  "fotos": [
+    "anjinho-menino-a-rezar"
+  ],
+  "resumo": "Anjinho menino a rezar em gesso perfumado, com laço, etiqueta personalizada e saco de organza.",
+  "descricao": "Um anjinho menino a rezar em gesso perfumado, com laço, uma etiqueta personalizada com o nome e a data, e o saco de organza.",
+  "preco": 2.2,
+  "precoAnterior": null,
+  "promocaoAte": "",
+  "inclui": [],
+  "medidas": [],
+  "opcoes": [],
+  "personalizacao": {
+    "nome": true,
+    "data": true,
+    "frase": false,
+    "rotuloNome": "Nome",
+    "rotuloData": "Data da celebração"
+  },
+  "quantidadeMinima": 1,
+  "categoria": "lembrancas",
+  "video": "",
+  "novidade": false,
+  "publicado": true,
+  "ordem": 8
+}

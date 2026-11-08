@@ -1,0 +1,32 @@
+{
+  "nome": "Cruz com espiga em gesso perfumado",
+  "nomeCurto": "Cruz com espiga",
+  "fotos": [
+    "cruz-com-espiga"
+  ],
+  "resumo": "Cruz com espiga em gesso perfumado, com saco de organza e etiqueta personalizada incluídos.",
+  "descricao": "Uma cruz com espiga em gesso perfumado, com laço, no saco de organza, com uma etiqueta personalizada com o nome e a data.\n\nO saco de organza e a etiqueta estão incluídos no preço.",
+  "preco": 1.9,
+  "precoAnterior": null,
+  "promocaoAte": "",
+  "inclui": [
+    "Cruz com espiga em gesso perfumado",
+    "Saco de organza",
+    "Etiqueta personalizada"
+  ],
+  "medidas": [],
+  "opcoes": [],
+  "personalizacao": {
+    "nome": true,
+    "data": true,
+    "frase": false,
+    "rotuloNome": "Nome",
+    "rotuloData": "Data da celebração"
+  },
+  "quantidadeMinima": 1,
+  "categoria": "lembrancas",
+  "video": "",
+  "novidade": false,
+  "publicado": true,
+  "ordem": 9
+}

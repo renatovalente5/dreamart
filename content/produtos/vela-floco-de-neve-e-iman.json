@@ -1,0 +1,28 @@
+{
+  "nome": "Vela floco de neve e íman de Natal",
+  "nomeCurto": "Vela floco de neve",
+  "fotos": [
+    "vela-floco-de-neve-e-iman"
+  ],
+  "resumo": "Uma vela em forma de floco de neve e um íman «Feliz Natal», numa caixa com a sua mensagem.",
+  "descricao": "Uma vela em forma de floco de neve e um íman «Feliz Natal», numa caixa com uma mensagem de Natal personalizada.\n\nCada pormenor é pensado para surpreender e transmitir carinho.",
+  "preco": 9.5,
+  "precoAnterior": null,
+  "promocaoAte": "",
+  "inclui": [],
+  "medidas": [],
+  "opcoes": [],
+  "personalizacao": {
+    "nome": true,
+    "data": false,
+    "frase": true,
+    "rotuloNome": "Para quem é",
+    "rotuloFrase": "Mensagem de Natal (opcional)"
+  },
+  "quantidadeMinima": 1,
+  "categoria": "colecoes",
+  "video": "",
+  "novidade": true,
+  "publicado": true,
+  "ordem": 1
+}

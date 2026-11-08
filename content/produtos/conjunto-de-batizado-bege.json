@@ -1,0 +1,34 @@
+{
+  "nome": "Conjunto de batizado em linho e bordado (bege)",
+  "nomeCurto": "Conjunto bege",
+  "fotos": [
+    "conjunto-de-batizado-bege"
+  ],
+  "resumo": "Caixa em linho, toalha bordada com o nome e a data, vela decorada e concha, em tons de bege.",
+  "descricao": "Um conjunto de batizado em linho e bordado, em tons de bege: a caixa em linho, a toalha bordada com o nome e a data, a vela decorada com flores e a concha.\n\nCada conjunto é pensado e feito à mão, ao pormenor.",
+  "preco": 120,
+  "precoAnterior": null,
+  "promocaoAte": "",
+  "inclui": [
+    "Caixa em linho",
+    "Toalha bordada com o nome e a data",
+    "Vela decorada",
+    "Concha"
+  ],
+  "medidas": [],
+  "opcoes": [],
+  "personalizacao": {
+    "nome": true,
+    "data": true,
+    "frase": true,
+    "rotuloNome": "Nome da criança",
+    "rotuloData": "Data do batizado",
+    "rotuloFrase": "Frase para a toalha (opcional)"
+  },
+  "quantidadeMinima": 1,
+  "categoria": "conjuntos-de-batizado",
+  "video": "",
+  "novidade": false,
+  "publicado": true,
+  "ordem": 1
+}

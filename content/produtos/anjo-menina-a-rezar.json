@@ -1,0 +1,32 @@
+{
+  "nome": "Anjo menina a rezar",
+  "nomeCurto": "Anjo menina",
+  "fotos": [
+    "anjo-menina-a-rezar"
+  ],
+  "resumo": "Anjo menina a rezar em gesso perfumado, com etiqueta personalizada e saco de organza incluídos.",
+  "descricao": "Um anjo menina a rezar em gesso perfumado, com laço, uma etiqueta personalizada com o nome e a data, e o saco de organza.\n\nA etiqueta e o saco de organza estão incluídos no preço.",
+  "preco": 2.2,
+  "precoAnterior": null,
+  "promocaoAte": "",
+  "inclui": [
+    "Anjo em gesso perfumado",
+    "Etiqueta personalizada",
+    "Saco de organza"
+  ],
+  "medidas": [],
+  "opcoes": [],
+  "personalizacao": {
+    "nome": true,
+    "data": true,
+    "frase": false,
+    "rotuloNome": "Nome",
+    "rotuloData": "Data da celebração"
+  },
+  "quantidadeMinima": 1,
+  "categoria": "lembrancas",
+  "video": "",
+  "novidade": false,
+  "publicado": true,
+  "ordem": 7
+}

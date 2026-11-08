@@ -1,0 +1,28 @@
+{
+  "nome": "Convite urso vegetal",
+  "nomeCurto": "Convite urso",
+  "fotos": [
+    "convite-urso-vegetal"
+  ],
+  "resumo": "Convite em papel vegetal com faixa e medalhão com um urso, personalizado.",
+  "descricao": "Um convite em papel vegetal, com faixa de cetim e um medalhão rendado com um urso, personalizado com o nome, a data e o local.\n\nPara batizados e chás de bebé.",
+  "preco": 2.3,
+  "precoAnterior": null,
+  "promocaoAte": "",
+  "inclui": [],
+  "medidas": [],
+  "opcoes": [],
+  "personalizacao": {
+    "nome": true,
+    "data": true,
+    "frase": false,
+    "rotuloNome": "Nome",
+    "rotuloData": "Data da celebração"
+  },
+  "quantidadeMinima": 1,
+  "categoria": "convites",
+  "video": "",
+  "novidade": false,
+  "publicado": true,
+  "ordem": 2
+}

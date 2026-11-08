@@ -1,0 +1,28 @@
+{
+  "nome": "Nome em sabonete",
+  "nomeCurto": "Nome em sabonete",
+  "fotos": [
+    "nome-em-sabonete"
+  ],
+  "resumo": "O nome em letras de sabonete coloridas, embrulhado com laço e etiqueta.",
+  "descricao": "O nome da criança em letras de sabonete coloridas, embrulhado com laço e uma etiqueta personalizada com a data.",
+  "preco": 2.2,
+  "precoAnterior": null,
+  "promocaoAte": "",
+  "inclui": [],
+  "medidas": [],
+  "opcoes": [],
+  "personalizacao": {
+    "nome": true,
+    "data": true,
+    "frase": false,
+    "rotuloNome": "Nome (as letras)",
+    "rotuloData": "Data da celebração"
+  },
+  "quantidadeMinima": 1,
+  "categoria": "lembrancas",
+  "video": "",
+  "novidade": false,
+  "publicado": true,
+  "ordem": 10
+}

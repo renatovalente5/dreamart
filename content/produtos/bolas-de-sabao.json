@@ -1,0 +1,28 @@
+{
+  "nome": "Bolas de sabão",
+  "nomeCurto": "Bolas de sabão",
+  "fotos": [
+    "bolas-de-sabao"
+  ],
+  "resumo": "Tubo de bolas de sabão com rótulo personalizado.",
+  "descricao": "Um tubo de bolas de sabão com um rótulo personalizado com o nome, a idade ou o tema da festa.",
+  "preco": 2.4,
+  "precoAnterior": null,
+  "promocaoAte": "",
+  "inclui": [],
+  "medidas": [],
+  "opcoes": [],
+  "personalizacao": {
+    "nome": true,
+    "data": false,
+    "frase": true,
+    "rotuloNome": "Nome",
+    "rotuloFrase": "Tema ou idade (opcional)"
+  },
+  "quantidadeMinima": 1,
+  "categoria": "lembrancas",
+  "video": "",
+  "novidade": false,
+  "publicado": true,
+  "ordem": 13
+}

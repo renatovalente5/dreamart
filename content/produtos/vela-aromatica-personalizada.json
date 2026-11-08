@@ -1,0 +1,29 @@
+{
+  "nome": "Vela aromática personalizada",
+  "nomeCurto": "Vela aromática",
+  "fotos": [
+    "vela-aromatica-personalizada"
+  ],
+  "resumo": "Vela aromática em frasco de vidro com rolha de cortiça, laço e flores secas, com as iniciais e a data.",
+  "descricao": "Uma vela aromática num frasco de vidro com rolha de cortiça, com laço e flores secas, personalizada com as vossas iniciais e a data do grande dia.\n\nÉ uma das lembranças preferidas para casamentos, e serve qualquer celebração. A cor do laço combina-se convosco.",
+  "preco": 3,
+  "precoAnterior": null,
+  "promocaoAte": "",
+  "inclui": [],
+  "medidas": [],
+  "opcoes": [],
+  "personalizacao": {
+    "nome": true,
+    "data": true,
+    "frase": true,
+    "rotuloNome": "Nomes ou iniciais",
+    "rotuloData": "Data da celebração",
+    "rotuloFrase": "Frase (opcional)"
+  },
+  "quantidadeMinima": 1,
+  "categoria": "lembrancas",
+  "video": "",
+  "novidade": false,
+  "publicado": true,
+  "ordem": 1
+}

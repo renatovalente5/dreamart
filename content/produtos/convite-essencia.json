@@ -1,0 +1,28 @@
+{
+  "nome": "Convite essência",
+  "nomeCurto": "Convite essência",
+  "fotos": [
+    "convite-essencia"
+  ],
+  "resumo": "Convite com envelope, flores secas e lacre, personalizado.",
+  "descricao": "Um convite com envelope, flores secas e lacre, personalizado com o nome e os pormenores da celebração.\n\nNa fotografia, para uma primeira comunhão.",
+  "preco": 2.8,
+  "precoAnterior": null,
+  "promocaoAte": "",
+  "inclui": [],
+  "medidas": [],
+  "opcoes": [],
+  "personalizacao": {
+    "nome": true,
+    "data": true,
+    "frase": false,
+    "rotuloNome": "Nome",
+    "rotuloData": "Data da celebração"
+  },
+  "quantidadeMinima": 1,
+  "categoria": "convites",
+  "video": "",
+  "novidade": false,
+  "publicado": true,
+  "ordem": 4
+}

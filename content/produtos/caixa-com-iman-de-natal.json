@@ -1,0 +1,28 @@
+{
+  "nome": "Caixa com íman de Natal",
+  "nomeCurto": "Íman de Natal",
+  "fotos": [
+    "caixa-com-iman-de-natal"
+  ],
+  "resumo": "Caixa com íman «Feliz Natal» e a sua mensagem de Natal personalizada.",
+  "descricao": "Uma caixa com um íman «Feliz Natal», com a sua mensagem de Natal personalizada.",
+  "preco": 5,
+  "precoAnterior": null,
+  "promocaoAte": "",
+  "inclui": [],
+  "medidas": [],
+  "opcoes": [],
+  "personalizacao": {
+    "nome": true,
+    "data": false,
+    "frase": true,
+    "rotuloNome": "Para quem é",
+    "rotuloFrase": "Mensagem de Natal (opcional)"
+  },
+  "quantidadeMinima": 1,
+  "categoria": "colecoes",
+  "video": "",
+  "novidade": true,
+  "publicado": true,
+  "ordem": 3
+}
