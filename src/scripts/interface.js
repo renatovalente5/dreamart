@@ -87,14 +87,18 @@
   if (capa && slides.length > 1) {
     const abas = $$('.capa__aba', capa);
     const pausa = $('.capa__pausa', capa);
-    const PASSO = 7000;
+    const PASSO = 5500; // um pouco mais rápido do que os 7 s de antes (o Renato, 9 nov 2026)
     let atual = 0;
     let relogio = 0;
+    let resta = PASSO; // o que falta ao diapositivo de agora: parar e retomar não volta a contar do zero
+    let desde = 0; // quando o relógio arrancou
+    let comecou = false; // a barra só anda depois de a passagem ter arrancado uma vez
     let parado = menosMovimento.matches; // com movimento reduzido não roda sozinha
     let suspenso = false;
     capa.style.setProperty('--passo', `${PASSO}ms`);
 
     const mostrar = (i, porToque) => {
+      window.clearTimeout(relogio); relogio = 0; resta = PASSO;
       atual = (i + slides.length) % slides.length;
       slides.forEach((s, n) => {
         const ativo = n === atual;
@@ -107,12 +111,17 @@
       if (barra) { barra.style.animation = 'none'; void barra.offsetWidth; barra.style.animation = ''; }
       if (porToque) programar();
     };
+    /* Pára e retoma no ponto onde estava: guarda o que falta, e a barra fica parada (is-suspensa) em vez
+       de voltar ao princípio. */
     const programar = () => {
-      window.clearTimeout(relogio);
+      const agora = performance.now();
+      if (relogio) { window.clearTimeout(relogio); relogio = 0; resta = Math.max(0, resta - (agora - desde)); }
       // também não roda por trás de um painel aberto
       const vai = !parado && !suspenso && !$('dialog[open]');
-      capa.classList.toggle('is-a-passar', vai);
-      if (vai) relogio = window.setTimeout(() => { mostrar(atual + 1); programar(); }, PASSO);
+      if (vai) comecou = true;
+      capa.classList.toggle('is-a-passar', comecou);
+      capa.classList.toggle('is-suspensa', comecou && !vai);
+      if (vai) { desde = agora; relogio = window.setTimeout(() => { relogio = 0; mostrar(atual + 1); programar(); }, resta); }
     };
     const desenharPausa = () => {
       pausa.setAttribute('aria-pressed', parado ? 'true' : 'false');
@@ -121,8 +130,8 @@
     abas.forEach((a, n) => a.addEventListener('click', () => mostrar(n, true)));
     pausa.addEventListener('click', () => { parado = !parado; if (!parado) suspenso = false; desenharPausa(); programar(); });
     desenharPausa();
-    /* Pára enquanto o rato está na capa, ou o foco do teclado (:focus-visible), e quando o separador
-       está escondido. Só o rato: no telemóvel, um toque dava «mouseenter» sem o «mouseleave», e a capa
+    /* Pára enquanto o rato está na capa (no botão de pausa também), ou o foco do teclado (:focus-visible),
+       e quando o separador está escondido; ao sair, continua de onde estava. Só o rato: no telemóvel, um toque dava «mouseenter» sem o «mouseleave», e a capa
        ficava parada de vez. */
     capa.addEventListener('pointerenter', (ev) => { if (ev.pointerType === 'mouse') { suspenso = true; programar(); } });
     capa.addEventListener('pointerleave', (ev) => { if (ev.pointerType === 'mouse') { suspenso = false; programar(); } });

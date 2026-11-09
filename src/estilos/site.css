@@ -348,7 +348,7 @@ main { padding-top: var(--topo-h); }
   outline: 1px solid rgba(200, 176, 124, 0.55); outline-offset: 10px;
   pointer-events: none;
 }
-.capa__slide .medalhao img { transform: scale(1.06); transition: transform 7.5s linear; }
+.capa__slide .medalhao img { transform: scale(1.06); transition: transform calc(var(--passo, 5.5s) + 0.5s) linear; }
 .capa__slide.is-ativo .medalhao img { transform: scale(1); }
 
 .capa__texto { display: flex; flex-direction: column; align-items: center; margin-top: 60px; }
@@ -375,7 +375,9 @@ main { padding-top: var(--topo-h); }
 .capa__barra { position: relative; display: block; width: 100%; min-width: 44px; height: 2px; border-radius: 2px; background: rgba(83, 61, 39, 0.18); overflow: hidden; }
 .capa__barra i { position: absolute; inset: 0; background: var(--acento); transform: scaleX(0); transform-origin: left; }
 .capa__aba[aria-current="true"] .capa__barra i { transform: scaleX(1); }
-.capa.is-a-passar .capa__aba[aria-current="true"] .capa__barra i { animation: progresso var(--passo, 7s) linear forwards; }
+.capa.is-a-passar .capa__aba[aria-current="true"] .capa__barra i { animation: progresso var(--passo, 5.5s) linear forwards; }
+/* parada (o rato por cima, a pausa, um painel aberto): a barra fica onde está e continua daí */
+.capa.is-suspensa .capa__aba[aria-current="true"] .capa__barra i { animation-play-state: paused; }
 @keyframes progresso { from { transform: scaleX(0); } to { transform: scaleX(1); } }
 .capa__pausa {
   display: grid; place-items: center; width: 44px; height: 44px; flex: none; border-radius: 50%;
