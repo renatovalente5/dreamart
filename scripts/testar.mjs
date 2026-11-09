@@ -620,9 +620,9 @@ await construcao('a página inicial: os separadores em monogramas (a letra e a p
   }
   // as peças do logótipo (scripts/logo-sem-circulo.py): no cabeçalho, o desenho inteiro com o semicírculo
   assert.match(index, /<a class="topo__logo" href="\/dreamart\/" aria-current="page"><img class="topo__logo-img" src="\/dreamart\/assets\/img\/logo-cabecalho-[0-9a-f]{10}-\d+\.webp"[^>]* sizes="\(min-width: 1024px\) 116px, 84px"[^>]* alt="Dream Art, Lembranças e Eventos — página inicial" fetchpriority="high"/);
-  assert.match(index, /<img class="gaveta__logo" src="\/dreamart\/assets\/img\/logo-nome-/);
+  assert.match(index, /<img class="gaveta__logo" src="\/dreamart\/assets\/img\/logo-cabecalho-/);
   assert.match(index, /<a class="rodape__logo" href="\/dreamart\/"><img src="\/dreamart\/assets\/img\/logo-rodape-[0-9a-f]{10}-\d+\.webp"[^>]* alt="Dream Art — página inicial"/);
-  for (const peca of ['logo-cabecalho', 'logo-nome', 'logo-rodape']) assert.ok(fs.readdirSync(path.join(pasta, '_site/assets/img')).some((f) => f.startsWith(`${peca}-`)), `falta ${peca} em assets/img`);
+  for (const peca of ['logo-cabecalho', 'logo-rodape']) assert.ok(fs.readdirSync(path.join(pasta, '_site/assets/img')).some((f) => f.startsWith(`${peca}-`)), `falta ${peca} em assets/img`);
 });
 await construcao('o catálogo da encomenda leva, de cada artigo publicado, o preço, as escolhas, a personalização e o mínimo; e as zonas e os portes; a ficha mostra o preço da regra', () => {
   const { pasta } = construida('agora');

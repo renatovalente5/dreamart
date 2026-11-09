@@ -44,7 +44,7 @@ function gaveta(ctx, caminho) {
   <div class="gaveta__interior">
     <div class="gaveta__topo">
       <button class="icone-botao" type="button" data-fechar aria-label="Fechar o menu">${ico('fechar')}</button>
-      ${pecaDoLogo(ctx, 'logo-nome', { alto: 30, classe: 'gaveta__logo', alt: ctx.site.marca })}
+      ${pecaDoLogo(ctx, 'logo-cabecalho', { alto: 72, classe: 'gaveta__logo', alt: ctx.site.marca })}
     </div>
     <nav aria-label="Loja">
       <div class="gaveta__cabeca"><p class="rotulo">Loja</p><a class="gaveta__tudo" href="${ctx.url('/loja/')}"${marca('/loja/')}>Ver tudo${ico('seta')}</a></div>

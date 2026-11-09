@@ -86,8 +86,8 @@ export function medalhao(ctx, nome, { tamanhos, prioridade = false, baixa = fals
 // ---------------------------------------------------------------- o logótipo
 /* O logótipo redondo (media/marca/logo.png) fica para os ícones e o cartão de partilha (imagens.py).
    As peças do logótipo sem a bola verde (scripts/logo-sem-circulo.py, nas versões do imagens.py):
-   «logo-cabecalho» (o desenho inteiro com o semicírculo, a verde), «logo-nome» (só o nome, a verde: o menu)
-   e «logo-rodape» (o desenho inteiro, creme e dourado). «alto» é a altura em CSS (a largura sai da proporção
+   «logo-cabecalho» (o desenho inteiro com o semicírculo, a verde: o cabeçalho e o menu) e «logo-rodape» (o
+   desenho inteiro, creme e dourado: o rodapé). «alto» é a altura em CSS (a largura sai da proporção
    da peça); «tamanhos» troca o sizes, quando a altura muda com o ecrã. */
 export function pecaDoLogo(ctx, nome, { alto, classe = '', alt = '', prioridade = false, tamanhos = '' } = {}) {
   const m = ctx.manifesto.marca[nome];

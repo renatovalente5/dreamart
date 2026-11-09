@@ -32,15 +32,20 @@ diz «dúvida».
     fica no logótipo, nos ícones do cabeçalho e no rodapé. O logótipo sem a bola verde
     (`scripts/logo-sem-circulo.py`, a partir do logótipo quadrado da cliente: tira-se só o verde): no
     cabeçalho claro, o desenho inteiro a verde, com o semicírculo num dourado mais fundo (escolhido por ele
-    entre as provas; «faltou o semi círculo» quando o tirei); no menu, só o nome; no rodapé verde, o desenho
-    inteiro em creme e dourado. As
+    entre as provas; «faltou o semi círculo» quando o tirei); no menu lateral, também o desenho inteiro
+    («o logo no Menu Lateral também tem de ser o Logo inteiro»); no rodapé verde, o desenho inteiro em creme
+    e dourado. O botão do WhatsApp voltou ao verde do logótipo, com o anel dourado (com as cores das histórias tinha
+    passado a chocolate; «mete o botão do WhatsApp verde»). O
+    rodapé mais pequeno, com o «© 2026 Dream Art» à esquerda e as ligações à direita no computador (no
+    telemóvel, o «©» fica no fim). As
     secções da página inicial em monogramas, como as capas das histórias (a letra em Bodoni Moda, a
     palavra em Ms Madi; «monograma» em content/categorias.json);
   - EB Garamond (600) nos títulos e Mulish no texto, servidas pelo próprio site (escolhidas pelo Renato a
     9 nov 2026 entre as provas; antes, Gilda Display e Montserrat). A Cormorant Garamond ficou de fora: é a
     letra dos títulos da Mimices;
-  - a fotografia num medalhão redondo com o arco dourado, os separadores em círculos, cartões de cantos
-    redondos;
+  - a fotografia num rectângulo de cantos redondos com o fio dourado à volta (`.moldura-foto`; o arco em
+    cima «parece que tem formato de caixão», o Renato, 9 nov 2026; nada de oval, que lembra as fotografias
+    das campas), os separadores em círculos, cartões de cantos redondos;
   - o cabeçalho com o menu e a procura à esquerda, o logótipo ao centro, os favoritos e a encomenda à direita;
     a gaveta do menu; o rodapé verde com o logótipo;
   - a loja e os separadores (o Renato, 9 nov 2026, com uma captura): os produtos no mesmo creme da página,

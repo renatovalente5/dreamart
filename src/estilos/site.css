@@ -88,6 +88,7 @@
 
   /* derivados */
   --verde-fundo: #434C37;    /* rodapé: um verde abaixo do círculo, para o logótipo se ler */
+  --verde-escuro: #4A543C;   /* o botão do WhatsApp ao passar o rato */
   --tinta: #3B2D21;          /* texto corrido: 11,9:1 no creme, 9,0:1 no rosa */
   --tinta-2: #634E3E;        /* texto secundário: 7,0:1 no creme, 5,3:1 no rosa */
   --creme-no-verde: #DEDCD0; /* texto secundário sobre o verde do rodapé: 6,6:1 */
@@ -565,19 +566,21 @@ html:not(.js) .artigo__fav, html:not(.js) .artigo__mais, html:not(.js) .juntar__
 /* ---------- Lembranças ---------- */
 .lembrancas__mais { display: flex; justify-content: center; margin-top: 36px; }
 
-/* ---------- Um sonho de família (e as fotografias em arco) ---------- */
+/* ---------- Um sonho de família (e as fotografias emolduradas) ---------- */
 .apresentacao { background: var(--creme); padding: var(--secao) 0; }
 .apresentacao__grelha { display: grid; gap: 44px; align-items: center; }
-.arco-foto { position: relative; width: min(78%, 330px); margin: 14px auto 0; }
-.arco-foto img {
+/* a fotografia num rectângulo de cantos redondos, com o fio dourado à volta, como num caixilho (o
+   arco em cima e o fundo direito lembravam um caixão — o Renato, 9 nov 2026) */
+.moldura-foto { position: relative; width: min(78%, 330px); margin: 14px auto 0; }
+.moldura-foto img {
   width: 100%; aspect-ratio: 4 / 5; object-fit: cover;
-  border-radius: 999px 999px 22px 22px;
+  border-radius: 24px;
   background: var(--rosa);
 }
-.arco-foto::after {
-  content: ""; position: absolute; inset: -12px;
+.moldura-foto::after {
+  content: ""; position: absolute; inset: -10px;
   border: 1.25px solid var(--dourado);
-  border-radius: 999px 999px 30px 30px;
+  border-radius: 32px;
   pointer-events: none;
 }
 .apresentacao__texto { display: flex; flex-direction: column; align-items: flex-start; gap: 16px; }
@@ -585,7 +588,7 @@ html:not(.js) .artigo__fav, html:not(.js) .artigo__mais, html:not(.js) .juntar__
 .apresentacao__texto p:not(.rotulo) { color: var(--tinta); font-size: 16px; max-width: 30em; }
 @media (min-width: 640px) {
   .apresentacao__grelha { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 48px; }
-  .apresentacao .arco-foto { width: min(100%, 400px); margin: 12px 0 12px auto; }
+  .apresentacao .moldura-foto { width: min(100%, 400px); margin: 12px 0 12px auto; }
 }
 @media (min-width: 900px) {
   .apresentacao__grelha { gap: 80px; }
@@ -605,15 +608,17 @@ html:not(.js) .artigo__fav, html:not(.js) .artigo__mais, html:not(.js) .juntar__
 }
 
 /* ---------- Rodapé ---------- */
-.rodape { background: var(--verde-fundo); color: var(--creme); padding: 56px 0 calc(96px + env(safe-area-inset-bottom)); }
-.rodape__grelha { display: grid; gap: 40px 24px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+/* mais pequeno (o Renato, 9 nov 2026): menos ar, o logótipo e as letras mais pequenos. Até 1024 px, o
+   botão do WhatsApp fica no canto livre ao lado do «©» (a última linha só tem coisas à esquerda) */
+.rodape { background: var(--verde-fundo); color: var(--creme); padding: 40px 0 calc(32px + env(safe-area-inset-bottom)); }
+.rodape__grelha { display: grid; gap: 28px 20px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .rodape__marca {
   grid-column: 1 / -1;
-  display: grid; grid-template-columns: 118px minmax(0, 1fr); column-gap: 20px; row-gap: 12px; align-items: center;
+  display: grid; grid-template-columns: 92px minmax(0, 1fr); column-gap: 18px; row-gap: 10px; align-items: center;
 }
 .rodape__logo { grid-row: 1 / span 2; display: block; border-radius: 8px; }
-.rodape__logo img { width: auto; height: 112px; }
-.rodape__frase { font-family: var(--f-titulo); font-weight: 600; font-size: 22px; line-height: 1.2; max-width: 15em; align-self: end; }
+.rodape__logo img { width: auto; height: 88px; }
+.rodape__frase { font-family: var(--f-titulo); font-weight: 600; font-size: 19px; line-height: 1.2; max-width: 15em; align-self: end; }
 .rodape__marca .redes { align-self: start; }
 .redes { display: flex; gap: 10px; }
 .redes a {
@@ -623,13 +628,13 @@ html:not(.js) .artigo__fav, html:not(.js) .artigo__mais, html:not(.js) .juntar__
 }
 .redes a:hover { background: var(--creme); color: var(--verde-fundo); }
 .redes .ico { width: 20px; height: 20px; }
-.rodape__titulo { font-family: var(--f-titulo); font-weight: 600; font-size: 21px; line-height: 1.3; margin-bottom: 8px; color: var(--creme); }
+.rodape__titulo { font-family: var(--f-titulo); font-weight: 600; font-size: 19px; line-height: 1.3; margin-bottom: 4px; color: var(--creme); }
 .rodape__titulo a, .rodape__col .rodape__titulo a { display: inline-flex; align-items: center; min-height: 44px; margin-block: -12px; font-size: inherit; color: inherit; }
 .rodape__titulo a:hover { text-decoration: underline; text-underline-offset: 4px; text-decoration-thickness: 1px; }
 .rodape__col ul { display: grid; gap: 0; }
 .rodape__col a, .rodape__col li > span {
   display: inline-flex; align-items: center; gap: 8px; min-height: 44px;
-  color: var(--creme-no-verde); font-size: 14px; line-height: 1.35;
+  color: var(--creme-no-verde); font-size: 13.5px; line-height: 1.35;
 }
 .rodape__col a:hover { color: var(--creme); }
 .rodape__col .ico { width: 18px; height: 18px; }
@@ -637,8 +642,8 @@ html:not(.js) .artigo__fav, html:not(.js) .artigo__mais, html:not(.js) .juntar__
 .rodape__contactos { grid-column: 1 / -1; }
 .rodape__legal {
   display: flex; flex-direction: column; gap: 14px;
-  margin-top: 40px; padding-top: 22px; border-top: 1px solid rgba(200, 176, 124, 0.55);
-  font-size: 13px; color: var(--creme-no-verde);
+  margin-top: 28px; padding-top: 14px; border-top: 1px solid rgba(200, 176, 124, 0.55);
+  font-size: 12.5px; color: var(--creme-no-verde);
 }
 .rodape__legal ul { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 16px; }
 .rodape__legal a { display: inline-flex; align-items: center; gap: 7px; min-height: 44px; color: var(--creme-no-verde); }
@@ -647,24 +652,30 @@ html:not(.js) .artigo__fav, html:not(.js) .artigo__mais, html:not(.js) .juntar__
 .rodape__legal .lr-discreto svg { width: 17px; height: 17px; }
 @media (min-width: 640px) {
   .rodape__grelha { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1.35fr); }
-  .rodape__marca { grid-template-columns: 136px minmax(0, 1fr) auto; column-gap: 24px; }
+  .rodape__marca { grid-template-columns: 106px minmax(0, 1fr) auto; column-gap: 22px; }
   .rodape__logo { grid-row: auto; }
-  .rodape__logo img { height: 128px; }
-  .rodape__frase { align-self: center; font-size: 23px; }
+  .rodape__logo img { height: 100px; }
+  .rodape__frase { align-self: center; font-size: 20px; }
   .rodape__marca .redes { align-self: center; }
   .rodape__contactos { grid-column: auto; }
 }
 @media (min-width: 1024px) {
-  /* a folga em baixo é a do botão do WhatsApp (28 + 62 px): sem ela, tapava o «©» */
-  .rodape { padding: 72px 0 112px; }
+  /* a folga em baixo é a do botão do WhatsApp (28 + 62 px): sem ela, tapava as ligações da direita */
+  .rodape { padding: 48px 0 104px; }
   .rodape__legal { flex-direction: row; justify-content: space-between; align-items: center; }
-  .rodape__legal ul { flex: 1; display: flex; flex-wrap: wrap; gap: 0 20px; }
-  .rodape__legal p { flex: none; white-space: nowrap; margin-left: 24px; }
+  /* o «©» à esquerda e as ligações à direita (no telemóvel, o «©» fica no fim) */
+  .rodape__legal p { order: -1; flex: none; white-space: nowrap; margin-right: 24px; }
+  .rodape__legal ul { flex: 1; display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 0 20px; }
+}
+/* com rato, as ligações do rodapé mais juntas (o alvo continua com 32 px); no toque ficam os 44 */
+@media (hover: hover) and (pointer: fine) {
+  .rodape__col a, .rodape__col li > span, .rodape__legal a, .rodape__legal .lr-discreto { min-height: 32px; }
+  .rodape__titulo a, .rodape__col .rodape__titulo a { min-height: 32px; margin-block: -6px; }
 }
 /* quatro colunas só quando o email cabe inteiro na sua */
 @media (min-width: 1200px) {
-  .rodape__grelha { grid-template-columns: minmax(0, 1.5fr) repeat(3, minmax(0, 1fr)); gap: 48px; }
-  .rodape__marca { grid-column: auto; display: flex; flex-direction: column; align-items: flex-start; gap: 20px; }
+  .rodape__grelha { grid-template-columns: minmax(0, 1.5fr) repeat(3, minmax(0, 1fr)); gap: 40px; }
+  .rodape__marca { grid-column: auto; display: flex; flex-direction: column; align-items: flex-start; gap: 14px; }
   .rodape__marca .redes, .rodape__marca .rodape__frase { align-self: flex-start; }
   .rodape__legal ul { gap: 0 28px; }
 }
@@ -677,11 +688,11 @@ html:not(.js) .artigo__fav, html:not(.js) .artigo__mais, html:not(.js) .juntar__
   position: fixed; z-index: 30;
   right: max(16px, env(safe-area-inset-right)); bottom: calc(16px + env(safe-area-inset-bottom));
   display: grid; place-items: center; width: 58px; height: 58px; border-radius: 50%;
-  background: var(--acento); color: var(--creme);
+  background: var(--verde); color: var(--creme);
   box-shadow: 0 0 0 2px var(--dourado), 0 10px 26px rgba(59, 45, 33, 0.32);
   transition: transform 0.25s var(--ease), background-color 0.2s var(--ease);
 }
-.whats:hover { transform: translateY(-2px); background: var(--acento-escuro); }
+.whats:hover { transform: translateY(-2px); background: var(--verde-escuro); }
 .whats .ico { width: 28px; height: 28px; }
 @media (min-width: 1024px) { .whats { right: 28px; bottom: 28px; width: 62px; height: 62px; } }
 /* fora da frente dos campos da ficha (interface.js), no telemóvel e no tablet */
@@ -705,7 +716,7 @@ html:not(.js) .artigo__fav, html:not(.js) .artigo__mais, html:not(.js) .juntar__
 .gaveta[open].is-aberta { transform: translateX(0); }
 .gaveta__interior { display: flex; flex-direction: column; height: 100%; overflow-y: auto; overscroll-behavior: contain; padding: 12px 20px calc(24px + env(safe-area-inset-bottom)); }
 .gaveta__topo { display: flex; align-items: center; justify-content: space-between; min-height: 64px; margin: 0 -8px 8px; }
-.gaveta__logo { width: auto; height: 30px; margin-right: 8px; }
+.gaveta__logo { width: auto; height: 72px; margin-right: 4px; }
 .gaveta__cabeca { display: flex; align-items: center; justify-content: space-between; margin: 4px 0 2px; }
 .gaveta .rotulo { color: var(--tinta-2); }
 .gaveta__tudo { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; font-size: 13px; font-weight: 600; color: var(--acento); }

@@ -11,13 +11,11 @@ Escreve em media/marca/:
   logo-cabecalho.png   o desenho inteiro, com o semicírculo, a verde (o cabeçalho claro; o Renato escolheu-o
                        a 9 nov 2026: o creme passa ao verde do logótipo, e o dourado do arco e do «|» a um
                        dourado mais fundo, para se ver no creme)
-  logo-nome.png        só o nome e o «LEMBRANÇAS | EVENTOS», a verde (o cabeçalho no telemóvel)
 
     python3 scripts/logo-sem-circulo.py
 """
 import os
 
-import cv2
 import numpy as np
 from PIL import Image
 
@@ -50,11 +48,8 @@ def sem_o_verde(im):
     return rgba, dourado
 
 
-def recortar(rgba, apagar=None, folga=8):
-    b = rgba.copy()
-    if apagar is not None:
-        b[apagar, 3] = 0
-    im = Image.fromarray(b)
+def recortar(rgba, folga=8):
+    im = Image.fromarray(rgba)
     caixa = im.getchannel('A').point(lambda v: 255 if v > 6 else 0).getbbox()
     caixa = (max(0, caixa[0] - folga), max(0, caixa[1] - folga), min(im.width, caixa[2] + folga), min(im.height, caixa[3] + folga))
     return im.crop(caixa)
@@ -73,24 +68,10 @@ def a_verde(im, dourado):
 
 def main():
     rgba, dourado = sem_o_verde(Image.open(ORIGEM))
-    alfa = rgba[..., 3].astype(np.float64) / 255
-    e_dourado = (np.abs(rgba[..., :3].astype(np.float64) - dourado).sum(axis=2) < 40) & (alfa > 0.01)
-    n, lab, stats, _ = cv2.connectedComponentsWithStats((alfa > 0.02).astype(np.uint8), connectivity=8)
-    dourados = [i for i in range(1, n) if e_dourado[lab == i].mean() > 0.5]
-    arco_i = max(dourados, key=lambda i: stats[i][4])        # o arco é a maior peça dourada (o «|» também é dourado)
-    arco = lab == arco_i
-    flores_i = max((i for i in range(1, n) if i not in dourados), key=lambda i: stats[i][4])
-    # o topo do nome: o «D», a primeira letra grande à esquerda; o que acaba antes dele é das flores
-    topo_nome = min(stats[i][1] for i in range(1, n) if stats[i][4] > 1000 and stats[i][0] < stats[flores_i][0] and i != arco_i)
-    flores = lab == flores_i
-    for i in range(1, n):
-        if i != arco_i and stats[i][1] + stats[i][3] <= topo_nome + 2:
-            flores |= lab == i
     os.makedirs(MARCA, exist_ok=True)
     recortar(rgba).save(os.path.join(MARCA, 'logo-rodape.png'), optimize=True)
     a_verde(recortar(rgba), dourado).save(os.path.join(MARCA, 'logo-cabecalho.png'), optimize=True)
-    a_verde(recortar(rgba, arco | flores), dourado).save(os.path.join(MARCA, 'logo-nome.png'), optimize=True)
-    for f in ('logo-rodape.png', 'logo-cabecalho.png', 'logo-nome.png'):
+    for f in ('logo-rodape.png', 'logo-cabecalho.png'):
         im = Image.open(os.path.join(MARCA, f))
         print(f, im.size, os.path.getsize(os.path.join(MARCA, f)) // 1024, 'KB')
 

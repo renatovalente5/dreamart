@@ -125,7 +125,7 @@ export function inicio(ctx) {
   const a = h.apresentacao || {};
   const apresentacao = a.titulo ? `<section class="apresentacao" aria-labelledby="t-apresentacao">
   <div class="contentor apresentacao__grelha">
-    ${a.foto && ctx.manifesto.fotos[a.foto] ? `<figure class="arco-foto revela">${imagem(ctx, a.foto, { tamanhos: '(min-width: 640px) min(calc(50vw - 56px), 400px), min(calc(78vw - 16px), 330px)', ate: 960, moldura: 0.8 })}</figure>` : ''}
+    ${a.foto && ctx.manifesto.fotos[a.foto] ? `<figure class="moldura-foto revela">${imagem(ctx, a.foto, { tamanhos: '(min-width: 640px) min(calc(50vw - 56px), 400px), min(calc(78vw - 16px), 330px)', ate: 960, moldura: 0.8 })}</figure>` : ''}
     <div class="apresentacao__texto revela">
       ${a.etiqueta ? `<p class="rotulo">${esc(a.etiqueta)}</p>` : ''}
       <h2 class="titulo-secao" id="t-apresentacao">${esc(a.titulo)}</h2>
@@ -532,7 +532,7 @@ export function texto(ctx, pag) {
   const conteudo = `${cabecaDePagina(ctx, { titulo: pag.titulo, sub: pag.subtitulo ? `<p>${esc(pag.subtitulo)}</p>` : '', data })}
 <section class="leitura${pag.modelo ? ` leitura--${esc(pag.modelo)}` : ''}${comFoto ? ' leitura--foto' : ''}">
   <div class="contentor leitura__grelha">
-    ${comFoto ? `<figure class="arco-foto leitura__foto">${imagem(ctx, pag.foto, { tamanhos: '(min-width: 900px) 360px, min(calc(78vw - 16px), 330px)', prioridade: true, ate: 960, moldura: 0.8 })}</figure>` : ''}
+    ${comFoto ? `<figure class="moldura-foto leitura__foto">${imagem(ctx, pag.foto, { tamanhos: '(min-width: 900px) 360px, min(calc(78vw - 16px), 330px)', prioridade: true, ate: 960, moldura: 0.8 })}</figure>` : ''}
     <article class="leitura__texto">
       ${corpo}
       ${legal ? '' : `<p class="leitura__fim">${botao(ctx.url('/loja/'), 'Ver a loja', { classe: 'botao botao--contorno' })}</p>`}

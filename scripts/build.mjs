@@ -176,8 +176,8 @@ const CSS_FONTE = fs.readFileSync(path.join(RAIZ, 'src/estilos/site.css'), 'utf8
     // o chocolate (títulos, botões, preços) nos mesmos fundos, e o creme em cima dele (botões, o Natal)
     ['acento', 'creme', 4.5], ['acento', 'branco', 4.5], ['acento', 'rosa', 4.5], ['acento', 'rosa-escuro', 4.5], ['acento', 'rosa-claro', 4.5],
     ['creme', 'acento', 4.5], ['creme', 'acento-escuro', 4.5], ['creme-no-acento', 'acento', 4.5],
-    // o verde do logótipo: os ícones do cabeçalho no creme, e o creme no rodapé
-    ['verde', 'creme', 4.5], ['creme', 'verde', 4.5], ['creme', 'verde-fundo', 4.5], ['creme-no-verde', 'verde-fundo', 4.5],
+    // o verde do logótipo: os ícones do cabeçalho no creme, o creme no rodapé e no botão do WhatsApp
+    ['verde', 'creme', 4.5], ['creme', 'verde', 4.5], ['creme', 'verde-escuro', 4.5], ['creme', 'verde-fundo', 4.5], ['creme-no-verde', 'verde-fundo', 4.5],
     ['erro', 'branco', 4.5], ['linha-campo', 'branco', 3], ['linha-campo', 'creme', 3],
   ];
   const falham = [];
@@ -198,7 +198,7 @@ const semVersoes = Object.keys(fotos).filter((f) => dadosRegras.ficheirosFotos.i
 if (semVersoes.length) parar('A publicação parou: faltam as versões web de fotografias.', semVersoes.map((f) => `Fotografias: «${f}» não tem as versões web (scripts/imagens.py)`), { tecnico: true });
 if (!manifesto.logo) parar('A publicação parou: falta o logótipo.', ['Gerador: media/marca/logo.png não tem as versões pequenas (scripts/imagens.py)'], { tecnico: true });
 // as peças do logótipo sem a bola (o cabeçalho, o menu e o rodapé)
-const semPecas = ['logo-cabecalho', 'logo-nome', 'logo-rodape'].filter((p) => !manifesto.marca || !manifesto.marca[p]);
+const semPecas = ['logo-cabecalho', 'logo-rodape'].filter((p) => !manifesto.marca || !manifesto.marca[p]);
 if (semPecas.length) parar('A publicação parou: falta uma peça do logótipo.', semPecas.map((p) => `Gerador: media/marca/${p}.png não tem as versões (scripts/logo-sem-circulo.py e scripts/imagens.py)`), { tecnico: true });
 
 // ---------------------------------------------------------------- saída
