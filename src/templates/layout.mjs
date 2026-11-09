@@ -1,10 +1,10 @@
-// A moldura de todas as páginas (a da proposta A, «Verde da marca», escolhida pelo Renato a 9 nov
-// 2026): o cabeçalho (menu e lupa à esquerda, o logótipo redondo ao centro, favoritos e encomenda à
-// direita), a gaveta do menu, o painel da procura, a folha de «juntar à encomenda», o rodapé verde
-// e o botão do WhatsApp.
+// A moldura de todas as páginas: o cabeçalho claro (menu e lupa à esquerda, o logótipo sem a bola ao
+// centro, a verde, favoritos e encomenda à direita), a gaveta do menu, o painel da procura, a folha de
+// «juntar à encomenda», o rodapé verde (com o logótipo inteiro, creme e dourado) e o botão do WhatsApp.
+// O logótipo sem a bola e o rosa e o chocolate das histórias: pedidos do Renato a 9 nov 2026.
 import { esc, numeroWhatsApp } from './util.mjs';
 import { sprite, ico, arco } from './icones.mjs';
-import { logotipo, livroBotao, miniatura, separadoresComArtigos, nomeDoSeparador } from './componentes.mjs';
+import { pecaDoLogo, livroBotao, miniatura, separadoresComArtigos, nomeDoSeparador } from './componentes.mjs';
 
 const wa = (ctx) => (ctx.site.contactos.whatsapp ? `https://wa.me/${numeroWhatsApp(ctx.site.contactos.whatsapp)}` : '');
 
@@ -25,7 +25,7 @@ function cabecalho(ctx, caminho) {
       <button class="icone-botao" type="button" id="abrir-menu" aria-label="Abrir o menu" aria-haspopup="dialog" aria-controls="gaveta" aria-expanded="false">${ico('menu')}</button>
       <button class="icone-botao" type="button" id="abrir-procura" aria-label="Procurar" aria-haspopup="dialog" aria-controls="procura" aria-expanded="false">${ico('lupa')}</button>
     </div>
-    <a class="topo__logo" href="${ctx.url('/')}"${caminho === '/' ? ' aria-current="page"' : ''}>${logotipo(ctx, { lado: 104, classe: 'topo__logo-img', alt: `${ctx.site.marca}, Lembranças e Eventos — página inicial`, prioridade: true }).replace('sizes="104px"', 'sizes="(min-width: 1024px) 104px, 72px"')}</a>
+    <a class="topo__logo" href="${ctx.url('/')}"${caminho === '/' ? ' aria-current="page"' : ''}>${pecaDoLogo(ctx, 'logo-cabecalho', { alto: 92, classe: 'topo__logo-flores', prioridade: true })}${pecaDoLogo(ctx, 'logo-nome', { alto: 34, classe: 'topo__logo-nome', alt: `${ctx.site.marca}, Lembranças e Eventos — página inicial`, prioridade: true })}</a>
     <div class="topo__lado topo__lado--dir">
       <a class="icone-botao" href="${ctx.url('/favoritos/')}" id="favoritos-topo" aria-label="Favoritos"${caminho === '/favoritos/' ? ' aria-current="page"' : ''}>${ico('coracao')}</a>
       <a class="icone-botao saco" href="${ctx.url('/encomenda/')}" id="saco" aria-label="A encomenda"${caminho === '/encomenda/' ? ' aria-current="page"' : ''}>${ico('saco')}<span class="saco__n" data-conta hidden></span></a>
@@ -44,7 +44,7 @@ function gaveta(ctx, caminho) {
   <div class="gaveta__interior">
     <div class="gaveta__topo">
       <button class="icone-botao" type="button" data-fechar aria-label="Fechar o menu">${ico('fechar')}</button>
-      ${logotipo(ctx, { lado: 52, classe: 'gaveta__logo' })}
+      ${pecaDoLogo(ctx, 'logo-nome', { alto: 30, classe: 'gaveta__logo', alt: ctx.site.marca })}
     </div>
     <nav aria-label="Loja">
       <div class="gaveta__cabeca"><p class="rotulo">Loja</p><a class="gaveta__tudo" href="${ctx.url('/loja/')}"${marca('/loja/')}>Ver tudo${ico('seta')}</a></div>
@@ -124,7 +124,7 @@ function rodape(ctx) {
   <div class="contentor">
     <div class="rodape__grelha">
       <div class="rodape__marca">
-        <a class="rodape__logo" href="${ctx.url('/')}">${logotipo(ctx, { lado: 104, alt: `${ctx.site.marca} — página inicial` }).replace('sizes="104px"', 'sizes="(min-width: 640px) 104px, 92px"')}</a>
+        <a class="rodape__logo" href="${ctx.url('/')}">${pecaDoLogo(ctx, 'logo-rodape', { alto: 128, alt: `${ctx.site.marca} — página inicial` })}</a>
         <p class="rodape__frase">${esc(ctx.site.assinatura || '')}</p>
         ${redes(ctx)}
       </div>

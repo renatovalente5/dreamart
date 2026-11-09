@@ -84,15 +84,18 @@ export function medalhao(ctx, nome, { tamanhos, prioridade = false, baixa = fals
 }
 
 // ---------------------------------------------------------------- o logótipo
-/* O logótipo da cliente, tal e qual (media/marca/logo.png, só recortado em círculo), nas versões
-   pequenas do imagens.py (64/128/192/256 px): nunca o PNG de 435 KB. «lado» é o tamanho em CSS. */
-export function logotipo(ctx, { lado = 72, classe = '', alt = '', prioridade = false, preguica = true } = {}) {
-  const l = ctx.manifesto.logo;
-  const alturas = Object.keys(l.altura).map(Number).sort((a, b) => a - b);
-  const src = l.altura[alturas.find((h) => h >= lado * 2) || alturas[alturas.length - 1]];
-  const srcset = alturas.map((h) => `${ctx.asset(`img/${l.altura[h].webp}`)} ${h}w`).join(', ');
-  const carga = prioridade ? ' fetchpriority="high"' : preguica ? ' loading="lazy"' : '';
-  return `<img${classe ? ` class="${esc(classe)}"` : ''} src="${ctx.asset(`img/${src.webp}`)}" srcset="${srcset}" sizes="${lado}px" width="${lado}" height="${lado}" alt="${esc(alt)}"${carga} decoding="async">`;
+/* O logótipo redondo (media/marca/logo.png) fica para os ícones e o cartão de partilha (imagens.py).
+   As peças do logótipo sem a bola verde (scripts/logo-sem-circulo.py, nas versões do imagens.py):
+   «logo-cabecalho» (o nome com as flores, a verde), «logo-nome» (só o nome, a verde) e «logo-rodape» (o
+   desenho inteiro, creme e dourado). «alto» é a altura em CSS; a largura sai da proporção da peça. */
+export function pecaDoLogo(ctx, nome, { alto, classe = '', alt = '', prioridade = false } = {}) {
+  const m = ctx.manifesto.marca[nome];
+  const alturas = Object.keys(m.altura).map(Number).sort((a, b) => a - b);
+  const largo = Math.round((m.w * alto) / m.h);
+  const src = m.altura[alturas.find((h) => h >= alto * 2) || alturas[alturas.length - 1]];
+  const srcset = alturas.map((h) => `${ctx.asset(`img/${m.altura[h].webp}`)} ${m.altura[h].largura}w`).join(', ');
+  const carga = prioridade ? ' fetchpriority="high"' : ' loading="lazy"';
+  return `<img${classe ? ` class="${esc(classe)}"` : ''} src="${ctx.asset(`img/${src.webp}`)}" srcset="${srcset}" sizes="${largo}px" width="${largo}" height="${alto}" alt="${esc(alt)}"${carga} decoding="async">`;
 }
 
 // ---------------------------------------------------------------- preços
@@ -163,7 +166,20 @@ export function pastilhas(ctx, atual = '') {
   return `<nav class="pastilhas" aria-label="Separadores"><ul role="list">${itens.map((i) => `<li><a href="${ctx.url(i.caminho)}"${i.caminho === atual ? ' aria-current="page"' : ''}>${esc(i.nome)}</a></li>`).join('')}</ul></nav>`;
 }
 
-/* Os separadores em círculos (página inicial e página que não existe), com o arco dourado. */
+/* O monograma de um separador (como as capas das histórias da Dream Art): a letra grande, a palavra
+   manuscrita por cima e o fundo (rosa, ou chocolate com «escuro»). Vêm do «monograma» de
+   content/categorias.json; sem ele, a primeira letra e o nome em minúsculas. */
+export function monogramaDe(c) {
+  const nome = nomeDoSeparador(c);
+  const m = c.monograma || {};
+  return { letra: m.letra || nome.trim().charAt(0).toLocaleUpperCase('pt-PT'), palavra: m.palavra || nome.toLocaleLowerCase('pt-PT'), escuro: m.escuro === true };
+}
+export function monograma(c) {
+  const m = monogramaDe(c);
+  return `<span class="monograma${m.escuro ? ' monograma--escuro' : ''}" aria-hidden="true"><span class="monograma__letra">${esc(m.letra)}</span><span class="monograma__palavra">${esc(m.palavra)}</span></span>`;
+}
+
+/* Os separadores em círculos (página inicial e página que não existe): o monograma, com o arco dourado. */
 export function circulos(ctx, { titulo = 'h3' } = {}) {
   const lista = separadoresComArtigos(ctx);
   const n = lista.length;
@@ -172,7 +188,7 @@ export function circulos(ctx, { titulo = 'h3' } = {}) {
   const computador = n <= 6 ? n : Math.ceil(n / 2);
   return `<ul class="circulos" role="list" style="--c-tab:${tablet};--c-desk:${computador}">${lista.map((c) => `<li class="circulo">
     <a class="circulo__ligacao" href="${ctx.url(`/loja/${c.slug}/`)}">
-      ${medalhao(ctx, c.foto, { tamanhos: '(min-width: 640px) 168px, 132px', alt: '', etiqueta: 'span', ate: 540 })}
+      <span class="medalhao">${monograma(c)}</span>
       <${titulo} class="circulo__nome">${esc(nomeDoSeparador(c))}</${titulo}>
     </a>
   </li>`).join('\n')}</ul>`;

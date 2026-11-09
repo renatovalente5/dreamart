@@ -137,7 +137,7 @@ export const TAMANHOS = Object.freeze({
   marca: 60, descricaoSite: 300, assinatura: 100, fundadores: 80, email: 160, telefone: 20, rede: 60, horario: 120,
   empresaNome: 160, empresaTipo: 80, nif: 20, morada: 160, codigoPostal: 12, localidade: 60, concelho: 60, iva: 200,
   avisoTexto: 140, ligacao: 200, prazo: 400, pagamento: 400, levantamento: 300,
-  catNome: 40, catTitulo: 80, catResumo: 2000,
+  catNome: 40, catTitulo: 80, catResumo: 2000, catPalavra: 12,
   inicioAba: 24, inicioCurto: 60, inicioTitulo: 120, inicioTexto: 600, inicioLongo: 1200,
 });
 /* O que o Worker do painel aceita gravar (recusa acima); aqui só se lembra, a
@@ -734,6 +734,19 @@ export function problemasDasCategorias(valor, { fotos = null } = {}) {
       if (m) bloqueia(`${c.slug}.${k}:alegacao`, `${i}.${k}`, `«${rotulo}» da categoria ${c.nome || c.slug}: «${m[0]}» é uma palavra que a lei só deixa usar com prova. Tire-a.`);
     }
     if (!nomeDeFotoValido(c.foto) || (fotos && !fotos.has(c.foto))) bloqueia(`${c.slug}.foto`, `${i}.foto`, `A fotografia da categoria ${c.nome || c.slug} não existe na biblioteca: escolha outra.`);
+    // o monograma do círculo da página inicial (como as capas das histórias): opcional; sem ele, a 1.ª letra e o nome
+    const mo = c.monograma;
+    if (mo !== undefined) {
+      if (!eObjecto(mo)) bloqueia(`${c.slug}.monograma:forma`, `${i}.monograma`, `O monograma da categoria ${c.nome || c.slug} não tem a forma certa. Só o Renato o pode corrigir.`);
+      else {
+        if (mo.letra !== undefined && (typeof mo.letra !== 'string' || !/^\p{Lu}$/u.test(mo.letra))) bloqueia(`${c.slug}.monograma.letra`, `${i}.monograma.letra`, `A letra do monograma da categoria ${c.nome || c.slug} tem de ser uma só letra, maiúscula.`);
+        if (mo.palavra !== undefined) {
+          if (typeof mo.palavra !== 'string' || RE_CONTROLO_TEXTO.test(mo.palavra) || RE_PARTE_A_PAGINA.test(mo.palavra)) bloqueia(`${c.slug}.monograma.palavra`, `${i}.monograma.palavra`, `A palavra do monograma da categoria ${c.nome || c.slug} tem caracteres que não podem ir para o site.`);
+          else if (mo.palavra.length > TAMANHOS.catPalavra) avisa(`${c.slug}.monograma.palavra:tamanho`, `${i}.monograma.palavra`, `A palavra do monograma da categoria ${c.nome || c.slug} tem mais de ${TAMANHOS.catPalavra} letras: sai do círculo.`);
+        }
+        if (mo.escuro !== undefined && typeof mo.escuro !== 'boolean') bloqueia(`${c.slug}.monograma.escuro`, `${i}.monograma.escuro`, `O fundo do monograma da categoria ${c.nome || c.slug} não tem a forma certa. Só o Renato o pode corrigir.`);
+      }
+    }
   });
   return out;
 }

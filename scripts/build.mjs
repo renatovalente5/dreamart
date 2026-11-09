@@ -162,7 +162,7 @@ if (semDesenho.length) erros.push(`Gerador: os ícones ${semDesenho.join(', ')} 
 if (erros.length) parar(`A publicação parou: ${erros.length} ${erros.length === 1 ? 'problema' : 'problemas'} no conteúdo.`, erros);
 
 // ---------------------------------------------------------------- os contrastes da paleta
-/* As cores da proposta A, medidas aqui e não a olho (memória contraste-mede-se-nao-se-olha): o texto
+/* As cores do site (as do logótipo e, desde 9 nov 2026, o rosa e o chocolate das histórias), medidas aqui e não a olho (memória contraste-mede-se-nao-se-olha): o texto
    a 4,5:1 e os contornos dos campos a 3:1. Lêem-se do :root do site.css: mudar uma cor e falhar o
    mínimo pára a construção. */
 const CSS_FONTE = fs.readFileSync(path.join(RAIZ, 'src/estilos/site.css'), 'utf8');
@@ -170,10 +170,15 @@ const CSS_FONTE = fs.readFileSync(path.join(RAIZ, 'src/estilos/site.css'), 'utf8
   const raiz = CSS_FONTE.slice(CSS_FONTE.indexOf(':root {'), CSS_FONTE.indexOf('}', CSS_FONTE.indexOf(':root {')));
   const cor = Object.fromEntries([...raiz.matchAll(/--([\w-]+):\s*(#[0-9A-Fa-f]{6})\b/g)].map((m) => [m[1], m[2]]));
   const PARES = [
-    ['tinta', 'creme', 4.5], ['tinta', 'branco', 4.5], ['tinta-2', 'creme', 4.5], ['tinta-2', 'branco', 4.5], ['tinta-2', 'salvia', 4.5],
-    ['verde', 'creme', 4.5], ['verde', 'branco', 4.5], ['verde', 'salvia', 4.5], ['creme', 'verde', 4.5], ['creme-no-verde', 'verde', 4.5],
-    ['creme-no-verde', 'verde-fundo', 4.5], ['creme', 'verde-fundo', 4.5], ['creme', 'tinta', 4.5], ['erro', 'branco', 4.5], ['tinta', 'marcador', 4.5],
-    ['linha-campo', 'branco', 3], ['linha-campo', 'creme', 3],
+    // o texto no creme da página, no branco dos campos e no rosa (capa, pastilhas, cartões)
+    ['tinta', 'creme', 4.5], ['tinta', 'branco', 4.5], ['tinta', 'rosa', 4.5], ['tinta', 'marcador', 4.5],
+    ['tinta-2', 'creme', 4.5], ['tinta-2', 'branco', 4.5], ['tinta-2', 'rosa', 4.5],
+    // o chocolate (títulos, botões, preços) nos mesmos fundos, e o creme em cima dele (botões, o Natal)
+    ['acento', 'creme', 4.5], ['acento', 'branco', 4.5], ['acento', 'rosa', 4.5], ['acento', 'rosa-escuro', 4.5], ['acento', 'rosa-claro', 4.5],
+    ['creme', 'acento', 4.5], ['creme', 'acento-escuro', 4.5], ['creme-no-acento', 'acento', 4.5],
+    // o verde do logótipo: os ícones do cabeçalho no creme, e o creme no rodapé
+    ['verde', 'creme', 4.5], ['creme', 'verde', 4.5], ['creme', 'verde-fundo', 4.5], ['creme-no-verde', 'verde-fundo', 4.5],
+    ['erro', 'branco', 4.5], ['linha-campo', 'branco', 3], ['linha-campo', 'creme', 3],
   ];
   const falham = [];
   for (const [a, b, min] of PARES) {
@@ -192,6 +197,9 @@ const manifesto = JSON.parse(fs.readFileSync(path.join(RAIZ, '.cache/imagens/man
 const semVersoes = Object.keys(fotos).filter((f) => dadosRegras.ficheirosFotos.includes(f) && !manifesto.fotos[f]);
 if (semVersoes.length) parar('A publicação parou: faltam as versões web de fotografias.', semVersoes.map((f) => `Fotografias: «${f}» não tem as versões web (scripts/imagens.py)`), { tecnico: true });
 if (!manifesto.logo) parar('A publicação parou: falta o logótipo.', ['Gerador: media/marca/logo.png não tem as versões pequenas (scripts/imagens.py)'], { tecnico: true });
+// as peças do logótipo sem a bola (o cabeçalho, o menu e o rodapé)
+const semPecas = ['logo-cabecalho', 'logo-nome', 'logo-rodape'].filter((p) => !manifesto.marca || !manifesto.marca[p]);
+if (semPecas.length) parar('A publicação parou: falta uma peça do logótipo.', semPecas.map((p) => `Gerador: media/marca/${p}.png não tem as versões (scripts/logo-sem-circulo.py e scripts/imagens.py)`), { tecnico: true });
 
 // ---------------------------------------------------------------- saída
 fs.rmSync(SAIDA, { recursive: true, force: true });

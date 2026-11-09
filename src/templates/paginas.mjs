@@ -68,7 +68,7 @@ export function inicio(ctx) {
         <div class="capa__texto">
           ${i === 0 ? `<h1 class="capa__titulo">${esc(d.titulo)}</h1>` : `<p class="capa__titulo">${esc(d.titulo)}</p>`}
           ${d.texto ? `<p class="capa__sub">${esc(d.texto)}</p>` : ''}
-          ${botao(ctx.url(ligacaoQueExiste(ctx, d.ligacao)), d.botao, { classe: 'botao botao--creme' })}
+          ${botao(ctx.url(ligacaoQueExiste(ctx, d.ligacao)), d.botao, { classe: 'botao botao--verde' })}
         </div>
       </div>`).join('\n      ')}
     </div>

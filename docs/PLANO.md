@@ -26,6 +26,15 @@ diz «dúvida».
   (`~/Websites/dreamart-propostas/a/`, com as capturas), que é a fonte da verdade do aspeto:
   - as cores do logótipo: verde #556045 (fundos fortes, títulos, botões), creme #F6F2E8 (o papel) e dourado
     #C8B07C só no arco fino;
+  - **9 nov 2026, «sem vida e sem cor» (o Renato, com as capas dos destaques do Instagram):** o rosa
+    (#E9CFC2) e o chocolate (#533D27) das histórias entram no site: a capa rosa, os títulos, os botões e
+    os preços em chocolate, as pastilhas e os cartões em rosa, o Natal em chocolate; o verde do logótipo
+    fica no logótipo, nos ícones do cabeçalho e no rodapé. O logótipo sem a bola verde
+    (`scripts/logo-sem-circulo.py`, a partir do logótipo quadrado da cliente: tira-se só o verde): no
+    cabeçalho claro, o nome com as flores a verde (escolhido por ele entre as provas, com o creme trocado
+    pelo verde); no telemóvel e no cabeçalho encolhido, só o nome; no rodapé verde, o desenho inteiro. As
+    secções da página inicial em monogramas, como as capas das histórias (a letra em Bodoni Moda, a
+    palavra em Ms Madi; «monograma» em content/categorias.json);
   - EB Garamond (600) nos títulos e Mulish no texto, servidas pelo próprio site (escolhidas pelo Renato a
     9 nov 2026 entre as provas; antes, Gilda Display e Montserrat). A Cormorant Garamond ficou de fora: é a
     letra dos títulos da Mimices;

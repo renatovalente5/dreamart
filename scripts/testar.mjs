@@ -32,6 +32,7 @@ import { fileURLToPath } from 'node:url';
 import * as R from '../src/lib/regras.mjs';
 import { esc, euros, hojeEmLisboa, numeroWhatsApp } from '../src/templates/util.mjs';
 import { NOMES_ICONES } from '../src/templates/icones.mjs';
+import { monogramaDe } from '../src/templates/componentes.mjs';
 
 const RAIZ = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const NO_CI = process.env.GITHUB_ACTIONS === 'true';
@@ -337,6 +338,25 @@ await teste('o preço no browser é a regra das regras (precoDe), e todos os scr
   }
   assert.match(lerRaiz('src/scripts/carrinho.js'), /const \{[^}]*\bprecoDe\b[^}]*\} = window\.DA;/);
 });
+await teste('o monograma de uma categoria (o círculo da página inicial): uma letra maiúscula, uma palavra curta e o fundo chocolate opcional; o resto pára ou avisa', () => {
+  const base = JSON.parse(lerRaiz('content/categorias.json'));
+  const slug = base[0].slug;
+  const problemas = (mo) => R.problemasDasCategorias(JSON.stringify(base.map((c, i) => (i === 0 ? { ...c, monograma: mo } : c))))
+    .filter((p) => p.chave.startsWith(`categorias:${slug}.monograma`)).map((p) => `${p.classe} ${p.chave.split(':').slice(1).join(':')}`);
+  assert.deepEqual(problemas({ letra: 'L', palavra: 'lembranças' }), []);
+  assert.deepEqual(problemas({ letra: 'Ç', palavra: 'natal', escuro: true }), []);
+  assert.deepEqual(problemas(undefined), [], 'sem monograma: vale a primeira letra e o nome');
+  assert.deepEqual(problemas({ letra: 'l' }), [`bloqueia ${slug}.monograma.letra`]);
+  assert.deepEqual(problemas({ letra: 'LM' }), [`bloqueia ${slug}.monograma.letra`]);
+  assert.deepEqual(problemas({ palavra: 'uma palavra comprida' }), [`avisa ${slug}.monograma.palavra:tamanho`]);
+  assert.deepEqual(problemas({ palavra: 'na\u0007tal' }), [`bloqueia ${slug}.monograma.palavra`], 'um carácter de controlo');
+  assert.deepEqual(problemas({ palavra: 'a<b' }), [], 'o «<» escapa-se ao escrever a página');
+  assert.deepEqual(problemas({ escuro: 'sim' }), [`bloqueia ${slug}.monograma.escuro`]);
+  assert.deepEqual(problemas('L'), [`bloqueia ${slug}.monograma:forma`]);
+  // sem o monograma escrito, o site usa a primeira letra do nome do menu e o nome em minúsculas
+  assert.deepEqual(monogramaDe({ nome: 'Livros de honra', nomeMenu: 'Livros' }), { letra: 'L', palavra: 'livros', escuro: false });
+  assert.deepEqual(monogramaDe({ nome: 'Coleções', monograma: { letra: 'N', palavra: 'natal', escuro: true } }), { letra: 'N', palavra: 'natal', escuro: true });
+});
 await teste('o browser escreve os euros como o gerador («3,80 €», «1 234,50 €»)', () => {
   const DA = nucleoNoVm();
   for (const v of [0, 0.5, 1.3, 2.2, 3.8, 9.99, 10, 76, 120, 1234.5, 99999.99]) assert.equal(DA.euros(v), euros(v), String(v));
@@ -587,6 +607,22 @@ await construcao('a loja e cada separador: as pastilhas em cima e, por baixo, o 
     assert.equal((painel.match(/<li class="artigo">/g) || []).length, c ? pub.filter((p) => p.categoria === c.slug).length : pub.length, `${rel}: os artigos`);
     assert.match(main, new RegExp(`<a href="/dreamart/loja/${c ? `${c.slug}/` : ''}" aria-current="page">`), `${rel}: a pastilha do separador não está marcada`);
   }
+});
+await construcao('a página inicial: os separadores em monogramas (a letra e a palavra de categorias.json, o Natal no chocolate); o logótipo sem a bola no cabeçalho, no menu e no rodapé', () => {
+  const { pasta } = construida('agora');
+  const index = lerSaida(pasta, 'index.html');
+  const pub = publicados(pasta);
+  for (const c of JSON.parse(ler(pasta, 'content/categorias.json')).filter((k) => pub.some((p) => p.categoria === k.slug))) {
+    const m = new RegExp(`<a class="circulo__ligacao" href="/dreamart/loja/${c.slug}/">\\s*<span class="medalhao"><span class="monograma( monograma--escuro)?" aria-hidden="true"><span class="monograma__letra">([^<]+)</span><span class="monograma__palavra">([^<]+)</span>`).exec(index);
+    assert.ok(m, `o círculo de ${c.slug} não tem o monograma`);
+    const esperado = monogramaDe(c);
+    assert.deepEqual([Boolean(m[1]), m[2], m[3]], [esperado.escuro, esc(esperado.letra), esc(esperado.palavra)], c.slug);
+  }
+  // as peças do logótipo (scripts/logo-sem-circulo.py): a do nome leva o alt (a das flores é a mesma marca)
+  assert.match(index, /<a class="topo__logo" href="\/dreamart\/" aria-current="page"><img class="topo__logo-flores" src="\/dreamart\/assets\/img\/logo-cabecalho-[0-9a-f]{10}-\d+\.webp"[^>]* alt=""[^>]*><img class="topo__logo-nome" src="\/dreamart\/assets\/img\/logo-nome-[0-9a-f]{10}-\d+\.webp"[^>]* alt="Dream Art, Lembranças e Eventos — página inicial"/);
+  assert.match(index, /<img class="gaveta__logo" src="\/dreamart\/assets\/img\/logo-nome-/);
+  assert.match(index, /<a class="rodape__logo" href="\/dreamart\/"><img src="\/dreamart\/assets\/img\/logo-rodape-[0-9a-f]{10}-\d+\.webp"[^>]* alt="Dream Art — página inicial"/);
+  for (const peca of ['logo-cabecalho', 'logo-nome', 'logo-rodape']) assert.ok(fs.readdirSync(path.join(pasta, '_site/assets/img')).some((f) => f.startsWith(`${peca}-`)), `falta ${peca} em assets/img`);
 });
 await construcao('o catálogo da encomenda leva, de cada artigo publicado, o preço, as escolhas, a personalização e o mínimo; e as zonas e os portes; a ficha mostra o preço da regra', () => {
   const { pasta } = construida('agora');

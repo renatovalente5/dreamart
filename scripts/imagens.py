@@ -8,6 +8,7 @@ Lê:
   media/capa/*.jpg         as imagens paradas do filme da capa (o primeiro fotograma de cada corte,
                            feitas pelo scripts/filme.py)
   media/marca/logo.png     o logótipo, com transparência (o círculo da Dream Art, com o fundo cinzento tirado)
+  media/marca/logo-*.png   as peças do logótipo sem a bola (scripts/logo-sem-circulo.py): cabeçalho, nome, rodapé
   content/produtos/*.json  para saber a primeira fotografia de cada artigo (o cartão de partilha)
 
 Escreve em .cache/imagens/ (fica entre publicações; cada ficheiro leva no nome um resumo do
@@ -146,6 +147,35 @@ def cartao_logotipo(logo):
     return os.path.basename(destino)
 
 
+PECAS_DA_MARCA = {
+    # media/marca/<nome>.png (do scripts/logo-sem-circulo.py): as alturas em px que o site pede (1x, 2x, 3x)
+    'logo-cabecalho': (92, 184, 276),   # o nome com as flores, a verde: o cabeçalho no computador
+    'logo-nome': (34, 68, 102),         # só o nome, a verde: o cabeçalho no telemóvel e encolhido, o menu
+    'logo-rodape': (128, 256, 384),     # o desenho inteiro, creme e dourado: o rodapé verde
+}
+
+
+def pecas_da_marca():
+    """As peças do logótipo sem a bola, em PNG e WebP, às alturas de PECAS_DA_MARCA (as que existem)."""
+    saida = {}
+    for nome, alturas in PECAS_DA_MARCA.items():
+        origem = os.path.join(MARCA, f'{nome}.png')
+        if not os.path.exists(origem):
+            continue
+        h = resumo(origem, extra=nome)
+        peca = Image.open(origem).convert('RGBA')
+        d = {'w': peca.width, 'h': peca.height, 'altura': {}}
+        for alto in alturas:
+            alto = min(alto, peca.height)
+            largo = round(peca.width * alto / peca.height)
+            r = peca.resize((largo, alto), Image.LANCZOS)
+            for fmt in ('webp', 'png'):
+                guardar(r, os.path.join(CACHE, f'{nome}-{h}-{alto}.{fmt}'), fmt)
+            d['altura'][alto] = {'largura': largo, 'webp': f'{nome}-{h}-{alto}.webp', 'png': f'{nome}-{h}-{alto}.png'}
+        saida[nome] = d
+    return saida
+
+
 def logotipo(logo):
     """O logótipo em PNG e WebP a 64/128/192/256 px de altura, e os ícones da aba e do ecrã inicial."""
     h = resumo(logo, extra='logo')
@@ -219,7 +249,7 @@ def principal():
         print('fotografias conferidas:', len(json.load(open(INDICE, encoding='utf-8'))))
         return
     os.makedirs(CACHE, exist_ok=True)
-    manifesto = {'fotos': {}, 'posters': {}, 'capa': {}, 'partilha': {}, 'logo': None}
+    manifesto = {'fotos': {}, 'posters': {}, 'capa': {}, 'partilha': {}, 'logo': None, 'marca': {}}
     origens = {}
     for f in sorted(os.listdir(FOTOS)):
         nome, ext = os.path.splitext(f)
@@ -246,6 +276,7 @@ def principal():
     if os.path.exists(logo):
         manifesto['logo'] = logotipo(logo)
         manifesto['partilha']['_site'] = cartao_logotipo(logo)
+    manifesto['marca'] = pecas_da_marca()
     # tira da cache o que já não é de nenhuma versão actual (fotografias trocadas ou apagadas)
     vivos = set()
     for grupo in ('fotos', 'posters', 'capa'):
@@ -259,6 +290,9 @@ def principal():
             vivos.update([f, f + '.resumo'])
     if manifesto['logo']:
         for d in manifesto['logo']['altura'].values():
+            vivos.update([d['webp'], d['png']])
+    for peca in manifesto['marca'].values():
+        for d in peca['altura'].values():
             vivos.update([d['webp'], d['png']])
         vivos.update(manifesto['logo']['icones'].values())
     for f in os.listdir(CACHE):
