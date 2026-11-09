@@ -3,27 +3,60 @@
     "titulo": "Dream Art — Lembranças e convites personalizados para batizados, casamentos e comunhões",
     "descricao": "Lembranças, convites, conjuntos de batizado e livros de honra personalizados, feitos à mão em Rio Tinto (Gondomar). Escolha no site e encomende pelo WhatsApp. Envios para todo o país, ilhas e Europa."
   },
-  "capa": {
-    "titulo": "Mais do que criar peças, criamos memórias.",
-    "botao": "Ver as lembranças",
-    "ligacao": "/loja/lembrancas/",
-    "filme": false,
-    "foto": "vela-aromatica-personalizada"
+  "capa": [
+    {
+      "aba": "Lembranças",
+      "titulo": "Mais do que criar peças, criamos memórias.",
+      "texto": "Lembranças personalizadas, feitas à mão.",
+      "botao": "Ver as lembranças",
+      "ligacao": "/loja/lembrancas/",
+      "foto": "vela-tulipa"
+    },
+    {
+      "aba": "Natal",
+      "titulo": "Natal 2026",
+      "texto": "Presentes com a sua mensagem, feitos à mão para este Natal.",
+      "botao": "Conhecer a coleção",
+      "ligacao": "/loja/colecoes/",
+      "foto": "vela-floco-de-neve-e-iman"
+    },
+    {
+      "aba": "Batizado",
+      "titulo": "Conjuntos de batizado",
+      "texto": "Em linho, com o nome e a data bordados.",
+      "botao": "Conhecer os conjuntos",
+      "ligacao": "/loja/conjuntos-de-batizado/",
+      "foto": "conjunto-de-batizado-bege"
+    }
+  ],
+  "separadores": {
+    "titulo": "O que criamos",
+    "texto": ""
   },
   "destaque": {
+    "etiqueta": "Coleção",
     "titulo": "Natal 2026",
+    "texto": "Presentes com a sua mensagem, feitos à mão para este Natal.",
     "categoria": "colecoes",
-    "botao": "Ver a coleção de Natal"
-  },
-  "apresentacao": {
-    "titulo": "Um sonho de família",
-    "texto": "A Dream Art nasceu em 2018, de um sonho familiar que ganhou vida com a criação de sabonetes perfumados. Desde então, a família cresceu e, com ela, este projeto.\n\nCada peça é feita à mão, uma a uma, com amor e atenção a cada detalhe, para eternizar os vossos momentos especiais.",
-    "assinatura": "",
-    "foto": "caixa-de-batizado-em-linho"
+    "botao": "Ver a coleção"
   },
   "lembrancas": {
     "titulo": "Lembranças",
+    "texto": "Para batizados, casamentos, comunhões e aniversários, com os nomes e a data.",
     "categoria": "lembrancas",
     "botao": "Ver todas as lembranças"
-  }
+  },
+  "apresentacao": {
+    "etiqueta": "Desde 2018",
+    "titulo": "Um sonho de família",
+    "texto": "A Dream Art nasceu de um sonho familiar e de sabonetes perfumados. Hoje, cada peça continua a ser feita à mão, uma a uma, com amor e atenção a cada detalhe.",
+    "botao": "Conhecer a nossa história",
+    "foto": "vela-coracao"
+  },
+  "confianca": [
+    { "icone": "mao", "texto": "Feito à mão" },
+    { "icone": "etiqueta", "texto": "Personalizado com nomes e datas" },
+    { "icone": "caixa", "texto": "Envios para todo o país, ilhas e Europa" },
+    { "icone": "mensagem", "texto": "Encomenda pelo WhatsApp" }
+  ]
 }

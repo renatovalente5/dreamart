@@ -138,7 +138,7 @@ export const TAMANHOS = Object.freeze({
   empresaNome: 160, empresaTipo: 80, nif: 20, morada: 160, codigoPostal: 12, localidade: 60, concelho: 60, iva: 200,
   avisoTexto: 140, ligacao: 200, prazo: 400, pagamento: 400, levantamento: 300,
   catNome: 40, catTitulo: 80, catResumo: 2000,
-  inicioCurto: 60, inicioTitulo: 120, inicioTexto: 600, inicioLongo: 1200,
+  inicioAba: 24, inicioCurto: 60, inicioTitulo: 120, inicioTexto: 600, inicioLongo: 1200,
 });
 /* O que o Worker do painel aceita gravar (recusa acima); aqui só se lembra, a
    partir de 80 %. */
@@ -742,18 +742,25 @@ export function problemasDasCategorias(valor, { fotos = null } = {}) {
 /* content/inicio.json                                                 */
 /* ------------------------------------------------------------------ */
 
-/* As secções da página inicial, pela ordem da página (vem da Mimices: «poucas secções, às vezes
-   simples é mais»): a capa, um destaque (na Dream Art, a coleção de Natal), a apresentação («Sobre
-   nós») e as lembranças. As que mostram artigos apontam para uma categoria. As categorias, em
-   cartões com fotografia, vêm de content/categorias.json (as que têm artigos). */
-export const SECCOES_INICIO = Object.freeze(['seo', 'capa', 'destaque', 'apresentacao', 'lembrancas']);
+/* As secções da página inicial, pela ordem da página (a proposta A, «Verde da marca», escolhida pelo
+   Renato a 9 nov 2026): a CAPA que roda as coleções (cada diapositivo com o nome da aba, o título, uma
+   frase, o botão e a fotografia num medalhão; o título do primeiro é o h1 da página), os separadores
+   («O que criamos»: os cartões redondos vêm de content/categorias.json, os que têm artigos), o
+   destaque (na Dream Art, a coleção de Natal), as lembranças, a apresentação («Um sonho de família»)
+   e a faixa de confiança (quatro frases curtas com ícone). As que mostram artigos apontam para uma
+   categoria. */
+export const SECCOES_INICIO = Object.freeze(['seo', 'capa', 'separadores', 'destaque', 'lembrancas', 'apresentacao', 'confianca']);
+/* A capa: de 1 a 4 diapositivos. A faixa de confiança: de 0 a 4 frases. */
+export const LIMITES_INICIO = Object.freeze({ diapositivos: [1, 4], confianca: [0, 4] });
+export const CAMPOS_DIAPOSITIVO = Object.freeze(['aba', 'titulo', 'texto', 'botao', 'ligacao', 'foto']);
 
-/* As fotografias que a página inicial usa (para saber se uma se pode apagar). A da capa é a que
-   aparece com o filme desligado. */
+/* As fotografias que a página inicial usa (para saber se uma se pode apagar): as dos diapositivos da
+   capa e a da apresentação. */
 export function fotosDoInicio(h) {
   if (!eObjecto(h)) return [];
   const out = [];
-  for (const k of ['capa', 'apresentacao']) if (eObjecto(h[k])) out.push(h[k].foto);
+  if (Array.isArray(h.capa)) for (const d of h.capa) if (eObjecto(d)) out.push(d.foto);
+  if (eObjecto(h.apresentacao)) out.push(h.apresentacao.foto);
   return out.filter((x) => typeof x === 'string');
 }
 
@@ -766,20 +773,11 @@ export function problemasDoInicio(valor, { fotos = null, categorias = null } = {
   const l = lerJson(valor);
   if (l.ilegivel || !eObjecto(l.obj)) { bloqueia('forma', undefined, 'A página inicial não se consegue ler. Só o Renato a pode corrigir.'); return out; }
   const h = l.obj;
-  const seccao = (k) => (eObjecto(h[k]) ? h[k] : null);
   for (const k of SECCOES_INICIO) {
-    if (!seccao(k)) bloqueia(`${k}:forma`, k, `A secção «${k}» da página inicial não está gravada. Só o Renato a pode repor.`);
+    const listas = k === 'capa' || k === 'confianca';
+    if (listas ? !Array.isArray(h[k]) : !eObjecto(h[k])) bloqueia(`${k}:forma`, k, `A secção «${k}» da página inicial não está gravada. Só o Renato a pode repor.`);
   }
   if (out.length) return out;
-  /* Os textos todos: obrigatórios onde o gerador os escreve sem perguntar. Poucos e curtos: a
-     capa diz uma frase e um botão (como a do ithos). */
-  const textos = [
-    ['seo.titulo', TAMANHOS.inicioTitulo, true], ['seo.descricao', TAMANHOS.inicioTexto, true],
-    ['capa.titulo', TAMANHOS.inicioTitulo, true], ['capa.botao', TAMANHOS.inicioCurto, true],
-    ['destaque.titulo', TAMANHOS.inicioTitulo, true], ['destaque.botao', TAMANHOS.inicioCurto, true],
-    ['apresentacao.titulo', TAMANHOS.inicioTitulo, true], ['apresentacao.texto', TAMANHOS.inicioLongo, true], ['apresentacao.assinatura', TAMANHOS.inicioCurto, false],
-    ['lembrancas.titulo', TAMANHOS.inicioTitulo, true], ['lembrancas.botao', TAMANHOS.inicioCurto, true],
-  ];
   const valorEm = (caminho) => caminho.split('.').reduce((o, k) => (eObjecto(o) || Array.isArray(o) ? o[k] : undefined), h);
   const umTexto = (caminho, max, obrigatorio) => {
     const v = valorEm(caminho);
@@ -790,25 +788,55 @@ export function problemasDoInicio(valor, { fotos = null, categorias = null } = {
     const m = v.match(RE_ALEGACOES);
     if (m) bloqueia(`${caminho}:alegacao`, caminho, `«${m[0]}» é uma palavra que a lei só deixa usar com prova (ou uma certificação que não temos). Tire-a.`);
   };
+  const umaLigacao = (caminho) => {
+    const v = valorEm(caminho);
+    if (!vazio(v) && (typeof v !== 'string' || !/^\/[a-z0-9/-]*$/.test(v))) avisa(`${caminho}`, caminho, 'A ligação do botão tem de ser uma página do site (ex.: /loja/lembrancas/).');
+  };
+  const umaFoto = (caminho, f) => {
+    if (!nomeDeFotoValido(f) || (fotos && !fotos.has(f))) bloqueia(`${caminho}:foto`, caminho, 'Esta fotografia já não está na biblioteca: escolha outra.');
+  };
+  // --- a capa: os diapositivos -------------------------------------------------------------
+  const [minD, maxD] = LIMITES_INICIO.diapositivos;
+  if (h.capa.length < minD) bloqueia('capa:vazia', 'capa', 'A capa precisa de pelo menos um diapositivo.');
+  if (h.capa.length > maxD) avisa('capa:muitos', 'capa', `A capa tem ${h.capa.length} diapositivos; o máximo é ${maxD} (os outros não aparecem).`);
+  h.capa.forEach((d, i) => {
+    if (!eObjecto(d)) { bloqueia(`capa.${i}:forma`, `capa.${i}`, `O diapositivo ${i + 1} da capa não está gravado como deve ser.`); return; }
+    umTexto(`capa.${i}.aba`, TAMANHOS.inicioAba, true);
+    umTexto(`capa.${i}.titulo`, TAMANHOS.inicioTitulo, true);
+    umTexto(`capa.${i}.texto`, TAMANHOS.inicioTexto, false);
+    umTexto(`capa.${i}.botao`, TAMANHOS.inicioCurto, true);
+    if (vazio(d.ligacao)) bloqueia(`capa.${i}.ligacao:vazio`, `capa.${i}.ligacao`, 'Falta a página para onde o botão leva.');
+    else umaLigacao(`capa.${i}.ligacao`);
+    umaFoto(`capa.${i}.foto`, d.foto);
+  });
+  // --- as outras secções ---------------------------------------------------------------------
+  const textos = [
+    ['seo.titulo', TAMANHOS.inicioTitulo, true], ['seo.descricao', TAMANHOS.inicioTexto, true],
+    ['separadores.titulo', TAMANHOS.inicioTitulo, true], ['separadores.texto', TAMANHOS.inicioTexto, false],
+    ['destaque.etiqueta', TAMANHOS.inicioCurto, false], ['destaque.titulo', TAMANHOS.inicioTitulo, true], ['destaque.texto', TAMANHOS.inicioTexto, false], ['destaque.botao', TAMANHOS.inicioCurto, true],
+    ['lembrancas.titulo', TAMANHOS.inicioTitulo, true], ['lembrancas.texto', TAMANHOS.inicioTexto, false], ['lembrancas.botao', TAMANHOS.inicioCurto, true],
+    ['apresentacao.etiqueta', TAMANHOS.inicioCurto, false], ['apresentacao.titulo', TAMANHOS.inicioTitulo, true], ['apresentacao.texto', TAMANHOS.inicioLongo, true], ['apresentacao.botao', TAMANHOS.inicioCurto, true],
+  ];
   for (const [c, max, ob] of textos) umTexto(c, max, ob);
-  if (!vazio(h.capa.ligacao) && (typeof h.capa.ligacao !== 'string' || !/^\/[a-z0-9/-]*$/.test(h.capa.ligacao))) avisa('capa.ligacao', 'capa.ligacao', 'A ligação do botão tem de ser uma página do site (ex.: /loja/).');
-  /* O filme da capa (media/capa/, feito pelo scripts/filme.py): ligado ou desligado. Desligado, a
-     capa mostra a fotografia. */
-  if (!vazio(h.capa.filme) && typeof h.capa.filme !== 'boolean') bloqueia('capa.filme:tipo', 'capa.filme', 'O «filme na capa» tem de estar ligado ou desligado.');
   /* As categorias que as secções mostram. Uma que já não existe deixa a secção de fora (o gerador
      não a escreve). */
   for (const k of ['destaque', 'lembrancas']) {
     const cat = h[k].categoria;
     if (vazio(cat) || (categorias && !categorias.includes(cat))) avisa(`${k}.categoria`, `${k}.categoria`, `A secção «${h[k].titulo || k}» aponta para uma categoria que não existe: não aparece na página inicial.`, { lembrete: true });
   }
-  /* As fotografias. */
-  const umaFoto = (caminho, f) => {
-    if (!nomeDeFotoValido(f) || (fotos && !fotos.has(f))) bloqueia(`${caminho}:foto`, caminho, 'Esta fotografia já não está na biblioteca: escolha outra.');
-  };
-  umaFoto('capa.foto', h.capa.foto);
   umaFoto('apresentacao.foto', h.apresentacao.foto);
+  // --- a faixa de confiança: até quatro frases curtas -------------------------------------------
+  const [, maxC] = LIMITES_INICIO.confianca;
+  if (h.confianca.length > maxC) avisa('confianca:muitas', 'confianca', `A faixa de confiança tem ${h.confianca.length} frases; o máximo é ${maxC} (as outras não aparecem).`);
+  h.confianca.forEach((f, i) => {
+    if (!eObjecto(f)) { bloqueia(`confianca.${i}:forma`, `confianca.${i}`, `A frase ${i + 1} da faixa de confiança não está gravada como deve ser.`); return; }
+    umTexto(`confianca.${i}.texto`, TAMANHOS.inicioCurto, true);
+    if (!vazio(f.icone) && !ICONES_CONFIANCA.includes(f.icone)) avisa(`confianca.${i}.icone`, `confianca.${i}.icone`, 'Este ícone não existe: escolha um da lista.');
+  });
   return out;
 }
+/* Os ícones que a faixa de confiança sabe desenhar (o gerador tem um desenho para cada um). */
+export const ICONES_CONFIANCA = Object.freeze(['mao', 'etiqueta', 'caixa', 'mensagem', 'coracao', 'estrela', 'presente', 'flor']);
 
 /* ------------------------------------------------------------------ */
 /* content/fotos.json                                                  */

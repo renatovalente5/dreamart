@@ -35,7 +35,8 @@ function imagemDaCapa(ctx, f, alt) {
 }
 
 export function inicio(ctx) {
-  const h = ctx.inicio;
+  // (provisório, até ao desenho novo: a capa passou a uma lista de diapositivos; aqui só o primeiro)
+  const h = { ...ctx.inicio, capa: Array.isArray(ctx.inicio.capa) ? ctx.inicio.capa[0] : ctx.inicio.capa };
   const f = ctx.ficheiros.filme;
   const altCapa = ctx.fotos[h.capa.foto]?.alt || '';
   const fundo = f
