@@ -1,15 +1,18 @@
 titulo: Política de cookies
-descricao: Este site não usa cookies, nem de publicidade nem de estatística. Só guarda o carrinho no seu browser, para não se perder.
-atualizado: 2026-10-16
+descricao: Este site não usa cookies nem estatísticas. Só guarda no seu browser a encomenda que está a preparar e os favoritos, para não se perderem.
+atualizado: 2026-11-09
 ---
 **Este site não usa cookies** — nem de publicidade, nem de estatística, nem de redes sociais. Por isso não lhe pedimos autorização.
 
 ## O que fica guardado no seu browser
 
-Só uma coisa: **o carrinho** (as peças que escolheu, as quantidades, a personalização e a entrega e, depois de abrir o WhatsApp com a encomenda, o dia e a hora em que o abriu), no armazenamento local do browser, com o nome «dreamart:carrinho». Serve para o carrinho não se perder se fechar a página, e para a página lhe mostrar que a encomenda já seguiu quando volta. É estritamente necessário para o serviço que pediu, não sai do seu aparelho e não nos é enviado.
+Duas coisas, no armazenamento local do browser, só para o site fazer o que lhe pede:
 
-Apaga-se ao esvaziar o carrinho, ou a qualquer momento nas definições do browser (limpar os dados deste site).
+- **A encomenda** («dreamart:carrinho»): as peças, as quantidades, a personalização e a entrega e, depois de abrir o WhatsApp com a encomenda, o dia e a hora em que o abriu. Assim, a encomenda não se perde se fechar a página e, quando volta, o site mostra-lhe que já a enviou.
+- **Os favoritos** («dreamart:favoritos»): as peças que marcou com o coração.
+
+O nome, a morada e as observações não ficam guardados. Nada disto sai do seu aparelho nem nos é enviado. Apaga-se quando esvazia a encomenda ou tira os favoritos, ou a qualquer momento nas definições do browser (limpar os dados deste site).
 
 ## Conteúdo de outros sites
 
-O site não carrega nada de terceiros: as letras e as imagens são servidas a partir do próprio site, e as ligações para o Instagram, o Facebook e o WhatsApp só abrem esses sites quando carrega nelas.
+O site não carrega nada de terceiros: as letras e as imagens vêm do próprio site, e as ligações para o Instagram, o Facebook e o WhatsApp só abrem esses sites quando carrega nelas.

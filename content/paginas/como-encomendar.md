@@ -1,40 +1,34 @@
 titulo: Como encomendar
-descricao: Escolha as peças, escreva os nomes e a data, e envie a encomenda pelo WhatsApp. Confirmamos consigo o total, o prazo e o pagamento.
-subtitulo: Do carrinho ao WhatsApp, em quatro passos.
+descricao: Escolha as peças, escreva os nomes e a data e carregue em «Encomendar pelo WhatsApp». Confirmamos consigo o total, o prazo e o pagamento.
+subtitulo: Da escolha ao WhatsApp, em quatro passos.
 modelo: passos
 ---
-Não há pagamentos no site: a encomenda segue para nós pelo WhatsApp e combinamos o resto consigo.
+Não há pagamentos no site: a encomenda segue para nós pelo WhatsApp.
 
-## 1. Escolha e personalize
+## 1. Junte à encomenda
 
-Junte à encomenda as peças que quer e a quantidade de cada uma. Em cada peça, escreva os nomes e a data como quer que fiquem, com os acentos e as maiúsculas.
-
-Se tiver uma ideia diferente (outra cor, outro pormenor), escreva-a nas observações: combinamos consigo.
+Escolha as peças e a quantidade de cada uma. Escreva os nomes e a data como quer que fiquem, com os acentos e as maiúsculas.
 
 ## 2. Escolha a entrega
 
-Na encomenda, escolha como quer receber: levantamento ou envio. Os portes são por encomenda, não por peça:
+Enviamos para todo o país, ilhas incluídas, e para a Europa.
 
-{{portes}}
+## 3. Encomende pelo WhatsApp
 
-## 3. Envie pelo WhatsApp
-
-Escreva o seu nome e, se for envio, a morada. Ao carregar em «Enviar encomenda pelo WhatsApp», abre-se o WhatsApp com a mensagem já escrita: as peças, as quantidades, os nomes e as datas, a entrega e o total. Só tem de a enviar.
+Escreva o seu nome e, se for envio, a morada, e carregue em «Encomendar pelo WhatsApp». A mensagem abre já escrita, com as peças, os nomes, a entrega e o total: só tem de a enviar.
 
 ## 4. Confirmamos consigo
 
-Respondemos com o total, o prazo e os dados para o pagamento. A encomenda fica feita quando a confirmarmos consigo.
+Respondemos com o resumo: as peças como as vamos fazer, o total, o prazo e o pagamento. A encomenda fica feita quando nos responder a confirmar.
+
+## Entrega
+
+Os portes são por encomenda, não por peça. {{portes}}
 
 ## Pagamento
 
 {{pagamento}}
 
-## Prazos
+## Prazo
 
-{{prazo}}
-
-Cada peça é feita à mão, para o seu dia: quanto mais cedo nos disser a data da celebração, melhor.
-
-## Levantamento
-
-{{levantamento}}
+{{prazo}} Quanto mais cedo nos disser a data da celebração, melhor.
