@@ -38,7 +38,10 @@ diz «dúvida».
     brancas das lembranças, da coleção e da confiança), com um só espaço entre secções; só os cartões da
     coleção, no bloco verde, mantêm o creme à volta. E por fim as páginas de texto e os Contactos: sem a faixa
     branca por baixo da cabeça; os cartões das notas, o cabeçalho dos quadros e os círculos dos ícones (que
-    eram creme sobre o branco) passaram ao salva. O branco fica só nos campos e nos cartões da encomenda.
+    eram creme sobre o branco) passaram ao salva. Depois, também a encomenda: as peças separadas por riscas e o formulário no creme, sem os cartões
+    brancos (o branco fica só nos campos). E a data da celebração passou a um campo de texto «dd/mm/aaaa»
+    (o `<input type="date">` mostrava «mm/dd/yyyy» no Chrome em inglês e, no Safari, o dia de hoje a
+    cinzento), com o calendário do sistema por cima do ícone; guarda-se aaaa-mm-dd como antes.
 
   Nada pode voltar a ter o aspeto, as cores ou a arrumação da Mimices.
 - **Da base da Mimices fica só o invisível**: o gerador em Node sem dependências (`scripts/build.mjs`), as

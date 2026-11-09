@@ -21,6 +21,7 @@ const S = {
   lixo: '<path d="M4.75 7h14.5M10 10.75v5.75M14 10.75v5.75M6.6 7l.85 11.55a1.8 1.8 0 0 0 1.8 1.7h5.5a1.8 1.8 0 0 0 1.8-1.7L17.4 7M9.25 7V5.4a1.6 1.6 0 0 1 1.6-1.6h2.3a1.6 1.6 0 0 1 1.6 1.6V7"/>',
   certo: '<path d="m5.5 12.5 4.25 4.25L18.5 8"/>',
   relogio: '<circle cx="12" cy="12" r="8.25"/><path d="M12 7.75V12l2.75 1.75"/>',
+  calendario: '<rect x="3.75" y="5.25" width="16.5" height="15" rx="2.5"/><path d="M3.75 9.75h16.5M8 3.25v4M16 3.25v4"/>',
   cartao: '<rect x="3.25" y="5.75" width="17.5" height="12.5" rx="2.5"/><path d="M3.25 9.75h17.5M7 14.75h3.5"/>',
   info: '<circle cx="12" cy="12" r="8.25"/><path d="M12 11v5M12 7.9v.1"/>',
   carta: '<rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="m3.5 7 8.5 6 8.5-6"/>',

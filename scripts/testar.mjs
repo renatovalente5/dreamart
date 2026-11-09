@@ -341,6 +341,18 @@ await teste('o browser escreve os euros como o gerador («3,80 €», «1 234,50
   const DA = nucleoNoVm();
   for (const v of [0, 0.5, 1.3, 2.2, 3.8, 9.99, 10, 76, 120, 1234.5, 99999.99]) assert.equal(DA.euros(v), euros(v), String(v));
 });
+await teste('a data da celebração lê-se como em Portugal (dia/mês/ano), e uma que não existe não passa', () => {
+  const DA = nucleoNoVm();
+  const casos = [
+    ['12/12/2026', '2026-12-12'], ['1/5/2026', '2026-05-01'], ['01-05-26', '2026-05-01'], [' 5.6.2027 ', '2027-06-05'],
+    ['12122026', '2026-12-12'], ['29/02/2028', '2028-02-29'],
+    ['31/02/2026', null], ['29/02/2027', null], ['12/13/2026', null], ['00/05/2026', null],
+    ['', ''], ['amanhã', ''], ['12/12', ''], ['2026-12-12', ''],
+  ];
+  for (const [texto, iso] of casos) assert.equal(DA.isoDe(texto), iso, JSON.stringify(texto));
+  assert.equal(DA.dataCurta('2026-05-01'), '01/05/2026');
+  assert.equal(DA.dataCurta(DA.isoDe('1/5/26')), '01/05/2026');
+});
 // (o build.mjs fica de fora: a guarda contra a frase, quando a tiver, há de citá-la na mensagem)
 await teste('o que escreve as páginas (os modelos e os scripts do browser) nunca diz «obrigação de pagar»', () => {
   const ficheiros = [...SCRIPTS.map((f) => `src/scripts/${f}`), ...fs.readdirSync(path.join(RAIZ, 'src/templates')).map((f) => `src/templates/${f}`)];
@@ -639,7 +651,9 @@ await construcao('os artigos de ensaio: a ficha e o catálogo com o preço da re
   const vela = lerSaida(pasta, 'produtos/ensaio-vela/index.html');
   assert.match(vela, /<form class="juntar" data-juntar-form="ensaio-vela" data-minimo="10" novalidate>/);
   assert.match(vela, /name="nome"[^>]*required/);
-  assert.match(vela, /name="data" type="date" required/);
+  // a data: um campo de texto dd/mm/aaaa (a data sai como em Portugal em qualquer browser) e o calendário do sistema por cima do ícone
+  assert.match(vela, /<div class="data" data-data><input id="pz-data-ensaio-vela" name="data" type="text" inputmode="numeric" placeholder="dd\/mm\/aaaa"[^>]* required><input class="data__calendario" type="date" tabindex="-1" aria-hidden="true">/);
+  assert.doesNotMatch(vela, /name="data" type="date"/);
 });
 await construcao('um artigo sem nome sai do site sem parar a construção, e o registo diz porquê; um escondido também sai; uma fotografia em falta só tira essa fotografia', () => {
   const r = construida('ensaio');

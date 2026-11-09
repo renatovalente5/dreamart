@@ -21,6 +21,20 @@
     const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso || '');
     return m ? `${Number(m[3])} de ${MESES[Number(m[2]) - 1]} de ${m[1]}` : '';
   };
+  /* A data escrita no campo da celebração, como em Portugal («12/12/2026», «1-5-26», «12122026»), em
+     «2026-12-12» (o que a encomenda guarda). '' se não se percebe; null se não existe (31/02). */
+  function isoDe(texto) {
+    const t = String(texto || '').trim();
+    const m = /^(\d{1,2})\s*[/.\-\s]\s*(\d{1,2})\s*[/.\-\s]\s*(\d{4}|\d{2})$/.exec(t) || /^(\d{2})(\d{2})(\d{4})$/.exec(t);
+    if (!m) return '';
+    const dia = Number(m[1]);
+    const mes = Number(m[2]);
+    const ano = m[3].length === 2 ? 2000 + Number(m[3]) : Number(m[3]);
+    const d = new Date(Date.UTC(ano, mes - 1, dia));
+    if (d.getUTCFullYear() !== ano || d.getUTCMonth() !== mes - 1 || d.getUTCDate() !== dia) return null;
+    return `${ano}-${String(mes).padStart(2, '0')}-${String(dia).padStart(2, '0')}`;
+  }
+  const dataCurta = (iso) => { const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso || ''); return m ? `${m[3]}/${m[2]}/${m[1]}` : ''; };
   /* Para procurar: sem acentos nem maiúsculas («Lembranças» = «lembrancas»). */
   const normalizar = (t) => String(t || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
   const ico = (nome, classe = '') => `<svg class="ico${nome === 'whatsapp' ? ' ico--cheio' : ''}${classe ? ` ${classe}` : ''}" aria-hidden="true" focusable="false"><use href="#i-${nome}"/></svg>`;
@@ -122,7 +136,7 @@
   }
 
   window.DA = {
-    $, $$, esc, euros, hojeLisboa, dataPorExtenso, normalizar, ico, menosMovimento, guardado, precoDe,
+    $, $$, esc, euros, hojeLisboa, dataPorExtenso, isoDe, dataCurta, normalizar, ico, menosMovimento, guardado, precoDe,
     catalogo, catalogoJa: () => pronto, urlFoto, imagemHtml, miniaturaHtml, precoHtml, recado,
   };
 })();

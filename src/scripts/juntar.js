@@ -5,7 +5,7 @@
    conta mais uma e aparece o recado com «Ver a encomenda». */
 (function () {
   'use strict';
-  const { $, $$, esc, euros, ico, catalogo, miniaturaHtml, precoDe, hojeLisboa } = window.DA;
+  const { $, $$, esc, euros, ico, catalogo, miniaturaHtml, precoDe, hojeLisboa, isoDe } = window.DA;
   const folha = $('#folha');
   const caixaFolha = folha && $('[data-folha]', folha);
 
@@ -21,7 +21,7 @@
     const marca = (k) => (k.obrigatorio ? ' <span class="campo__obrig" aria-hidden="true">*</span>' : '');
     const pers = campos.length ? `<fieldset class="juntar__pers"><legend class="juntar__legenda"><span>Personalização</span>${campos.some((k) => k.obrigatorio) ? '<span class="juntar__nota" aria-hidden="true">* obrigatório</span>' : ''}</legend>${campos.map((k) => {
       const rotulo = `<label for="${id(k.id)}">${esc(k.rotulo)}${marca(k)}</label>`;
-      if (k.id === 'data') return `<div class="campo">${rotulo}<input id="${id('data')}" name="data" type="date"${k.obrigatorio ? ' required' : ''} data-sem-passado></div>`;
+      if (k.id === 'data') return `<div class="campo">${rotulo}<div class="data" data-data><input id="${id('data')}" name="data" type="text" inputmode="numeric" placeholder="dd/mm/aaaa" maxlength="10" autocomplete="off" aria-describedby="${id('data')}-forma"${k.obrigatorio ? ' required' : ''}><input class="data__calendario" type="date" tabindex="-1" aria-hidden="true"><span class="data__icone" aria-hidden="true">${ico('calendario')}</span></div><span class="so-leitor" id="${id('data')}-forma">dia, mês e ano</span></div>`;
       if (k.id === 'frase') return `<div class="campo">${rotulo}<textarea id="${id('frase')}" name="frase" rows="2" maxlength="160" spellcheck="true"${k.obrigatorio ? ' required' : ''}></textarea></div>`;
       return `<div class="campo">${rotulo}<input id="${id('nome')}" name="nome" type="text" maxlength="60" autocomplete="off" autocapitalize="words" spellcheck="false"${k.obrigatorio ? ' required' : ''}></div>`;
     }).join('')}</fieldset>` : '';
@@ -75,10 +75,17 @@
       for (const k of ['nome', 'data', 'frase']) {
         const i = form.elements[k];
         if (!i) continue;
-        const v = i.value.trim();
+        let v = i.value.trim();
         const rotulo = ($(`label[for="${i.id}"]`, form).firstChild.textContent || '').trim();
         if (i.required && !v) { errar(i, k === 'data' ? `Escolha a ${rotulo.toLowerCase()}.` : `Falta preencher: ${rotulo.toLowerCase()}.`); return; }
-        if (k === 'data' && v && v < hojeLisboa()) { errar(i, 'Essa data já passou.'); return; }
+        // a data escreve-se dd/mm/aaaa e guarda-se aaaa-mm-dd (a mensagem diz «12 de dezembro de 2026»)
+        if (k === 'data' && v) {
+          const iso = isoDe(v);
+          if (iso === null) { errar(i, 'Essa data não existe.'); return; }
+          if (!iso) { errar(i, 'Escreva a data assim: 12/12/2026.'); return; }
+          if (iso < hojeLisboa()) { errar(i, 'Essa data já passou.'); return; }
+          v = iso;
+        }
         if (v) pers[k] = v;
       }
       const q = quantidade();
@@ -132,7 +139,7 @@
   </div>
   ${formularioHtml(slug, p, 'fl')}
   <p class="folha__ficha"><a class="ligacao-seta" href="${esc(p.url)}"><span>Ver a peça</span>${ico('seta')}</a></p>`;
-    window.DA.marcarDatas(caixaFolha);
+    window.DA.ligarDatas(caixaFolha);
     ligar($('form', caixaFolha), { depois: () => window.DA.paineis.fechar(folha) });
     window.DA.paineis.abrir(folha, origem);
     // o foco vai para o primeiro campo (no telemóvel, sem abrir o teclado por cima da folha)

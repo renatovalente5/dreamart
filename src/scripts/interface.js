@@ -183,8 +183,45 @@
     input.value = n;
     input.dispatchEvent(new Event('input', { bubbles: true }));
   });
-  // as datas da personalização não oferecem dias que já passaram
-  const marcarDatas = (raiz = document) => $$('input[type="date"][data-sem-passado]', raiz).forEach((i) => { i.min = window.DA.hojeLisboa(); });
-  marcarDatas();
-  window.DA.marcarDatas = marcarDatas;
+  /* ---------- A data da celebração: escreve-se dd/mm/aaaa, ou escolhe-se no calendário ---------- */
+  // O campo é de texto: a data aparece sempre como em Portugal, seja qual for a língua do browser (o
+  // <input type="date"> mostrava «mm/dd/yyyy» no Chrome em inglês, e no Safari o dia de hoje a cinzento,
+  // como se já estivesse escolhido). O calendário é o do telemóvel ou do computador: um <input
+  // type="date"> invisível por cima do ícone, sem os dias que já passaram.
+  function ligarDatas(raiz = document) {
+    $$('[data-data]', raiz).forEach((caixa) => {
+      if (caixa.dataset.ligada) return;
+      caixa.dataset.ligada = '1';
+      const { hojeLisboa, isoDe, dataCurta } = window.DA;
+      const texto = $('input[type="text"]', caixa);
+      const nativa = $('input[type="date"]', caixa);
+      // a barra entra sozinha depois do dia e do mês (só a escrever no fim)
+      texto.addEventListener('input', (ev) => {
+        if (ev.inputType !== 'insertText' || texto.selectionStart !== texto.value.length) return;
+        let v = texto.value.replace(/\/{2,}/g, '/');
+        if (/^\d{2}$|^\d{1,2}\/\d{2}$/.test(v)) v += '/';
+        if (v !== texto.value) texto.value = v;
+      });
+      texto.addEventListener('blur', () => { const iso = isoDe(texto.value); if (iso) texto.value = dataCurta(iso); });
+      const preparar = () => { nativa.min = hojeLisboa(); nativa.value = isoDe(texto.value) || ''; };
+      nativa.addEventListener('pointerdown', (ev) => {
+        preparar();
+        // sem showPicker, o rato só punha o cursor no campo invisível: vai para o de texto
+        if (typeof nativa.showPicker !== 'function' && ev.pointerType === 'mouse') { ev.preventDefault(); texto.focus(); }
+      });
+      nativa.addEventListener('focus', preparar);
+      nativa.addEventListener('click', () => {
+        if (typeof nativa.showPicker === 'function') { try { nativa.showPicker(); } catch (_) { /* o browser abre-o sozinho */ } }
+      });
+      const escolhida = () => {
+        if (!nativa.value) return;
+        texto.value = dataCurta(nativa.value);
+        texto.dispatchEvent(new Event('input', { bubbles: true }));
+      };
+      nativa.addEventListener('input', escolhida);
+      nativa.addEventListener('change', escolhida);
+    });
+  }
+  ligarDatas();
+  window.DA.ligarDatas = ligarDatas;
 })();

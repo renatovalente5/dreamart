@@ -209,7 +209,8 @@ export function formulario(ctx, p, { prefixo = 'pz' } = {}) {
     <legend class="juntar__legenda"><span>Personalização</span>${obrig ? '<span class="juntar__nota" aria-hidden="true">* obrigatório</span>' : ''}</legend>
     ${campos.map((k) => {
       const rotulo = `<label for="${id(k.id)}">${esc(k.rotulo)}${marca(k)}</label>`;
-      if (k.id === 'data') return `<div class="campo">${rotulo}<input id="${id('data')}" name="data" type="date"${k.obrigatorio ? ' required' : ''} data-sem-passado></div>`;
+      // a data: um campo de texto dd/mm/aaaa e, por cima do ícone, o calendário do sistema (interface.js, ligarDatas)
+      if (k.id === 'data') return `<div class="campo">${rotulo}<div class="data" data-data><input id="${id('data')}" name="data" type="text" inputmode="numeric" placeholder="dd/mm/aaaa" maxlength="10" autocomplete="off" aria-describedby="${id('data')}-forma"${k.obrigatorio ? ' required' : ''}><input class="data__calendario" type="date" tabindex="-1" aria-hidden="true"><span class="data__icone" aria-hidden="true">${ico('calendario')}</span></div><span class="so-leitor" id="${id('data')}-forma">dia, mês e ano</span></div>`;
       if (k.id === 'frase') return `<div class="campo">${rotulo}<textarea id="${id('frase')}" name="frase" rows="2" maxlength="160" spellcheck="true"${k.obrigatorio ? ' required' : ''}></textarea></div>`;
       return `<div class="campo">${rotulo}<input id="${id('nome')}" name="nome" type="text" maxlength="60" autocomplete="off" autocapitalize="words" spellcheck="false"${k.obrigatorio ? ' required' : ''}></div>`;
     }).join('\n    ')}
