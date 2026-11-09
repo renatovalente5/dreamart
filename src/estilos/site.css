@@ -308,7 +308,9 @@ main { padding-top: var(--topo-h); }
 .aviso .ico { width: 16px; height: 16px; }
 
 /* ---------- Capa ---------- */
-.capa { background: var(--rosa); color: var(--acento); padding: 28px 0 30px; overflow: hidden; }
+/* no creme da página, com o rosa só no disco atrás da fotografia (a faixa toda rosa era «muito rosa», o
+   Renato, 9 nov 2026); o risco leve separa-a do cabeçalho, que é do mesmo creme */
+.capa { background: var(--creme); color: var(--acento); padding: 48px 0 30px; overflow: hidden; border-top: 1px solid rgba(83, 61, 39, 0.08); }
 .capa__grelha { position: relative; }
 .capa__palco { display: grid; }
 .capa__slide {
@@ -338,17 +340,18 @@ main { padding-top: var(--topo-h); }
   clip-path: inset(50% 0 0 0);
   pointer-events: none;
 }
-/* um halo de dois anéis muito leves, como um selo */
+/* o disco rosa atrás da fotografia, com um anel dourado leve à volta (cabem os dois no espaço da capa:
+   37 px no telemóvel, 59 no computador) */
 .capa .medalhao::before {
-  content: ""; position: absolute; inset: -46px; border-radius: 50%;
-  border: 1px solid rgba(83, 61, 39, 0.1);
-  outline: 1px solid rgba(83, 61, 39, 0.06); outline-offset: 44px;
+  content: ""; position: absolute; inset: -26px; border-radius: 50%;
+  background: var(--rosa);
+  outline: 1px solid rgba(200, 176, 124, 0.55); outline-offset: 10px;
   pointer-events: none;
 }
 .capa__slide .medalhao img { transform: scale(1.06); transition: transform 7.5s linear; }
 .capa__slide.is-ativo .medalhao img { transform: scale(1); }
 
-.capa__texto { display: flex; flex-direction: column; align-items: center; margin-top: 34px; }
+.capa__texto { display: flex; flex-direction: column; align-items: center; margin-top: 60px; }
 .capa__titulo {
   font-family: var(--f-titulo); font-weight: 600;
   font-size: clamp(35.5px, 7.8vw + 10.5px, 46px);
@@ -397,6 +400,7 @@ main { padding-top: var(--topo-h); }
     gap: 48px;
   }
   .capa .medalhao { --d: min(40vw, 440px); --folga: 20px; margin-right: 20px; margin-bottom: 20px; }
+  .capa .medalhao::before { inset: -44px; outline-offset: 14px; }
   .capa__texto { align-items: flex-start; margin-top: 0; flex: 1; padding-bottom: 72px; }
   .capa:not([aria-roledescription]) .capa__texto { padding-bottom: 0; } /* um só diapositivo: sem abas por baixo */
   .capa__titulo { font-size: clamp(50.5px, 4.6vw, 69px); max-width: 9.6em; }
@@ -569,19 +573,23 @@ html:not(.js) .artigo__fav, html:not(.js) .artigo__mais, html:not(.js) .juntar__
 /* ---------- Um sonho de família (e as fotografias emolduradas) ---------- */
 .apresentacao { background: var(--creme); padding: var(--secao) 0; }
 .apresentacao__grelha { display: grid; gap: 44px; align-items: center; }
-/* a fotografia num rectângulo de cantos redondos, com o fio dourado à volta, como num caixilho (o
-   arco em cima e o fundo direito lembravam um caixão — o Renato, 9 nov 2026) */
-.moldura-foto { position: relative; width: min(78%, 330px); margin: 14px auto 0; }
+/* a fotografia de cantos redondos com um bloco rosa por trás, deslocado para baixo e para a direita (o
+   arco em cima lembrava um caixão; o Renato escolheu esta, a «B», a 9 nov 2026) */
+.moldura-foto { position: relative; isolation: isolate; width: min(78%, 330px); margin: 14px auto 22px; }
 .moldura-foto img {
   width: 100%; aspect-ratio: 4 / 5; object-fit: cover;
-  border-radius: 24px;
+  border-radius: 20px;
   background: var(--rosa);
 }
 .moldura-foto::after {
-  content: ""; position: absolute; inset: -10px;
-  border: 1.25px solid var(--dourado);
-  border-radius: 32px;
+  content: ""; position: absolute; inset: 22px -22px -22px 22px; z-index: -1;
+  border-radius: 24px; background: var(--rosa);
   pointer-events: none;
+}
+/* o selo no canto de cima, como os círculos das secções, com o anel dourado */
+.moldura-foto__selo {
+  position: absolute; left: -22px; top: -22px; width: 30%; min-width: 84px; max-width: 112px; aspect-ratio: 1;
+  border-radius: 50%; box-shadow: 0 0 0 6px var(--creme), 0 0 0 7.5px var(--dourado);
 }
 .apresentacao__texto { display: flex; flex-direction: column; align-items: flex-start; gap: 16px; }
 .apresentacao__texto .rotulo { color: var(--acento); }

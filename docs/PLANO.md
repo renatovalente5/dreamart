@@ -44,7 +44,12 @@ diz «dúvida».
   - EB Garamond (600) nos títulos e Mulish no texto, servidas pelo próprio site (escolhidas pelo Renato a
     9 nov 2026 entre as provas; antes, Gilda Display e Montserrat). A Cormorant Garamond ficou de fora: é a
     letra dos títulos da Mimices;
-  - a fotografia num rectângulo de cantos redondos com o fio dourado à volta (`.moldura-foto`; o arco em
+  - **a capa no creme** (9 nov 2026, «está muito rosa assim no início do site»; escolhida a «1» entre três): o
+    rosa só num disco atrás da fotografia, com um anel dourado leve; um risco leve separa-a do cabeçalho;
+  - **a moldura «B»** do «Um sonho de família» (escolhida entre três): a fotografia de cantos redondos com um
+    bloco rosa por trás, deslocado, e um selo como os círculos das secções no canto (a letra da marca e a
+    última palavra do título: «D · família»); no «Sobre nós», o mesmo bloco, sem o selo. Antes:
+    a fotografia num rectângulo de cantos redondos com o fio dourado à volta (`.moldura-foto`; o arco em
     cima «parece que tem formato de caixão», o Renato, 9 nov 2026; nada de oval, que lembra as fotografias
     das campas), os separadores em círculos, cartões de cantos redondos;
   - o cabeçalho com o menu e a procura à esquerda, o logótipo ao centro, os favoritos e a encomenda à direita;

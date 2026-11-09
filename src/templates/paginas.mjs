@@ -5,7 +5,7 @@ import { ico, arco } from './icones.mjs';
 import { numeroPortugues, opcoesDe, personalizacaoDe, quantidadeMinimaDe, temSuplementos, ICONES_CONFIANCA } from '../lib/regras.mjs';
 import {
   imagem, medalhao, preco, promocaoNota, porUnidade, cartao, grelha, pastilhas, circulos, cabecaSeccao, cabecaDePagina,
-  migalhasLd, botao, separadoresComArtigos, nomeDoSeparador, urlFoto,
+  migalhasLd, botao, separadoresComArtigos, nomeDoSeparador, urlFoto, monograma,
 } from './componentes.mjs';
 
 const produtosDe = (ctx, cat) => ctx.produtos.filter((p) => p.categoria === cat);
@@ -123,9 +123,16 @@ export function inicio(ctx) {
 </section>` : '';
 
   const a = h.apresentacao || {};
+  // o selo no canto da fotografia, como os círculos das secções: a letra da marca e a última palavra do
+  // título («Um sonho de família» → «família»), se for uma palavra curta; sem ela, só a letra
+  const palavraDoSelo = String(a.titulo || '').trim().split(/\s+/).pop().toLocaleLowerCase('pt-PT');
+  const selo = monograma({ nome: ctx.site.marca, monograma: {
+    letra: ctx.site.marca.trim().charAt(0).toLocaleUpperCase('pt-PT'),
+    palavra: /^\p{L}{2,12}$/u.test(palavraDoSelo) ? palavraDoSelo : ' ',
+  } });
   const apresentacao = a.titulo ? `<section class="apresentacao" aria-labelledby="t-apresentacao">
   <div class="contentor apresentacao__grelha">
-    ${a.foto && ctx.manifesto.fotos[a.foto] ? `<figure class="moldura-foto revela">${imagem(ctx, a.foto, { tamanhos: '(min-width: 640px) min(calc(50vw - 56px), 400px), min(calc(78vw - 16px), 330px)', ate: 960, moldura: 0.8 })}</figure>` : ''}
+    ${a.foto && ctx.manifesto.fotos[a.foto] ? `<figure class="moldura-foto moldura-foto--selo revela">${imagem(ctx, a.foto, { tamanhos: '(min-width: 640px) min(calc(50vw - 56px), 400px), min(calc(78vw - 16px), 330px)', ate: 960, moldura: 0.8 })}<span class="moldura-foto__selo">${selo}</span></figure>` : ''}
     <div class="apresentacao__texto revela">
       ${a.etiqueta ? `<p class="rotulo">${esc(a.etiqueta)}</p>` : ''}
       <h2 class="titulo-secao" id="t-apresentacao">${esc(a.titulo)}</h2>

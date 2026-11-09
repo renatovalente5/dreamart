@@ -623,6 +623,8 @@ await construcao('a página inicial: os separadores em monogramas (a letra e a p
   assert.match(index, /<img class="gaveta__logo" src="\/dreamart\/assets\/img\/logo-cabecalho-/);
   assert.match(index, /<a class="rodape__logo" href="\/dreamart\/"><img src="\/dreamart\/assets\/img\/logo-rodape-[0-9a-f]{10}-\d+\.webp"[^>]* alt="Dream Art — página inicial"/);
   for (const peca of ['logo-cabecalho', 'logo-rodape']) assert.ok(fs.readdirSync(path.join(pasta, '_site/assets/img')).some((f) => f.startsWith(`${peca}-`)), `falta ${peca} em assets/img`);
+  // o selo no canto da fotografia do «Um sonho de família»: a letra da marca e a última palavra do título
+  assert.match(index, /<figure class="moldura-foto moldura-foto--selo revela"><picture>[\s\S]*?<\/picture><span class="moldura-foto__selo"><span class="monograma" aria-hidden="true"><span class="monograma__letra">D<\/span><span class="monograma__palavra">família<\/span><\/span><\/span><\/figure>/);
 });
 await construcao('o catálogo da encomenda leva, de cada artigo publicado, o preço, as escolhas, a personalização e o mínimo; e as zonas e os portes; a ficha mostra o preço da regra', () => {
   const { pasta } = construida('agora');
