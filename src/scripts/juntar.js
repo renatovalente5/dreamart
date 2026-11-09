@@ -97,7 +97,7 @@
     try { cat = await catalogo(); } catch (_) { /* sem catálogo, o recado vai sem fotografia */ }
     const p = cat && cat.produtos[slug];
     const encomenda = (cat && cat.encomenda) || `${document.body.dataset.base}encomenda/`;
-    window.DA.recado(`${p ? miniaturaHtml(cat, p.img, 44) : ''}<span class="recado__texto">${p ? `${q > 1 ? `${q} × ` : ''}${esc(p.curto || p.nome)}: ` : ''}juntou-se à encomenda.</span><a href="${esc(encomenda)}">Ver a encomenda</a>`);
+    window.DA.recado(`${p ? miniaturaHtml(cat, p.img, 44) : ''}<span class="recado__texto"><strong>Juntou-se à encomenda</strong>${p ? `<span>${q > 1 ? `${q} × ` : ''}${esc(p.curto || p.nome)}</span>` : ''}</span><a href="${esc(encomenda)}">Ver<span class="recado__mais"> a encomenda</span></a>`);
     if (botao && botao.classList.contains('artigo__mais')) { botao.classList.add('is-feito'); window.setTimeout(() => botao.classList.remove('is-feito'), 600); }
   }
 

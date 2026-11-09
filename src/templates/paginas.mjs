@@ -247,7 +247,7 @@ export const perigosDoArtigo = (p) => linhasDe(p.perigos);
 
 /* A morada de quem faz as peças: sem a rua (ainda não dita), na pré-visualização vai a marca
    «[por confirmar]» antes do código postal; no domínio aberto, o que houver (as regras deixam abrir
-   com a localidade, como na Mimices). */
+   com a localidade). */
 export function moradaDaLoja(ctx) {
   const e = ctx.site.empresa || {};
   const resto = moradaCompleta(e);
