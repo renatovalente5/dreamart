@@ -231,7 +231,7 @@ for (const nome of listar('media/video', '.mp4')) {
    discreta, .lr-discreto): as regras do rodapé vêm depois e ganham, e o Livro fica com a letra e a cor
    das ligações vizinhas. */
 const css = Buffer.from(`/* legal-comum v${LEGAL_COMUM_VERSAO}: o Livro de Reclamações */\n${livroCss()}\n${CSS_FONTE}`);
-const ORDEM_JS = ['nucleo.js', 'interface.js', 'carrinho.js', 'favoritos.js', 'procura.js', 'juntar.js'];
+const ORDEM_JS = ['nucleo.js', 'interface.js', 'carrinho.js', 'favoritos.js', 'procura.js', 'juntar.js', 'loja.js'];
 const soltos = fs.readdirSync(path.join(RAIZ, 'src/scripts')).filter((f) => f.endsWith('.js') && !ORDEM_JS.includes(f));
 if (soltos.length) parar('A publicação parou: há scripts fora da lista.', soltos.map((f) => `Gerador: src/scripts/${f} não está em ORDEM_JS (scripts/build.mjs)`), { tecnico: true });
 const js = Buffer.from(ORDEM_JS.map((f) => `// ${f}\n${fs.readFileSync(path.join(RAIZ, 'src/scripts', f), 'utf8')}`).join('\n'));

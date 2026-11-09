@@ -30,7 +30,11 @@ diz «dúvida».
   - a fotografia num medalhão redondo com o arco dourado, os separadores em círculos, cartões de cantos
     redondos;
   - o cabeçalho com o menu e a procura à esquerda, o logótipo ao centro, os favoritos e a encomenda à direita;
-    a gaveta do menu; o rodapé verde com o logótipo.
+    a gaveta do menu; o rodapé verde com o logótipo;
+  - a loja e os separadores (o Renato, 9 nov 2026, com uma captura): os produtos no mesmo creme da página,
+    sem faixa branca nem moldura nos cartões; sem a fotografia do separador nem o «← Loja»; as pastilhas em
+    cima trocam o separador sem a página subir (`src/scripts/loja.js`). Os favoritos e as sugestões da
+    ficha ficaram iguais; a página inicial ficou como estava.
 
   Nada pode voltar a ter o aspeto, as cores ou a arrumação da Mimices.
 - **Da base da Mimices fica só o invisível**: o gerador em Node sem dependências (`scripts/build.mjs`), as

@@ -153,23 +153,27 @@ export function inicio(ctx) {
 }
 
 // ---------------------------------------------------------------- loja e separadores
-/* A loja (/loja/): todos os artigos, e os separadores em pastilhas. Cada separador com artigos tem a
-   sua página (/loja/<slug>/), com uma cabeça curta: o medalhão com a fotografia do separador, o
-   título e o texto de content/categorias.json. */
+/* A loja (/loja/): todos os artigos. Cada separador com artigos tem a sua página (/loja/<slug>/).
+   Tudo no creme da página: as pastilhas em cima e, por baixo, o painel do separador (o título, o
+   texto de content/categorias.json e os artigos). As pastilhas trocam só o painel, sem sair do sítio
+   (loja.js, que o vai buscar à página do separador): o que está por cima dele não muda. */
 export function loja(ctx, slug = null) {
   const c = slug ? categoriaDe(ctx, slug) : null;
   const lista = c ? produtosDe(ctx, slug) : ctx.produtos;
   const caminho = c ? `/loja/${c.slug}/` : '/loja/';
-  const cabeca = c
-    ? cabecaDePagina(ctx, { rotulo: { nome: 'Loja', caminho: '/loja/' }, titulo: c.titulo, sub: markdown(c.resumo, ctx.url), foto: c.foto })
-    : cabecaDePagina(ctx, { titulo: 'Loja', sub: `<p>${esc(ctx.site.descricao)}</p>` });
-  const conteudo = `${cabeca}
-<section class="vitrine" aria-label="${c ? esc(c.titulo) : 'Todos os artigos'}">
+  const conteudo = `<div class="vitrine">
   <div class="contentor">
     ${pastilhas(ctx, caminho)}
-    ${grelha(ctx, lista, { titulo: 'h2', cedo: 4 })}
+    <div class="vitrine__painel" data-loja-painel>
+      <div class="vitrine__cabeca">
+        <h1 class="vitrine__titulo">${esc(c ? c.titulo : 'Loja')}</h1>
+        <div class="vitrine__sub">${c ? markdown(c.resumo, ctx.url) : `<p>${esc(ctx.site.descricao)}</p>`}</div>
+      </div>
+      ${grelha(ctx, lista, { titulo: 'h2', cedo: 4 })}
+    </div>
+    <p class="so-leitor" aria-live="polite" data-loja-anuncio></p>
   </div>
-</section>`;
+</div>`;
   const ld = [
     migalhasLd(ctx, [{ nome: 'Início', caminho: '/' }, { nome: 'Loja', caminho: '/loja/' }, ...(c ? [{ nome: c.titulo, caminho }] : [])]),
     { '@context': 'https://schema.org', '@type': 'ItemList', name: c ? c.titulo : 'Loja', itemListElement: lista.map((p, i) => ({ '@type': 'ListItem', position: i + 1, url: ctx.absoluto(`/produtos/${p.slug}/`), name: p.nome })) },
@@ -470,11 +474,11 @@ export function encomenda(ctx) {
 
 // ---------------------------------------------------------------- favoritos
 /* Os favoritos: os artigos marcados com o coração (no browser, «dreamart:favoritos»), desenhados pelo
-   site.js a partir do catálogo. */
+   site.js a partir do catálogo. A mesma cabeça curta da loja. */
 export function favoritos(ctx) {
-  const conteudo = `${cabecaDePagina(ctx, { titulo: 'Favoritos' })}
-<section class="vitrine">
+  const conteudo = `<section class="vitrine">
   <div class="contentor">
+    <div class="vitrine__cabeca"><h1 class="vitrine__titulo">Favoritos</h1></div>
     <ul class="grelha-artigos" role="list" data-favoritos-lista></ul>
     <div class="vazio" data-favoritos-vazio hidden>
       <span class="vazio__icone">${ico('coracao')}</span>

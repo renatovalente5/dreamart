@@ -559,6 +559,23 @@ await construcao('uma ficha por artigo publicado (com o nome no título), e nenh
     if (!temArtigos) assert.ok(!todas.includes(`/dreamart/loja/${c.slug}/`), `há uma ligação para o separador vazio «${c.slug}»`);
   }
 });
+await construcao('a loja e cada separador: as pastilhas em cima e, por baixo, o painel que elas trocam (o título, o texto e os artigos do separador); sem a fotografia do separador nem o «← Loja»', () => {
+  const { pasta } = construida('agora');
+  const pub = publicados(pasta);
+  const comArtigos = JSON.parse(ler(pasta, 'content/categorias.json')).filter((c) => pub.some((p) => p.categoria === c.slug));
+  for (const c of [null, ...comArtigos]) {
+    const rel = c ? `loja/${c.slug}/index.html` : 'loja/index.html';
+    const html = lerSaida(pasta, rel);
+    const main = html.slice(html.indexOf('<main'), html.indexOf('</main>'));
+    assert.doesNotMatch(main, /class="medalhao|cabeca-pagina__rotulo/, `${rel}: ainda tem a fotografia do separador ou o «← Loja»`);
+    // o loja.js troca o [data-loja-painel] pelo da página do separador: tudo o que muda tem de estar lá dentro
+    const painel = main.slice(main.indexOf('data-loja-painel'));
+    assert.ok(main.indexOf('class="pastilhas"') > 0 && main.indexOf('class="pastilhas"') < main.indexOf('data-loja-painel'), `${rel}: as pastilhas não estão por cima do painel`);
+    assert.ok(painel.includes(`<h1 class="vitrine__titulo">${esc(c ? c.titulo : 'Loja')}</h1>`), `${rel}: o título não está no painel`);
+    assert.equal((painel.match(/<li class="artigo">/g) || []).length, c ? pub.filter((p) => p.categoria === c.slug).length : pub.length, `${rel}: os artigos`);
+    assert.match(main, new RegExp(`<a href="/dreamart/loja/${c ? `${c.slug}/` : ''}" aria-current="page">`), `${rel}: a pastilha do separador não está marcada`);
+  }
+});
 await construcao('o catálogo da encomenda leva, de cada artigo publicado, o preço, as escolhas, a personalização e o mínimo; e as zonas e os portes; a ficha mostra o preço da regra', () => {
   const { pasta } = construida('agora');
   const url = /data-catalogo="([^"]+)"/.exec(lerSaida(pasta, 'index.html'))[1];

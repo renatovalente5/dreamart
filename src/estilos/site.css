@@ -394,27 +394,25 @@ main { padding-top: var(--topo-h); }
 }
 
 /* ---------- Cartões de artigo ---------- */
-.grelha-artigos { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
-@media (min-width: 640px) { .grelha-artigos { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; } }
-@media (min-width: 1024px) { .grelha-artigos { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 24px; } }
+/* O cartão: a fotografia de cantos redondos e, por baixo, o nome e o preço, no fundo da própria
+   página (a loja, os favoritos, as sugestões da ficha). Na página inicial, sobre o branco das
+   lembranças e o verde da coleção, leva o creme à volta (mais abaixo). */
+.grelha-artigos { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px 12px; }
+@media (min-width: 640px) { .grelha-artigos { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 36px 18px; } }
+@media (min-width: 1024px) { .grelha-artigos { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 44px 24px; } }
 /* na página inicial, seis lembranças no telemóvel e no tablet, oito no computador */
 .grelha-artigos--montra .artigo:nth-child(n + 7) { display: none; }
 @media (min-width: 1024px) { .grelha-artigos--montra .artigo:nth-child(n + 7) { display: flex; } }
 
-.artigo {
-  position: relative; display: flex; flex-direction: column;
-  background: var(--creme); border-radius: 20px; padding: 6px;
-  transition: box-shadow 0.3s var(--ease), transform 0.3s var(--ease);
-}
-.artigo:hover { box-shadow: var(--sombra); transform: translateY(-2px); }
+.artigo { position: relative; display: flex; flex-direction: column; border-radius: 15px; }
 .artigo__foto { position: relative; border-radius: 15px; overflow: hidden; aspect-ratio: 1; background: var(--salvia); }
 .artigo__foto img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s var(--ease); }
 .artigo:hover .artigo__foto img { transform: scale(1.03); }
-.artigo__info { flex: 1; display: flex; flex-direction: column; gap: 4px; padding: 12px 6px 6px; }
+.artigo__info { flex: 1; display: flex; flex-direction: column; gap: 4px; padding: 12px 2px 0; }
 .artigo__nome { font-family: var(--f-texto); font-size: 13.5px; font-weight: 500; line-height: 1.4; color: var(--tinta); }
 .artigo__nome a::after { content: ""; position: absolute; inset: 0; border-radius: inherit; z-index: 1; }
 .artigo__nome a:focus-visible { outline: none; }
-.artigo__nome a:focus-visible::after { outline: 2px solid var(--verde); outline-offset: 2px; border-radius: 20px; }
+.artigo__nome a:focus-visible::after { outline: 2px solid var(--verde); outline-offset: 4px; border-radius: 18px; }
 .artigo__preco { margin-top: auto; font-size: 15px; font-weight: 600; color: var(--verde); font-variant-numeric: tabular-nums; }
 .artigo__preco--confirmar, .ficha__preco--confirmar { color: var(--tinta-2); font-weight: 500; font-size: 14px; }
 .preco__antes { margin-left: 6px; font-weight: 500; font-size: 0.86em; color: var(--tinta-2); }
@@ -443,14 +441,29 @@ main { padding-top: var(--topo-h); }
 html:not(.js) .artigo__fav, html:not(.js) .artigo__mais, html:not(.js) .juntar__fav { display: none; }
 
 @media (min-width: 640px) {
-  .artigo { border-radius: var(--raio); padding: 8px; }
-  .artigo__foto { border-radius: 18px; }
-  .artigo__info { padding: 14px 8px 8px; }
+  .artigo, .artigo__foto { border-radius: 18px; }
+  .artigo__info { padding-top: 14px; }
   .artigo__nome { font-size: 14.5px; }
   .artigo__fav { top: 8px; right: 8px; }
   .artigo__mais { right: 8px; bottom: 8px; }
-  .artigo__nome a:focus-visible::after { border-radius: var(--raio); }
 }
+
+/* Na página inicial: no branco das lembranças e no verde da coleção, o cartão leva o creme à volta. */
+.lembrancas .grelha-artigos { gap: 12px; }
+.lembrancas .artigo, .destaque__lista .artigo {
+  background: var(--creme); border-radius: 20px; padding: 6px;
+  transition: box-shadow 0.3s var(--ease), transform 0.3s var(--ease);
+}
+.lembrancas .artigo:hover, .destaque__lista .artigo:hover { box-shadow: var(--sombra); transform: translateY(-2px); }
+.lembrancas .artigo__info { padding: 12px 6px 6px; }
+.lembrancas .artigo__nome a:focus-visible::after, .destaque__lista .artigo__nome a:focus-visible::after { outline-offset: 2px; border-radius: 20px; }
+@media (min-width: 640px) {
+  .lembrancas .grelha-artigos { gap: 18px; }
+  .lembrancas .artigo { border-radius: var(--raio); padding: 8px; }
+  .lembrancas .artigo__info { padding: 14px 8px 8px; }
+  .lembrancas .artigo__nome a:focus-visible::after, .destaque__lista .artigo__nome a:focus-visible::after { border-radius: var(--raio); }
+}
+@media (min-width: 1024px) { .lembrancas .grelha-artigos { gap: 24px; } }
 
 /* ---------- O destaque (a coleção de Natal) ---------- */
 .destaque { background: var(--branco); padding: var(--secao) 0 0; }
@@ -768,8 +781,11 @@ html:not(.js) .artigo__fav, html:not(.js) .artigo__mais, html:not(.js) .juntar__
 }
 
 /* ---------- A loja ---------- */
-.vitrine { background: var(--branco); padding: 28px 0 var(--secao); }
-.pastilhas { margin-bottom: 28px; }
+/* Tudo no creme da página: as pastilhas em cima e, por baixo, o painel do separador (o título, a
+   frase e os artigos). As pastilhas trocam só o painel (loja.js): o que está por cima dele não se
+   mexe, e a página fica onde está. */
+.vitrine { padding: 20px 0 var(--secao); }
+.pastilhas { margin-bottom: 30px; }
 .pastilhas ul {
   display: flex; gap: 8px; overflow-x: auto; overscroll-behavior-x: contain; scrollbar-width: none;
   margin-inline: calc(var(--gutter) * -1); padding: 2px var(--gutter);
@@ -783,10 +799,23 @@ html:not(.js) .artigo__fav, html:not(.js) .artigo__mais, html:not(.js) .juntar__
 }
 .pastilhas a:hover { background: #DDE2D2; }
 .pastilhas a[aria-current="page"] { background: var(--verde); color: var(--creme); }
+.vitrine__cabeca { max-width: 40em; margin: 0 auto 28px; text-align: center; }
+.vitrine__titulo {
+  font-family: var(--f-titulo); font-weight: 400;
+  font-size: clamp(30px, 1.6vw + 24px, 44px); line-height: 1.1; letter-spacing: -0.01em;
+  color: var(--verde); text-wrap: balance;
+}
+.vitrine__sub { margin-top: 8px; color: var(--tinta-2); font-size: 14.5px; line-height: 1.55; text-wrap: pretty; }
+.vitrine__sub p + p { margin-top: 6px; }
+/* o painel de outro separador aparece num instante, sem deslizar */
+.vitrine__painel.is-novo { animation: entrar 0.3s var(--ease) both; }
+@keyframes entrar { from { opacity: 0; } to { opacity: 1; } }
 @media (min-width: 900px) {
-  .vitrine { padding-top: 40px; }
-  .pastilhas { margin-bottom: 40px; }
+  .vitrine { padding-top: 32px; }
+  .pastilhas { margin-bottom: 44px; }
   .pastilhas ul { flex-wrap: wrap; justify-content: center; overflow: visible; margin: 0; padding: 0; }
+  .vitrine__cabeca { margin-bottom: 40px; }
+  .vitrine__sub { font-size: 15.5px; }
 }
 
 /* ---------- A ficha do artigo ---------- */
@@ -913,7 +942,8 @@ html:not(.js) .artigo__fav, html:not(.js) .artigo__mais, html:not(.js) .juntar__
 .ficha__feito .ico { width: 22px; height: 22px; color: var(--verde); margin-top: 1px; }
 .ficha__feito strong { color: var(--tinta); font-weight: 600; }
 
-.relacionados { background: var(--branco); padding: var(--secao) 0; }
+/* as sugestões no creme da ficha, como na loja (a ficha já deixa o espaço por cima) */
+.relacionados { padding: 0 0 var(--secao); }
 /* quatro sugestões em três colunas deixavam uma sozinha: no tablet ficam três */
 @media (min-width: 640px) and (max-width: 1023px) { .relacionados .artigo:nth-child(4) { display: none; } }
 
