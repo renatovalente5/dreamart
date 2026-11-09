@@ -37,7 +37,8 @@ diz «dúvida».
     e dourado. O botão do WhatsApp voltou ao verde do logótipo, com o anel dourado (com as cores das histórias tinha
     passado a chocolate; «mete o botão do WhatsApp verde»). O
     rodapé mais pequeno, com o «© 2026 Dream Art» à esquerda e as ligações à direita no computador (no
-    telemóvel, o «©» fica no fim). As
+    telemóvel, o «©» fica no fim); a página acaba logo por baixo da linha legal («não quero que o rodapé
+    baixe mais do que isto»), com o botão do WhatsApp ao lado dela. As
     secções da página inicial em monogramas, como as capas das histórias (a letra em Bodoni Moda, a
     palavra em Ms Madi; «monograma» em content/categorias.json);
   - EB Garamond (600) nos títulos e Mulish no texto, servidas pelo próprio site (escolhidas pelo Renato a

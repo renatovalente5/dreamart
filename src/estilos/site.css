@@ -608,9 +608,10 @@ html:not(.js) .artigo__fav, html:not(.js) .artigo__mais, html:not(.js) .juntar__
 }
 
 /* ---------- Rodapé ---------- */
-/* mais pequeno (o Renato, 9 nov 2026): menos ar, o logótipo e as letras mais pequenos. Até 1024 px, o
-   botão do WhatsApp fica no canto livre ao lado do «©» (a última linha só tem coisas à esquerda) */
-.rodape { background: var(--verde-fundo); color: var(--creme); padding: 40px 0 calc(32px + env(safe-area-inset-bottom)); }
+/* mais pequeno (o Renato, 9 nov 2026): menos ar, o logótipo e as letras mais pequenos, e a página acaba logo
+   por baixo das ligações legais («não quero que o rodapé baixe mais do que isto»). Até 1024 px, o botão do
+   WhatsApp fica no canto livre ao lado do «©» (a última linha só tem coisas à esquerda) */
+.rodape { background: var(--verde-fundo); color: var(--creme); padding: 40px 0 calc(24px + env(safe-area-inset-bottom)); }
 .rodape__grelha { display: grid; gap: 28px 20px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .rodape__marca {
   grid-column: 1 / -1;
@@ -660,9 +661,13 @@ html:not(.js) .artigo__fav, html:not(.js) .artigo__mais, html:not(.js) .juntar__
   .rodape__contactos { grid-column: auto; }
 }
 @media (min-width: 1024px) {
-  /* a folga em baixo é a do botão do WhatsApp (28 + 62 px): sem ela, tapava as ligações da direita */
-  .rodape { padding: 48px 0 104px; }
-  .rodape__legal { flex-direction: row; justify-content: space-between; align-items: center; }
+  .rodape { padding: 48px 0 24px; }
+  /* sem folga em baixo, o botão do WhatsApp (62 px a 28 px da borda) fica ao lado da linha legal: as
+     ligações param antes dele quando a margem da página não chega (102 px = 28 + 62 + 12 de ar) */
+  .rodape__legal {
+    flex-direction: row; justify-content: space-between; align-items: center;
+    padding-right: max(0px, calc(102px - var(--gutter) - max(0px, (100vw - var(--max)) / 2 - var(--gutter))));
+  }
   /* o «©» à esquerda e as ligações à direita (no telemóvel, o «©» fica no fim) */
   .rodape__legal p { order: -1; flex: none; white-space: nowrap; margin-right: 24px; }
   .rodape__legal ul { flex: 1; display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 0 20px; }
