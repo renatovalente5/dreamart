@@ -1,16 +1,16 @@
 #!/usr/bin/env node
-// Gera o site da Mimices em _site/, a partir de content/ e media/. Node 22, sem dependências.
-// (O gerador é o da Pokóto Wood, adaptado: tons de linho, escolhas, personalização por campos.)
+// Gera o site da Dream Art em _site/, a partir de content/ e media/. Node 22, sem dependências.
+// O aspeto é o da proposta A, «Verde da marca» (escolhida pelo Renato a 9 nov 2026); por baixo, a
+// infraestrutura de sempre: as regras dos dados (src/lib/regras.mjs, as mesmas do painel), as
+// imagens do scripts/imagens.py, a biblioteca legal-comum e as guardas do fim.
 //
-//   node scripts/build.mjs                       local, em http://localhost:4830/
-//   node scripts/build.mjs --base=/mimices       pré-visualização no GitHub Pages
-//   node scripts/build.mjs --dominio             o domínio (mimices.pt, na Cloudflare) ANTES de
-//                                                abrir: na raiz, com o _headers (a cache), mas
-//                                                fechado aos motores de busca e com o que falta
-//                                                «[por confirmar]» (16 out 2026: o domínio chegou
-//                                                antes dos dados legais da Susana)
-//   node scripts/build.mjs --producao            o domínio aberto: aos motores de busca, e
-//                                                RECUSA publicar com dados legais por preencher
+//   node scripts/build.mjs                       local, em http://localhost:4880/
+//   node scripts/build.mjs --base=/dreamart      pré-visualização no GitHub Pages
+//   node scripts/build.mjs --dominio             o domínio (dreamart.pt, na Cloudflare) ANTES de
+//                                                abrir: na raiz, com o _headers, mas fechado aos
+//                                                motores de busca e com o que falta «[por confirmar]»
+//   node scripts/build.mjs --producao            o domínio aberto: aos motores de busca, e RECUSA
+//                                                publicar com dados legais por preencher
 //   node scripts/build.mjs --sem-imagens         não corre o scripts/imagens.py (usa a cache)
 //
 // Os textos que a lei manda ter certos (identificação, NIF, morada, contactos, prazos) vêm todos
@@ -21,16 +21,16 @@ import path from 'node:path';
 import crypto from 'node:crypto';
 import { execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
-import { esc, euros, hojeEmLisboa, markdown, numeroWhatsApp, numeroLegivel, custoChamada, notaChamada, moradaCompleta } from '../src/templates/util.mjs';
-import { pagina } from '../src/templates/layout.mjs';
+import { esc, euros, hojeEmLisboa, markdown, numeroWhatsApp, numeroLegivel, notaChamada, moradaCompleta, textoSimples } from '../src/templates/util.mjs';
+import { pagina, reencaminhar } from '../src/templates/layout.mjs';
 import * as R from '../src/lib/regras.mjs';
 import * as paginas from '../src/templates/paginas.mjs';
-/* As peças legais comuns aos sites do Renato (a cópia em legal-comum/, instalada por
-   _ferramentas/legal-comum/instalar.mjs; não se edita aqui): o CSS do botão do Livro de
-   Reclamações, os destinatários da política de privacidade e as guardas da identificação, das
-   promoções e das fichas (22 out 2026, grupo 1 da auditoria legal). */
-import { livroCss, destinatariosHtml, CATALOGO_DESTINATARIOS, frasesPrivacidade, prazos as PRAZOS_LEGAIS, verificarIdentificacao, verificarPromocao, verificarProduto, VERSAO as LEGAL_COMUM_VERSAO } from '../legal-comum/index.mjs';
-import { pecaLegal } from '../src/templates/componentes.mjs';
+import { pecaLegal, separadoresComArtigos, nomeDoSeparador } from '../src/templates/componentes.mjs';
+import { NOMES_ICONES } from '../src/templates/icones.mjs';
+/* As peças legais comuns aos sites do Renato (a cópia em legal-comum/; não se edita aqui): o CSS do
+   Livro de Reclamações, os destinatários da política de privacidade, as guardas da identificação,
+   das promoções e das fichas, e a conta do contraste. */
+import { livroCss, destinatariosHtml, CATALOGO_DESTINATARIOS, frasesPrivacidade, prazos as PRAZOS_LEGAIS, verificarIdentificacao, verificarPromocao, verificarProduto, contraste, VERSAO as LEGAL_COMUM_VERSAO } from '../legal-comum/index.mjs';
 
 const RAIZ = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const args = process.argv.slice(2);
@@ -39,14 +39,14 @@ const args = process.argv.slice(2);
 const CONTEUDO = path.resolve(args.find((a) => a.startsWith('--conteudo='))?.slice(11) || path.join(RAIZ, 'content'));
 const SAIDA = path.resolve(args.find((a) => a.startsWith('--saida='))?.slice(8) || path.join(RAIZ, '_site'));
 const producao = args.includes('--producao');
-const dominio = producao || args.includes('--dominio');   // na raiz de mimices.pt (aberto ou ainda não)
+const dominio = producao || args.includes('--dominio');   // na raiz de dreamart.pt (aberto ou ainda não)
 const base = dominio ? '' : (args.find((a) => a.startsWith('--base='))?.slice(7) || '').replace(/\/$/, '');
 const semImagens = args.includes('--sem-imagens');
 
-// O domínio (o Renato compra-o quando o site estiver feito, 15 out 2026): o canonical, o
-// sitemap e os cartões de partilha seguem-no em produção.
-const DOMINIO = 'mimices.pt';
-const ORIGEM = dominio ? `https://${DOMINIO}` : (base ? 'https://renatovalente5.github.io' : 'http://localhost:4830');
+// O domínio (aprovado pela cliente a 8 nov 2026; o Renato compra-o no fim): o canonical, o sitemap
+// e os cartões de partilha seguem-no em produção.
+const DOMINIO = 'dreamart.pt';
+const ORIGEM = dominio ? `https://${DOMINIO}` : (base ? 'https://renatovalente5.github.io' : 'http://localhost:4880');
 
 const erros = [];
 const avisos = [];
@@ -70,16 +70,15 @@ function parar(titulo, lista, { tecnico = false } = {}) {
   for (const e of [...new Set(lista)].slice(0, 10)) anotar('error', tecnico ? `${e} (Só o Renato pode corrigir.)` : e);
   process.exit(1);
 }
-const ler = (rel) => JSON.parse(fs.readFileSync(path.join(RAIZ, rel), 'utf8'));
 const existe = (rel) => fs.existsSync(path.join(RAIZ, rel));
 
 // ---------------------------------------------------------------- conteúdo e regras
 // As regras dos dados estão em src/lib/regras.mjs, o MESMO ficheiro que o painel usa (cópia byte a
-// byte em mimices-painel/estatico/js/regras.js): o que o painel deixa gravar é o que a publicação
-// aceita. Classes: «bloqueia» pára a publicação; «neutraliza» esconde só aquele artigo (ou tira-lhe
-// a fotografia que falta) na cópia que o gerador lê; «avisa» só avisa.
+// byte): o que o painel deixa gravar é o que a publicação aceita. Classes: «bloqueia» pára a
+// publicação; «neutraliza» esconde só aquele artigo (ou tira-lhe a fotografia que falta) na cópia
+// que o gerador lê; «avisa» só avisa.
 // Os ficheiros de uma pasta com a extensão dada, sem a extensão; uma pasta que não existe (o git não
-// guarda pastas vazias: media/video/ sem vídeos não chega ao CI) é uma lista vazia (vem da LF Mobile).
+// guarda pastas vazias: media/video/ sem vídeos não chega ao CI) é uma lista vazia.
 const listar = (rel, ext) => (fs.existsSync(path.join(RAIZ, rel)) ? fs.readdirSync(path.join(RAIZ, rel)).filter((f) => f.endsWith(ext)).map((f) => f.slice(0, -ext.length)) : []);
 const lerTexto = (rel) => fs.readFileSync(path.join(CONTEUDO, rel.replace(/^content\//, '')), 'utf8');
 const dadosRegras = {
@@ -106,24 +105,24 @@ const site = JSON.parse(dadosRegras.site);
 const inicio = JSON.parse(dadosRegras.inicio);
 const categorias = JSON.parse(dadosRegras.categorias);
 const fotos = JSON.parse(dadosRegras.fotos);
+const ordemSep = (p) => { const i = categorias.findIndex((c) => c.slug === p.categoria); return i < 0 ? 999 : i; };
 // Os artigos como o gerador os lê: a cópia neutralizada (um artigo com problemas sai escondido).
 const produtos = Object.entries(neutro.artigos)
   .map(([slug, a]) => ({ slug, ...a }))
-  .filter((p) => p.publicado !== false)
-  .sort((a, b) => (a.ordem ?? 999) - (b.ordem ?? 999) || a.nome.localeCompare(b.nome, 'pt'));
+  .filter((p) => p.publicado !== false && Array.isArray(p.fotos) && p.fotos.length)
+  // pela posição na lista e, com a mesma posição, pela ordem dos separadores: «Tudo» abre com a
+  // primeira peça de cada separador
+  .sort((a, b) => (a.ordem ?? 999) - (b.ordem ?? 999) || ordemSep(a) - ordemSep(b) || a.nome.localeCompare(b.nome, 'pt'));
 const fotoExiste = (f) => fotos[f] && dadosRegras.ficheirosFotos.includes(f);
 
 // ---------------------------------------------------------------- as guardas legais (só avisam)
-/* As guardas da biblioteca legal-comum, em modo AVISAR (22 out 2026, grupo 1 da auditoria legal):
-   nada pára nem se esconde por elas; o que dizem vai para os avisos do registo da publicação, para o
-   Renato ver. A identificação (DL 7/2004, art. 10.º: reposta depois de 2bb729f, que abriu o site sem
-   NIF), as promoções (DL 70/2007, art. 5.º) e as fichas (Regulamento (UE) 2023/988, art. 19.º; CLP nas
-   velas e no gesso perfumado; composição nas toalhas). */
+/* As guardas da biblioteca legal-comum, em modo AVISAR: nada pára nem se esconde por elas; o que
+   dizem vai para os avisos do registo da publicação, para o Renato ver. A identificação (DL 7/2004,
+   art. 10.º), as promoções (DL 70/2007, art. 5.º) e as fichas (Regulamento (UE) 2023/988, art. 19.º;
+   CLP nas velas e no gesso perfumado; composição nas toalhas). */
 {
   const e = site.empresa || {};
   const FORMAS = [[/nome individual|\beni\b/i, 'eni'], [/unipessoal/i, 'unipessoal'], [/\blda\b|limitada/i, 'lda'], [/\bs\.?\s?a\b|an[óo]nima/i, 'sa']];
-  /* Sem NIF não há atividade aberta (o Renato, 17 out 2026): a guarda recebe «sem-actividade» e avisa que
-     o site não devia fechar vendas até lá (RGIT, art. 123.º), em vez de pedir só a forma jurídica. */
   const forma = FORMAS.find(([re]) => re.test(e.tipo || ''))?.[1] || (!e.nif ? 'sem-actividade' : undefined);
   const r = verificarIdentificacao({
     nome: e.nome, formaJuridica: forma, nif: e.nif,
@@ -146,13 +145,39 @@ for (const p of produtos) {
 }
 
 // As páginas de texto (content/paginas/*.md) não passam pelo painel: só o Renato as muda.
-// Conferem-se aqui as alegações e a fotografia.
+// Conferem-se aqui as alegações.
 for (const f of fs.readdirSync(path.join(CONTEUDO, 'paginas'))) {
   const t = lerTexto(`content/paginas/${f}`);
   const m = t.match(R.RE_ALEGACOES);
   if (m) erros.push(`Páginas › ${f}: «${m[0]}» é uma alegação que a lei só deixa fazer com prova (ou uma certificação que não temos). Tire a palavra.`);
 }
+// cada ícone da faixa de confiança tem desenho (regras.mjs, ICONES_CONFIANCA ↔ icones.mjs)
+const semDesenho = R.ICONES_CONFIANCA.filter((i) => !NOMES_ICONES.includes(i));
+if (semDesenho.length) erros.push(`Gerador: os ícones ${semDesenho.join(', ')} da faixa de confiança não têm desenho em src/templates/icones.mjs`);
 if (erros.length) parar(`A publicação parou: ${erros.length} ${erros.length === 1 ? 'problema' : 'problemas'} no conteúdo.`, erros);
+
+// ---------------------------------------------------------------- os contrastes da paleta
+/* As cores da proposta A, medidas aqui e não a olho (memória contraste-mede-se-nao-se-olha): o texto
+   a 4,5:1 e os contornos dos campos a 3:1. Lêem-se do :root do site.css: mudar uma cor e falhar o
+   mínimo pára a construção. */
+const CSS_FONTE = fs.readFileSync(path.join(RAIZ, 'src/estilos/site.css'), 'utf8');
+{
+  const raiz = CSS_FONTE.slice(CSS_FONTE.indexOf(':root {'), CSS_FONTE.indexOf('}', CSS_FONTE.indexOf(':root {')));
+  const cor = Object.fromEntries([...raiz.matchAll(/--([\w-]+):\s*(#[0-9A-Fa-f]{6})\b/g)].map((m) => [m[1], m[2]]));
+  const PARES = [
+    ['tinta', 'creme', 4.5], ['tinta', 'branco', 4.5], ['tinta-2', 'creme', 4.5], ['tinta-2', 'branco', 4.5], ['tinta-2', 'salvia', 4.5],
+    ['verde', 'creme', 4.5], ['verde', 'branco', 4.5], ['verde', 'salvia', 4.5], ['creme', 'verde', 4.5], ['creme-no-verde', 'verde', 4.5],
+    ['creme-no-verde', 'verde-fundo', 4.5], ['creme', 'verde-fundo', 4.5], ['creme', 'tinta', 4.5], ['erro', 'branco', 4.5], ['tinta', 'marcador', 4.5],
+    ['linha-campo', 'branco', 3], ['linha-campo', 'creme', 3],
+  ];
+  const falham = [];
+  for (const [a, b, min] of PARES) {
+    if (!cor[a] || !cor[b]) { falham.push(`Gerador: a cor --${!cor[a] ? a : b} não está no :root do site.css`); continue; }
+    const r = contraste(cor[a], cor[b]);
+    if (r < min) falham.push(`Gerador: --${a} sobre --${b} tem ${r}:1 (o mínimo é ${min}:1)`);
+  }
+  if (falham.length) parar('A publicação parou: as cores do site não têm contraste que chegue.', falham, { tecnico: true });
+}
 
 // ---------------------------------------------------------------- imagens
 if (!semImagens) execFileSync('python3', [path.join(RAIZ, 'scripts/imagens.py')], { stdio: 'inherit' });
@@ -161,6 +186,7 @@ const manifesto = JSON.parse(fs.readFileSync(path.join(RAIZ, '.cache/imagens/man
    nada, e o gerador nunca a usa (fotoExiste pede as duas coisas). */
 const semVersoes = Object.keys(fotos).filter((f) => dadosRegras.ficheirosFotos.includes(f) && !manifesto.fotos[f]);
 if (semVersoes.length) parar('A publicação parou: faltam as versões web de fotografias.', semVersoes.map((f) => `Fotografias: «${f}» não tem as versões web (scripts/imagens.py)`), { tecnico: true });
+if (!manifesto.logo) parar('A publicação parou: falta o logótipo.', ['Gerador: media/marca/logo.png não tem as versões pequenas (scripts/imagens.py)'], { tecnico: true });
 
 // ---------------------------------------------------------------- saída
 fs.rmSync(SAIDA, { recursive: true, force: true });
@@ -168,6 +194,8 @@ fs.mkdirSync(path.join(SAIDA, 'assets/img'), { recursive: true });
 const copiar = (de, para) => { fs.mkdirSync(path.dirname(para), { recursive: true }); fs.copyFileSync(de, para); };
 const resumo = (buf) => crypto.createHash('sha256').update(buf).digest('hex').slice(0, 10);
 
+// as imagens todas da cache (as versões web, os cartões de partilha, o logótipo e as miniaturas que o
+// painel mostra, assets/img/miniatura-<nome>.webp)
 for (const f of fs.readdirSync(path.join(RAIZ, '.cache/imagens'))) {
   if (f !== 'manifesto.json' && !f.endsWith('.resumo')) copiar(path.join(RAIZ, '.cache/imagens', f), path.join(SAIDA, 'assets/img', f));
 }
@@ -185,121 +213,124 @@ for (const [f, sha] of Object.entries(AVISO_SHA)) {
 }
 const AVISO_ALT = 'GARANTIA LEGAL. Proteção da garantia legal mínima de dois anos para os bens vendidos na União Europeia. Os consumidores podem invocar os seus direitos ao abrigo da garantia legal de conformidade, por exemplo, se os bens: não corresponderem à descrição; não funcionarem como previsto. Os vendedores são responsáveis por qualquer falta de conformidade que exista no momento em que os bens forem entregues e se manifeste no período de garantia legal. Os vendedores nessa situação estão obrigados a oferecer: reparação gratuita ou substituição gratuita; em alguns casos, redução do preço ou reembolso integral. Alguns países têm um período de garantia legal mais longo. Para os bens em segunda mão, pode aplicar-se um período mais curto, mas não inferior a um ano. Para mais informações sobre os seus direitos num determinado país, digitalize o código QR abaixo ou consulte o vendedor. europa.eu/youreurope/garantias. O que fazer se receber bens não conformes: 1. Contactar o vendedor o mais rapidamente possível para expor o problema; 2. Apresentar uma prova de compra, como um recibo, uma fatura ou um extrato bancário. Os vendedores e os produtores também podem oferecer garantias comerciais, que se aplicam independentemente da garantia legal. Por exemplo, pode ver este rótulo GARAN, que representa uma garantia comercial de durabilidade oferecida pelo produtor sem custos adicionais e cobrindo a totalidade do bem.';
 
-// vídeos: nome com resumo, para a cache de um ano nunca servir um vídeo antigo
+// os vídeos das fichas (media/video/): nome com resumo, para a cache de um ano nunca servir um antigo
 const ficheirosVideo = {};
-for (const f of listar('media/video', '.mp4').map((x) => `${x}.mp4`)) {
-  const buf = fs.readFileSync(path.join(RAIZ, 'media/video', f));
-  const nome = f.replace(/\.mp4$/, '');
+for (const nome of listar('media/video', '.mp4')) {
+  const buf = fs.readFileSync(path.join(RAIZ, 'media/video', `${nome}.mp4`));
   ficheirosVideo[nome] = `video/${nome}-${resumo(buf)}.mp4`;
-  copiar(path.join(RAIZ, 'media/video', f), path.join(SAIDA, 'assets', ficheirosVideo[nome]));
-}
-
-// O FILME DA CAPA (media/capa/, feito pelo scripts/filme.py): os dois cortes, com o resumo no
-// nome, e as imagens paradas (o primeiro fotograma de cada um) já passaram pelo imagens.py. Com o
-// filme ligado na página inicial e um dos ficheiros em falta, a publicação pára: a capa ficava sem
-// nada por baixo das palavras.
-let filme = null;
-if (inicio.capa?.filme === true) {
-  const cortes = { largo: 'filme-largo', alto: 'filme-alto' };
-  const faltam = Object.values(cortes).flatMap((n) => [
-    ...(existe(`media/capa/${n}.mp4`) ? [] : [`media/capa/${n}.mp4`]),
-    ...(manifesto.capa?.[`capa-${n}`] ? [] : [`media/capa/${n}.jpg`]),
-  ]);
-  if (faltam.length) parar('A publicação parou: falta o filme da capa.', faltam.map((f) => `Página inicial › A capa: falta ${f} (scripts/filme.py)`), { tecnico: true });
-  filme = {};
-  for (const [corte, n] of Object.entries(cortes)) {
-    const buf = fs.readFileSync(path.join(RAIZ, `media/capa/${n}.mp4`));
-    filme[corte] = { video: `video/${n}-${resumo(buf)}.mp4`, imagem: `capa-${n}` };
-    copiar(path.join(RAIZ, `media/capa/${n}.mp4`), path.join(SAIDA, 'assets', filme[corte].video));
-  }
+  copiar(path.join(RAIZ, 'media/video', `${nome}.mp4`), path.join(SAIDA, 'assets', ficheirosVideo[nome]));
 }
 
 // CSS e JS: um ficheiro cada, com o resumo no nome
-/* A folha de estilos leva o CSS do Livro de Reclamações da biblioteca legal-comum (a variante discreta,
-   .lr-discreto, e o texto só para leitores de ecrã). Vai ANTES do site.css: as regras do rodapé
-   (.rodape__legal a) ganham, e o Livro fica com a letra e a cor das ligações vizinhas. */
-const css = Buffer.concat([
-  Buffer.from(`/* legal-comum v${LEGAL_COMUM_VERSAO}: o Livro de Reclamações */\n${livroCss()}\n`),
-  fs.readFileSync(path.join(RAIZ, 'src/estilos/site.css')),
-]);
-const js = Buffer.from(['site.js', 'carrinho.js'].map((f) => `// ${f}\n${fs.readFileSync(path.join(RAIZ, 'src/scripts', f), 'utf8')}`).join('\n'));
-const ficheiros = { css: `site-${resumo(css)}.css`, js: `site-${resumo(js)}.js`, videos: ficheirosVideo, filme };
+/* A folha de estilos leva primeiro o CSS do Livro de Reclamações da biblioteca legal-comum (a variante
+   discreta, .lr-discreto): as regras do rodapé vêm depois e ganham, e o Livro fica com a letra e a cor
+   das ligações vizinhas. */
+const css = Buffer.from(`/* legal-comum v${LEGAL_COMUM_VERSAO}: o Livro de Reclamações */\n${livroCss()}\n${CSS_FONTE}`);
+const ORDEM_JS = ['nucleo.js', 'interface.js', 'carrinho.js', 'favoritos.js', 'procura.js', 'juntar.js'];
+const soltos = fs.readdirSync(path.join(RAIZ, 'src/scripts')).filter((f) => f.endsWith('.js') && !ORDEM_JS.includes(f));
+if (soltos.length) parar('A publicação parou: há scripts fora da lista.', soltos.map((f) => `Gerador: src/scripts/${f} não está em ORDEM_JS (scripts/build.mjs)`), { tecnico: true });
+const js = Buffer.from(ORDEM_JS.map((f) => `// ${f}\n${fs.readFileSync(path.join(RAIZ, 'src/scripts', f), 'utf8')}`).join('\n'));
+const ficheiros = { css: `site-${resumo(css)}.css`, js: `site-${resumo(js)}.js`, videos: ficheirosVideo };
 fs.writeFileSync(path.join(SAIDA, 'assets', ficheiros.css), css);
 fs.writeFileSync(path.join(SAIDA, 'assets', ficheiros.js), js);
+
+// ---------------------------------------------------------------- as páginas que vão existir
+/* Antes de escrever: a lista dos caminhos. Uma ligação do conteúdo (a capa, o aviso) para uma
+   página que não vai existir (um separador sem artigos) muda-se para a loja, em vez de partir. */
+const PAGINAS_MD = fs.readdirSync(path.join(CONTEUDO, 'paginas')).filter((x) => x.endsWith('.md'));
+const comArtigos = categorias.filter((c) => produtos.some((p) => p.categoria === c.slug));
+const caminhos = new Set([
+  '/', '/loja/', '/encomenda/', '/favoritos/', '/contactos/',
+  ...comArtigos.map((c) => `/loja/${c.slug}/`),
+  ...produtos.map((p) => `/produtos/${p.slug}/`),
+  ...PAGINAS_MD.map((f) => `/${f.replace(/\.md$/, '')}/`),
+]);
 
 // ---------------------------------------------------------------- contexto dos modelos
 const numero = numeroWhatsApp(site.contactos.whatsapp);
 const ctx = {
   site, inicio, categorias, produtos, fotos, manifesto, hoje, producao, ficheiros,
-  videos: {
-    'conjunto-tomas': 'o conjunto de batismo azul do Tomás, de perto: a caixa, a toalha bordada e a vela com o laço de linho',
-    'conjunto-mariana': 'o conjunto de batismo rosa da Mariana, de perto: o laço de linho, a vela e a toalha bordada',
-  },
   url: (c) => (/^https?:|^mailto:|^tel:|^#/.test(c) ? c : `${base}${c}`),
   asset: (rel) => `${base}/assets/${rel}`,
   absoluto: (c) => `${ORIGEM}${base}${c}`,
-  // sem número ainda: o wa.me sem número abre o WhatsApp a pedir o contacto (dá para ensaiar)
-  whatsapp: (texto) => `https://wa.me/${numero}?text=${encodeURIComponent(texto)}`,
-  numeroLegivel, custoChamada, notaChamada,
+  existe: (c) => caminhos.has(String(c || '').split(/[?#]/)[0]),
+  // o wa.me com a mensagem já escrita (sem texto, só a conversa)
+  whatsapp: (texto) => `https://wa.me/${numero}${texto ? `?text=${encodeURIComponent(texto)}` : ''}`,
   marcador: (desc) => `<mark class="por-confirmar">[por confirmar: ${esc(desc)}]</mark>`,
 };
+for (const d of Array.isArray(inicio.capa) ? inicio.capa : []) {
+  if (d && d.ligacao && !ctx.existe(d.ligacao)) avisos.push(`Página inicial › A capa: o botão «${d.botao}» leva a ${d.ligacao}, que não existe (um separador sem artigos?): vai para a loja.`);
+}
 
-
-// ---------------------------------------------------------------- catálogo do carrinho
-// O que o carrinho lê (assets/catalogo-*.json): os preços, as escolhas e os campos da personalização
-// de cada artigo, os tons de linho, as zonas e os portes da loja. O carrinho nunca guarda preços.
-const fotoPequena = (f) => { const m = manifesto.fotos[f]; const w = m.larguras.find((x) => x >= 360) || m.larguras[0]; return ctx.asset(`img/${f}-${m.resumo}-${w}.webp`); };
+// ---------------------------------------------------------------- catálogo (encomenda, favoritos, procura)
+/* O que o browser lê (assets/catalogo-*.json): os preços, as escolhas e os campos da personalização
+   de cada artigo, a fotografia (as versões do imagens.py), o separador, as zonas e os portes. O
+   carrinho nunca guarda preços: lê-os sempre daqui. */
+const fotoDoCatalogo = (f) => {
+  const m = manifesto.fotos[f];
+  return { n: f, r: m.resumo, l: m.larguras, f: m.formatos, w: m.largura, h: m.altura, foco: fotos[f]?.foco || '50% 50%', alt: fotos[f]?.alt || '' };
+};
 const catalogo = {
-  v: 1,
+  v: 2,
   marca: site.marca,
   whatsapp: numero,
-  zonas: site.entrega.zonas,
+  assets: ctx.asset(''),
+  encomenda: ctx.url('/encomenda/'),
+  loja: ctx.url('/loja/'),
+  pagamento: site.entrega.pagamento || '',
+  zonas: site.entrega.zonas.map((z) => ({ id: z.id, nome: z.nome, curto: z.curto, morada: z.morada === true })),
   portes: {
     ...Object.fromEntries(R.ZONAS_ENVIO.map((z) => [z, Number.isFinite(site.entrega.portes?.[z]) ? site.entrega.portes[z] : null])),
     gratisAPartirDe: Number.isFinite(site.entrega.portes?.gratisAPartirDe) ? site.entrega.portes.gratisAPartirDe : null,
   },
-  cores: (site.cores || []).map((c) => ({ numero: c.numero, nome: c.nome })),
-  carrinho: ctx.url('/carrinho/'),
-  loja: ctx.url('/loja/'),
-  produtos: Object.fromEntries(produtos.map((p) => [p.slug, {
-    nome: p.nome, nomeCurto: p.nomeCurto || p.nome, url: ctx.url(`/produtos/${p.slug}/`), foto: fotoPequena(p.fotos[0]),
-    preco: typeof p.preco === 'number' ? p.preco : null, precoAnterior: p.precoAnterior || null, promocaoAte: p.promocaoAte || '',
-    cores: p.cores === true, opcoes: R.opcoesDe(p), personalizacao: R.personalizacaoDe(p), minimo: R.quantidadeMinimaDe(p),
-  }])),
+  produtos: Object.fromEntries(produtos.map((p) => {
+    const c = categorias.find((k) => k.slug === p.categoria);
+    return [p.slug, {
+      nome: p.nome, curto: p.nomeCurto || p.nome, url: ctx.url(`/produtos/${p.slug}/`), resumo: p.resumo || '',
+      sep: p.categoria, sepNome: c ? nomeDoSeparador(c) : '', sepTitulo: c ? c.titulo : '',
+      preco: typeof p.preco === 'number' ? p.preco : null, precoAnterior: p.precoAnterior || null, promocaoAte: p.promocaoAte || '',
+      desde: R.temSuplementos(p), opcoes: R.opcoesDe(p), pers: R.personalizacaoDe(p), minimo: R.quantidadeMinimaDe(p),
+      img: fotoDoCatalogo(p.fotos[0]),
+    }];
+  })),
 };
 const catalogoBuf = Buffer.from(JSON.stringify(catalogo));
 ficheiros.catalogo = `catalogo-${resumo(catalogoBuf)}.json`;
 fs.writeFileSync(path.join(SAIDA, 'assets', ficheiros.catalogo), catalogoBuf);
 
 // ---------------------------------------------------------------- marcadores das páginas de texto
-/* Os portes da loja (por encomenda, não por peça), como frase: «Enviamos por CTT Expresso. Portugal
-   Continental: 5 €; Madeira e Açores: 9 €. O levantamento em Azeitão não tem custos.» */
+/* Na pré-visualização, o que falta dizer leva a marca «[por confirmar: …]»; no domínio aberto, as
+   regras já pararam a construção antes do que a lei pede, e o resto diz «a confirmar». */
+const porConfirmar = (desc, emProducao = 'a confirmar') => (producao ? esc(emProducao) : ctx.marcador(desc));
+
+/* Os portes da loja (por encomenda, não por peça), como frase: «Portugal Continental: 5,00 €; Madeira
+   e Açores: …. O levantamento em Rio Tinto não tem custos.» */
 function textoPortes() {
   const p = site.entrega.portes || {};
   const zonas = site.entrega.zonas.filter((z) => z.morada);
-  const partes = zonas.map((z) => `${esc(z.curto)}: ${Number.isFinite(p[z.id]) ? euros(p[z.id]) : ctx.marcador(`os portes para ${z.curto}`)}`);
-  const gratis = Number.isFinite(p.gratisAPartirDe) ? ` Portes grátis no continente a partir de ${euros(p.gratisAPartirDe)} em peças.` : '';
-  return `Enviamos por CTT Expresso. ${partes.join('; ')}.${gratis} Numa encomenda maior, os portes podem subir com o peso: confirmamos o valor consigo antes do pagamento. O levantamento em ${esc(site.local.localidade)} não tem custos.`;
+  const partes = zonas.map((z) => `${esc(z.curto)}: ${Number.isFinite(p[z.id]) ? euros(p[z.id]) : porConfirmar(`os portes para ${z.curto}`)}`);
+  const gratis = Number.isFinite(p.gratisAPartirDe) ? ` Portes grátis em Portugal Continental a partir de ${euros(p.gratisAPartirDe)} em peças.` : '';
+  const levantamento = site.entrega.zonas.find((z) => z.id === 'levantamento');
+  return `${partes.join('; ')}.${gratis}${levantamento ? ` O levantamento em ${esc(site.local.localidade)} não tem custos.` : ''}`;
 }
 
 function identificacao() {
   const e = site.empresa;
   const partes = [];
   partes.push(e.nome ? `<strong>${esc(e.nome)}</strong>` : ctx.marcador('o nome da empresa ou do empresário'));
-  if (e.tipo) partes.push(esc(e.tipo));
-  /* Sem atividade aberta não há NIF (o Renato, 17 out 2026), e a Susana deu só a terra (19 out: «Morada
-     apenas Azeitão»): o NIF só aparece se existir, e a morada pode ser só a localidade. As regras
-     (regras.mjs) continuam a lembrá-los no painel e na construção. */
+  if (e.tipo) partes.push(esc(e.tipo.charAt(0).toLowerCase() + e.tipo.slice(1)));
   if (e.nif) partes.push(`NIF ${esc(e.nif)}`);
-  const morada = e.morada || e.localidade ? moradaCompleta(e) : '';
-  partes.push(morada ? `em ${esc(morada)}` : `em ${ctx.marcador('a morada')}`);
+  const resto = moradaCompleta(e);
+  if (e.morada) partes.push(`com morada em ${esc(resto)}`);
+  else if (resto) partes.push(`com morada em ${producao ? esc(resto) : `${ctx.marcador('a rua e o número')}, ${esc(resto)}`}`);
+  else partes.push(`com morada em ${ctx.marcador('a morada')}`);
   return `${partes.join(', ')}, que vende com a marca ${esc(site.marca)}.`;
 }
 
 function botoesDesistencia() {
-  const texto = `Olá! Quero desistir da compra (direito de livre resolução).\n\nArtigo: \nEncomendado em: \nRecebido em: \nNome: \nMorada: `;
+  const texto = 'Olá! Quero desistir da compra (direito de livre resolução).\n\nArtigo: \nEncomendado em: \nRecebido em: \nNome: \nMorada: ';
   const b = [];
-  if (numero) b.push(`<a class="botao botao--whatsapp" href="${ctx.whatsapp(texto)}">Desistir pelo WhatsApp</a>`);
+  if (numero) b.push(`<a class="botao botao--verde" href="${ctx.whatsapp(texto)}" target="_blank" rel="noopener">Desistir pelo WhatsApp</a>`);
   if (site.contactos.email) b.push(`<a class="botao botao--contorno" href="mailto:${esc(site.contactos.email)}?subject=${encodeURIComponent('Desistência da compra (livre resolução)')}&amp;body=${encodeURIComponent(texto)}">Desistir por email</a>`);
   return `<div class="botoes">${b.join('')}</div><p class="nota">Respondemos a confirmar que recebemos a sua desistência.</p>`;
 }
@@ -329,28 +360,25 @@ function resolverMarcadores(fonte, onde) {
     localidade: () => esc(site.local.localidade),
     email: () => (c.email ? guardar(`<a href="mailto:${esc(c.email)}">${esc(c.email)}</a>`) : guardar(ctx.marcador('o email'))),
     // o WhatsApp só como ligação, sem o número (o Renato, 17 out 2026); o telefone com o número e a nota
-    whatsapp: () => (c.whatsapp ? guardar(`<a href="https://wa.me/${numero}">WhatsApp</a>`) : guardar(`WhatsApp ${ctx.marcador('o número')}`)),
+    whatsapp: () => (c.whatsapp ? guardar(`<a href="https://wa.me/${numero}" target="_blank" rel="noopener">WhatsApp</a>`) : guardar(`WhatsApp ${ctx.marcador('o número')}`)),
     telefone: () => (R.numeroPortugues(c.telefone) ? guardar(`<a href="tel:+351${R.numeroPortugues(c.telefone)}">${esc(numeroLegivel(c.telefone))}</a> ${notaChamada(c.telefone)}`) : guardar(ctx.marcador('o telefone'))),
     'empresa.identificacao': () => guardar(identificacao()),
-    'empresa.iva': () => (site.empresa.iva ? esc(site.empresa.iva) : ''), // sem atividade não há IVA a declarar
+    'empresa.iva': () => (site.empresa.iva ? esc(site.empresa.iva) : guardar(porConfirmar('se os preços incluem IVA ou se há isenção', ''))),
     prazo: () => (site.entrega.prazo ? esc(site.entrega.prazo) : guardar(ctx.marcador('quanto tempo leva a fazer e a entregar uma peça'))),
     pagamento: () => (site.entrega.pagamento ? esc(site.entrega.pagamento) : guardar(ctx.marcador('as formas de pagamento (MB WAY, transferência, no levantamento…)'))),
     levantamento: () => esc(site.entrega.levantamento || ''),
     portes: () => guardar(textoPortes()),
     botoesDesistencia: () => guardar(botoesDesistencia()),
-    /* A política de privacidade (RGPD, art. 13.º), pela biblioteca legal-comum: os destinatários reais
-       (o alojamento e o DNS na Cloudflare, o código e a publicação no GitHub, o Gmail da Mimices, a Meta,
-       e o Renato, que mantém o site e o painel: RGPD, art. 28.º), os prazos, e as frases da Meta e do
-       repositório público. */
-    'privacidade.destinatarios': () => guardar(pecaLegal('privacidade-destinatarios', destinatariosComExtras())),
+    /* A política de privacidade (RGPD, art. 13.º), pela biblioteca legal-comum: os destinatários reais,
+       os prazos, e as frases da Meta e do repositório público. */
+    'privacidade.destinatarios': () => guardar(pecaLegal('privacidade-destinatarios', `<div class="quadro" tabindex="0" role="region" aria-label="Quem recebe os dados">${destinatariosComExtras()}</div>`)),
     'privacidade.prazos': () => guardar(pecaLegal('privacidade-prazos', `<ul>${[
       'Pedidos de informação que não chegam a encomenda: 12 meses depois da última mensagem.',
       'Conversas e dados de uma encomenda: enquanto forem precisos para ela e para a garantia, até 3 anos depois da entrega.',
-      // Sem atividade aberta não há faturas (8 nov 2026): o prazo fiscal de 10 anos (PRAZOS_LEGAIS.encomendas) volta quando houver.
       PRAZOS_LEGAIS.registosTecnicos.texto,
     ].map((t) => `<li>${esc(t)}</li>`).join('')}</ul>`)),
     'privacidade.frases': () => guardar(pecaLegal('privacidade-frases', frasesPrivacidade(CONFIG_PRIVACIDADE).map((t) => `<p>${esc(t)}</p>`).join(''))),
-    avisoGarantia: () => guardar(`<figure class="aviso-garantia"><img src="${ctx.asset('legal/aviso-garantia-legal-pt.svg')}" width="600" height="848" alt="${esc(AVISO_ALT)}" loading="lazy"><figcaption><a href="${ctx.asset('legal/aviso-garantia-legal-pt.pdf')}">Descarregar o aviso oficial (PDF)</a> · <a href="https://europa.eu/youreurope/garantias" target="_blank" rel="noopener">europa.eu/youreurope/garantias</a></figcaption></figure>`),
+    avisoGarantia: () => guardar(`<figure class="aviso-garantia"><img src="${ctx.asset('legal/aviso-garantia-legal-pt.svg')}" width="600" height="848" alt="${esc(AVISO_ALT)}" loading="lazy" decoding="async"><figcaption><a href="${ctx.asset('legal/aviso-garantia-legal-pt.pdf')}">Descarregar o aviso oficial (PDF)</a> · <a href="https://europa.eu/youreurope/garantias" target="_blank" rel="noopener">europa.eu/youreurope/garantias</a></figcaption></figure>`),
   };
   const texto = fonte.replace(/\{\{([\w.]+)\}\}/g, (todo, chave) => {
     if (!valores[chave]) { erros.push(`${onde}: o marcador «${todo}» não existe (existem: ${Object.keys(valores).join(', ')})`); return todo; }
@@ -371,18 +399,19 @@ function paginaMarkdown(ficheiro) {
   if (meta.foto && !fotoExiste(meta.foto)) erros.push(`Páginas › ${ficheiro}: a fotografia «${meta.foto}» não existe`);
   // «indexar: não» no cabeçalho tira a página do Google (noindex e fora do sitemap); continua no site
   const indexar = !/^(n[ãa]o|false)$/i.test(meta.indexar || '');
-  return { caminho: `/${slug}/`, titulo: meta.titulo, tituloSeo: meta.tituloSeo, subtitulo: meta.subtitulo, modelo: meta.modelo, descricao: meta.descricao, atualizado: meta.atualizado, foto: meta.foto, indexar, html };
+  return { caminho: `/${slug}/`, titulo: meta.titulo, tituloSeo: meta.tituloSeo, subtitulo: meta.subtitulo, modelo: meta.modelo, descricao: meta.descricao, atualizado: meta.atualizado, foto: meta.foto && fotoExiste(meta.foto) ? meta.foto : '', indexar, html };
 }
 
 // ---------------------------------------------------------------- páginas
 const saidas = [];
 saidas.push(paginas.inicio(ctx));
 saidas.push(paginas.loja(ctx));
-for (const c of categorias) saidas.push(paginas.loja(ctx, c.slug));
+for (const c of comArtigos) saidas.push(paginas.loja(ctx, c.slug));   // os separadores vazios não têm página
 for (const p of produtos) saidas.push(paginas.produto(ctx, p));
-saidas.push(paginas.carrinho(ctx));
+saidas.push(paginas.encomenda(ctx));
+saidas.push(paginas.favoritos(ctx));
 saidas.push(paginas.contactos(ctx));
-for (const f of fs.readdirSync(path.join(CONTEUDO, 'paginas')).filter((x) => x.endsWith('.md'))) saidas.push(paginas.texto(ctx, paginaMarkdown(f)));
+for (const f of PAGINAS_MD) saidas.push(paginas.texto(ctx, paginaMarkdown(f)));
 saidas.push(paginas.erro404(ctx));
 
 if (erros.length) parar(`A publicação parou: ${erros.length} ${erros.length === 1 ? 'problema' : 'problemas'}.`, erros, { tecnico: true });
@@ -393,62 +422,94 @@ for (const s of saidas) {
   fs.mkdirSync(path.dirname(destino), { recursive: true });
   fs.writeFileSync(destino, html);
 }
+// /carrinho/ era o endereço da encomenda na primeira versão: reencaminha
+fs.mkdirSync(path.join(SAIDA, 'carrinho'), { recursive: true });
+fs.writeFileSync(path.join(SAIDA, 'carrinho/index.html'), reencaminhar(ctx, { de: '/carrinho/', para: '/encomenda/' }));
 
 // ---------------------------------------------------------------- robots, sitemap, _headers
-const indexaveis = saidas.filter((s) => !['/404.html', '/carrinho/'].includes(s.caminho) && s.indexar !== false);
-let lastmod = {};
-try {
-  // a data da última alteração de cada página sai do git (o conteúdo de que ela é feita)
-  const data = (ficheirosFonte) => execFileSync('git', ['log', '-1', '--format=%cs', '--', ...ficheirosFonte], { cwd: RAIZ, encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }).trim();
-  for (const s of indexaveis) {
-    let fontes = ['content/site.json'];
-    if (s.caminho === '/') fontes = ['content/inicio.json', 'content/produtos', 'media/capa'];
-    else if (s.caminho.startsWith('/produtos/')) fontes = [`content/produtos/${s.caminho.split('/')[2]}.json`];
-    else if (s.caminho.startsWith('/loja/')) fontes = ['content/produtos', 'content/categorias.json'];
-    else if (existe(`content/paginas${s.caminho.replace(/\/$/, '')}.md`)) fontes = [`content/paginas${s.caminho.replace(/\/$/, '')}.md`];
-    lastmod[s.caminho] = data(fontes) || hoje;
-  }
-} catch { lastmod = {}; }
-fs.writeFileSync(path.join(SAIDA, 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?>
+const indexaveis = saidas.filter((s) => s.caminho !== '/404.html' && s.indexar !== false);
+// O sitemap só no domínio aberto: na pré-visualização (noindex) ia mostrar ao Google páginas que lhe
+// pedimos para não guardar.
+if (producao) {
+  let lastmod = {};
+  try {
+    // a data da última alteração de cada página sai do git (o conteúdo de que ela é feita)
+    const data = (ficheirosFonte) => execFileSync('git', ['log', '-1', '--format=%cs', '--', ...ficheirosFonte], { cwd: RAIZ, encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }).trim();
+    for (const s of indexaveis) {
+      let fontes = ['content/site.json'];
+      if (s.caminho === '/') fontes = ['content/inicio.json', 'content/produtos'];
+      else if (s.caminho.startsWith('/produtos/')) fontes = [`content/produtos/${s.caminho.split('/')[2]}.json`];
+      else if (s.caminho.startsWith('/loja/')) fontes = ['content/produtos', 'content/categorias.json'];
+      else if (existe(`content/paginas${s.caminho.replace(/\/$/, '')}.md`)) fontes = [`content/paginas${s.caminho.replace(/\/$/, '')}.md`];
+      lastmod[s.caminho] = data(fontes) || hoje;
+    }
+  } catch { lastmod = {}; }
+  fs.writeFileSync(path.join(SAIDA, 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${indexaveis.map((s) => `  <url><loc>${ctx.absoluto(s.caminho)}</loc><lastmod>${lastmod[s.caminho] || hoje}</lastmod></url>`).join('\n')}
 </urlset>
 `);
+}
 // Pré-visualização: fechada aos motores de busca, mas aberta aos robôs que fazem a pré-visualização
 // das ligações no WhatsApp e no Facebook (sem isto, partilhar o link mostra-se sem imagem).
 fs.writeFileSync(path.join(SAIDA, 'robots.txt'), producao
   ? `User-agent: *\nAllow: /\n\nSitemap: ${ctx.absoluto('/sitemap.xml')}\n`
   : 'User-agent: facebookexternalhit\nAllow: /\n\nUser-agent: WhatsApp\nAllow: /\n\nUser-agent: *\nDisallow: /\n');
-// Em produção (Cloudflare): a cache dos ficheiros com o resumo no nome. Os ficheiros do
-// Worker saem todos com max-age=0 (cada visita pergunta outra vez); estes nunca mudam de
-// conteúdo, porque o nome muda com ele. Só grupos que não se tocam: duas regras para o
-// mesmo ficheiro JUNTAM os valores (as miniaturas do painel, assets/img/miniatura-*.webp,
-// não têm resumo e ficam fora — por isso as imagens não levam regra).
+// No domínio (Cloudflare): a cache dos ficheiros com o resumo no nome. Os ficheiros do Worker saem
+// todos com max-age=0 (cada visita pergunta outra vez); estes nunca mudam de conteúdo, porque o nome
+// muda com ele. Só grupos que não se tocam: duas regras para o mesmo ficheiro JUNTAM os valores (as
+// miniaturas do painel, assets/img/miniatura-*.webp, não têm resumo e ficam fora — por isso as
+// imagens não levam regra).
 if (dominio) {
   const umAno = '  Cache-Control: public, max-age=31536000, immutable\n';
-  /* E os cabeçalhos de segurança em todas as respostas (como no ithos): sem Cache-Control, porque
-     duas regras para o mesmo ficheiro JUNTAM os valores. O HSTS começa curto (um dia). */
+  // E os cabeçalhos de segurança em todas as respostas: sem Cache-Control (duas regras juntam-se).
   const seguranca = '/*\n  X-Content-Type-Options: nosniff\n  X-Frame-Options: SAMEORIGIN\n  Content-Security-Policy: frame-ancestors \'self\'\n  Referrer-Policy: strict-origin-when-cross-origin\n  Strict-Transport-Security: max-age=86400\n';
   fs.writeFileSync(path.join(SAIDA, '_headers'), seguranca + ['/assets/site-*', '/assets/catalogo-*', '/assets/video/*'].map((r) => `${r}\n${umAno}`).join(''));
 }
 fs.writeFileSync(path.join(SAIDA, '.nojekyll'), '');
-// A chave do IndexNow (o aviso ao Bing, ao Yandex e aos outros de que uma página mudou; o ChatGPT
-// pesquisa sobretudo pelo índice do Bing): é pública por desenho, e prova que o domínio é nosso. Só
-// no site aberto (--producao): avisar de páginas com noindex não serve de nada.
-const INDEXNOW = '3cb4f7a67561f88e800496793392287d';
+// A chave do IndexNow (o aviso ao Bing e aos outros de que uma página mudou), só no site aberto: é
+// pública por desenho, e prova que o domínio é nosso. Uma só para a Dream Art.
+const INDEXNOW = '26d937b70160ff32a868a5670710d2d1';
 if (producao) fs.writeFileSync(path.join(SAIDA, `${INDEXNOW}.txt`), INDEXNOW);
 
 // ---------------------------------------------------------------- verificação do que saiu
 const problemas = [];
 const todosHtml = [];
 (function andar(d) { for (const f of fs.readdirSync(d)) { const p = path.join(d, f); if (fs.statSync(p).isDirectory()) andar(p); else if (f.endsWith('.html')) todosHtml.push(p); } })(SAIDA);
+/* Nada da Mimices (o site da Dream Art nasceu sobre o código dela e o Renato rejeitou a mistura, 8 nov
+   2026): nem o nome, nem a dona, nem a terra, nem os tons de linho. */
+const RESTOS = /mimices|susana|azeit[ãa]o|tons? de linho|localhost:4830/i;
+for (const [nome, buf] of [[ficheiros.css, css], [ficheiros.js, js]]) {
+  const m = buf.toString('utf8').match(RESTOS);
+  if (m) problemas.push(`assets/${nome}: tem «${m[0]}» (resto de outro site)`);
+}
 for (const f of todosHtml) {
   const html = fs.readFileSync(f, 'utf8');
   const onde = path.relative(SAIDA, f);
+  const reencaminha = html.includes('http-equiv="refresh"');
   for (const lixo of ['{{', 'undefined', 'NaN', '[object Object]']) if (html.includes(lixo)) problemas.push(`${onde}: contém «${lixo}»`);
+  const resto = html.match(RESTOS);
+  if (resto) problemas.push(`${onde}: tem «${resto[0]}» (resto de outro site)`);
   if (producao && html.includes('por-confirmar')) problemas.push(`${onde}: ainda tem texto por confirmar`);
-  if (!html.includes('<!-- legal-comum:livro ')) problemas.push(`${onde}: falta o botão do Livro de Reclamações`);
-  for (const m of html.matchAll(/<img\b[^>]*>/g)) if (!/\salt="/.test(m[0])) problemas.push(`${onde}: imagem sem alt: ${m[0].slice(0, 80)}`);
+  if (!reencaminha && !html.includes('<!-- legal-comum:livro ')) problemas.push(`${onde}: falta a ligação ao Livro de Reclamações`);
+  if (!reencaminha && (html.match(/<h1[\s>]/g) || []).length !== 1) problemas.push(`${onde}: tem ${(html.match(/<h1[\s>]/g) || []).length} títulos h1 (tem de ter um)`);
+  if (!producao && !html.includes('name="robots" content="noindex')) problemas.push(`${onde}: a pré-visualização tem de ser noindex`);
+  for (const m of html.matchAll(/<img\b[^>]*>/g)) {
+    if (!/\salt="/.test(m[0])) problemas.push(`${onde}: imagem sem alt: ${m[0].slice(0, 80)}`);
+    if (!/\swidth="\d+"/.test(m[0]) || !/\sheight="\d+"/.test(m[0])) problemas.push(`${onde}: imagem sem width/height: ${m[0].slice(0, 80)}`);
+  }
+  // os JSON-LD têm de se ler (um erro aqui e o Google ignora a página inteira)
+  for (const m of html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)) {
+    try { const j = JSON.parse(m[1]); if (!j['@context'] || !j['@type']) problemas.push(`${onde}: JSON-LD sem @context ou @type`); } catch (e) { problemas.push(`${onde}: JSON-LD que não se lê (${e.message})`); }
+  }
+  // ids repetidos partem as ligações dos rótulos e dos aria-controls
+  const ids = [...html.matchAll(/\sid="([^"]+)"/g)].map((m) => m[1]);
+  const repetidos = ids.filter((x, i) => ids.indexOf(x) !== i);
+  if (repetidos.length) problemas.push(`${onde}: ids repetidos: ${[...new Set(repetidos)].join(', ')}`);
+  // nada de terceiros: as páginas não carregam nada de fora (as letras e as imagens são do site)
+  for (const m of html.matchAll(/<(?:script|link|img|source|iframe|video)\b[^>]*\s(?:src|srcset|href)="(https?:\/\/[^"]+)"/g)) {
+    if (!/^<link[^>]*rel="canonical"/.test(m[0]) && !m[1].startsWith(ORIGEM)) problemas.push(`${onde}: carrega de fora: ${m[1].slice(0, 80)}`);
+  }
   for (const m of html.matchAll(/\s(?:href|src|poster)="([^"]+)"/g)) {
     let u = m[1].replace(/&amp;/g, '&');
     if (/^(https?:|mailto:|tel:|#|data:)/.test(u)) continue;
@@ -465,9 +526,14 @@ for (const f of todosHtml) {
     }
   }
   const og = html.match(/property="og:image" content="([^"]+)"/)?.[1];
+  if (!reencaminha && !og) problemas.push(`${onde}: falta o cartão de partilha (og:image)`);
   if (og && !fs.existsSync(path.join(SAIDA, og.replace(ORIGEM + base, '')))) problemas.push(`${onde}: o cartão de partilha não existe: ${og}`);
+}
+// os separadores vazios não têm página, nem ligação em lado nenhum
+for (const c of categorias.filter((k) => !comArtigos.includes(k))) {
+  if (fs.existsSync(path.join(SAIDA, 'loja', c.slug))) problemas.push(`loja/${c.slug}/: um separador sem artigos não pode ter página`);
 }
 if (problemas.length) parar(`A publicação parou: o site saiu com ${problemas.length} problemas.`, [...new Set(problemas)].slice(0, 60).map((p) => `Gerador: ${p}`), { tecnico: true });
 
 for (const a of avisos) console.warn(`  ! ${a}`);
-console.log(`site: ${saidas.length} páginas em _site/ (${producao ? `produção, ${DOMINIO}` : dominio ? `${DOMINIO}, ainda fechado aos motores de busca` : base ? `pré-visualização, ${ORIGEM}${base}/` : 'local'}), ${produtos.length} artigos, hoje ${hoje}`);
+console.log(`site: ${saidas.length} páginas em ${path.relative(RAIZ, SAIDA) || '.'}/ (${producao ? `produção, ${DOMINIO}` : dominio ? `${DOMINIO}, ainda fechado aos motores de busca` : base ? `pré-visualização, ${ORIGEM}${base}/` : 'local'}), ${produtos.length} artigos, ${comArtigos.length} separadores, hoje ${hoje}`);
