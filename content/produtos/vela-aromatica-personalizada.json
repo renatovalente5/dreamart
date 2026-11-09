@@ -18,7 +18,7 @@
     "frase": true,
     "rotuloNome": "Nomes ou iniciais",
     "rotuloData": "Data da celebração",
-    "rotuloFrase": "Frase (opcional)"
+    "rotuloFrase": "Frase"
   },
   "quantidadeMinima": 1,
   "categoria": "lembrancas",

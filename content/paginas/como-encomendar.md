@@ -23,7 +23,7 @@ Respondemos com o resumo: as peças como as vamos fazer, o total, o prazo e o pa
 
 ## Entrega
 
-Os portes são por encomenda, não por peça. {{portes}}
+{{portes}}
 
 ## Pagamento
 

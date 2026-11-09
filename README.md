@@ -10,12 +10,22 @@ encomenda fica feita quando a Dream Art a confirma por lá.
 - **Pré-visualização**: https://renatovalente5.github.io/dreamart/ (noindex; `pre-visualizacao.yml`, a
   cada envio para a `main`). Os dados por confirmar aparecem como «[por confirmar]».
 - **Produção**: no domínio **dreamart.pt** (aprovado pela cliente a 8 nov 2026), só no fim — um Worker
-  da Cloudflare (`wrangler.jsonc`, `worker/www.js`, `publicar.yml`), como a Mimices: os termos do GitHub
-  Pages não deixam lá uma loja. Até lá o `publicar.yml` só corre à mão.
-- **Painel (backoffice)**: `renatovalente5/dreamart-painel`, onde a Dream Art muda o site sozinha. Fica no
-  ar com o domínio (o código de entrada vai por email de @dreamart.pt).
-- A base do código é a da Mimices (`~/Websites/mimices`), adaptada: sem os tons de linho, com a Europa
-  nas zonas de envio. Plano e decisões em [docs/PLANO.md](docs/PLANO.md).
+  da Cloudflare (`wrangler.jsonc`, `worker/www.js`, `publicar.yml`): os termos do GitHub Pages não deixam
+  lá uma loja. Até lá o `publicar.yml` só corre à mão.
+- **Painel (backoffice)**: `~/Websites/dreamart-painel` (ainda só no Mac), onde a Dream Art muda o site
+  sozinha. Fica no ar com o domínio (o código de entrada vai por email).
+- **O desenho é próprio**: a proposta A («Verde da marca», escolhida pelo Renato a 9 nov 2026), com as
+  cores e as letras do logótipo. O gerador, as regras e a legal-comum são os dos outros sites do Renato.
+  Plano e decisões em [docs/PLANO.md](docs/PLANO.md).
+
+## A encomenda
+
+- O saco do cabeçalho leva a **/encomenda/** (o /carrinho/ reencaminha para lá): as peças, a entrega
+  (levantamento, continente, ilhas, Europa) com os portes, o nome e a morada, e «Encomendar pelo
+  WhatsApp», que abre o WhatsApp com a mensagem escrita (`src/scripts/carrinho.js`).
+- **/favoritos/**: as peças guardadas com o coração.
+- No browser ficam só `dreamart:carrinho` (as peças e a entrega, nunca o nome nem a morada) e
+  `dreamart:favoritos`, como diz a política de cookies.
 
 ## Correr
 
@@ -24,6 +34,7 @@ python3 scripts/imagens.py        # as versões web das fotografias (Pillow), pa
 node scripts/build.mjs            # o site em _site/ (python3 -m http.server 4880 --directory _site)
 node scripts/build.mjs --base=/dreamart   # como no GitHub Pages
 node scripts/build.mjs --producao         # como no domínio: pára se faltar um dado que a lei pede
+node scripts/testar.mjs           # os testes (o CI corre-os antes de cada publicação)
 ```
 
 ## Onde está cada coisa

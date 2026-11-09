@@ -89,7 +89,7 @@ morada nem as observações. Não há cookies, estatísticas nem nada de terceir
 | Os portes: continente, ilhas, Europa | Os mesmos e a encomenda | Lei (art. 4.º, n.º 1, als. e) e g)) | 3 |
 | O prazo habitual | Os mesmos e a ficha | Lei (art. 4.º, n.º 1, al. j)). Sem ele valem os 30 dias do art. 19.º, já nos termos | 4 |
 | A quantidade mínima nas lembranças | Ficha e encomenda (hoje 1 em todas) | Para a encomenda funcionar | 5 |
-| O levantamento em Rio Tinto | Encomenda (é a 1.ª entrega e vem escolhida) e o texto dos portes | Para a encomenda funcionar. Se não houver, as regras dos dados têm de mudar (pedido D2) | 5 |
+| O levantamento em Rio Tinto | Encomenda, fichas e o texto dos portes, com «[por confirmar]» | Para a encomenda funcionar. No domínio, sem o texto (`entrega.levantamento`), não se oferece (9 nov) | 5 |
 | O IVA | Termos (`{{empresa.iva}}`, hoje vazio) | Lei: o preço mostrado é o total com impostos (art. 4.º, n.º 1, al. e)) | 6 |
 | A composição da toalha | Ficha dos dois conjuntos de batizado | Lei (Reg. (UE) 1007/2011, art. 16.º) | 7 |
 | Ingredientes, alergénios, peso e origem | Fichas das drageias e do mel | Lei (Reg. (UE) 1169/2011, art. 14.º) | 8 |
@@ -172,8 +172,8 @@ não obrigatória) e **GOSTO** (do Renato). Só a LEI entra nas perguntas à cli
     - no mel, o país de origem (Diretiva 2001/110/CE; DL 214/2003).
 
     A data de durabilidade só é precisa na entrega. Pergunta 8. O modelo dos artigos não tem campos para
-    isto: pedido D3. A frase «O nosso mel é de rosmaninho, de apicultores de Mogadouro», na ficha, não vem
-    do material da cliente: confirmar ou tirar (pedido D1).
+    isto: pedido D3. A frase sobre a origem do mel, que não vinha do material da cliente, saiu da ficha a
+    9 nov (pedido D1).
 14. **CLP** (Reg. (CE) 1272/2008), só se se aplicar. Diz respeito às peças com fragrância:
     - as velas perfumadas (a aromática e a coração dizem-no; as outras, por saber);
     - o gesso perfumado (anjo, anjinho, cruz);
@@ -332,16 +332,18 @@ Não os fiz: o código e os dados não são deste ramo.
    - o telefone, se aparecer, com a nota da chamada.
 6. Nada de terceiros: letras do Google, mapas, vídeos ou o Instagram embebido tornam falsas a política de
    cookies e a de privacidade, e pedem consentimento (Lei 41/2004, art. 5.º).
-7. As meta `google-site-verification` e `msvalidate.01` do `layout.mjs` são as da Mimices.
+7. ~~As meta `google-site-verification` e `msvalidate.01` do `layout.mjs` são as da Mimices.~~ O
+   `layout.mjs` novo (proposta A) já não as tem (9 nov).
 
 ### D. Dados (`content/`)
 
-1. `produtos/pote-de-mel-com-colher.json`: confirmar com a cliente a frase «O nosso mel é de rosmaninho, de
-   apicultores de Mogadouro», ou tirá-la. É uma alegação de origem (DL 57/2008, art. 7.º).
+1. ~~`produtos/pote-de-mel-com-colher.json`: a frase da origem do mel~~ saiu a 9 nov (era uma alegação de
+   origem sem fonte, DL 57/2008, art. 7.º). Volta só com o rótulo (pergunta 8).
 2. `site.json`, quando as respostas chegarem: `empresa.morada`, `empresa.iva`, `entrega.portes`,
-   `entrega.prazo`, `entrega.pagamento` e `entrega.levantamento`. A zona `levantamento` é hoje a primeira e
-   vem escolhida. Se não houver levantamento, tirá-la é **mudança nas regras**: `regras.mjs` (linha 683,
-   `entrega.zonas`) para a publicação quando ela falta.
+   `entrega.prazo`, `entrega.pagamento` e `entrega.levantamento`. O levantamento só se oferece no domínio
+   quando `entrega.levantamento` diz como se combina (o `build.mjs` tira a zona sem esse texto, 9 nov); na
+   pré-visualização aparece com «[por confirmar]». Os portes não dizem «por encomenda» nem «por peça» até
+   a cliente responder (pergunta 3).
 3. **Mudança de modelo** (`regras.mjs` e painel, byte a byte): nos alimentos, campos para os ingredientes, os
    alergénios, a quantidade líquida, a conservação e a origem (Reg. (UE) 1169/2011, art. 9.º). Até lá podem ir
    na descrição.

@@ -25,7 +25,7 @@ Enviamos para todo o país, para as ilhas e para outros países da Europa.
 
 ## Quanto custam os portes?
 
-São por encomenda, não por peça. {{portes}}
+{{portes}}
 
 ## Como pago?
 

@@ -119,12 +119,15 @@
       pausa.setAttribute('aria-label', parado ? 'Retomar a passagem das coleções' : 'Parar a passagem das coleções');
     };
     abas.forEach((a, n) => a.addEventListener('click', () => mostrar(n, true)));
-    pausa.addEventListener('click', () => { parado = !parado; desenharPausa(); programar(); });
+    pausa.addEventListener('click', () => { parado = !parado; if (!parado) suspenso = false; desenharPausa(); programar(); });
     desenharPausa();
-    // pára enquanto o rato ou o foco estão na capa, e quando o separador está escondido
-    capa.addEventListener('mouseenter', () => { suspenso = true; programar(); });
-    capa.addEventListener('mouseleave', () => { suspenso = false; programar(); });
-    capa.addEventListener('focusin', () => { suspenso = true; programar(); });
+    /* Pára enquanto o rato está na capa, ou o foco do teclado (:focus-visible), e quando o separador
+       está escondido. Só o rato: no telemóvel, um toque dava «mouseenter» sem o «mouseleave», e a capa
+       ficava parada de vez. */
+    capa.addEventListener('pointerenter', (ev) => { if (ev.pointerType === 'mouse') { suspenso = true; programar(); } });
+    capa.addEventListener('pointerleave', (ev) => { if (ev.pointerType === 'mouse') { suspenso = false; programar(); } });
+    const peloTeclado = (el) => { try { return el.matches(':focus-visible'); } catch (_) { return true; } }; // Safari < 15.4
+    capa.addEventListener('focusin', (ev) => { if (peloTeclado(ev.target)) { suspenso = true; programar(); } });
     capa.addEventListener('focusout', (ev) => { if (!capa.contains(ev.relatedTarget)) { suspenso = false; programar(); } });
     document.addEventListener('visibilitychange', () => { suspenso = document.hidden; programar(); });
     $$('dialog').forEach((d) => { d.addEventListener('close', programar); d.addEventListener('da:aberto', () => window.setTimeout(programar, 0)); });

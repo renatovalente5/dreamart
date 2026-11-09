@@ -294,7 +294,8 @@ export function produto(ctx, p) {
     ${p.referencia ? `<p class="ficha__linha"><strong>Referência:</strong> ${esc(p.referencia)}</p>` : ''}
   </div>` : '';
 
-  // entrega e pagamento (fechado): o prazo, os portes por encomenda e o pagamento
+  // entrega e pagamento (fechado): o prazo, os portes e o pagamento; o levantamento por confirmar até a
+  // Dream Art dizer como se combina (entrega.levantamento)
   const en = ctx.site.entrega || {};
   const portes = (en.zonas || []).filter((z) => z.morada).map((z) => `${esc(z.curto)}: ${Number.isFinite(en.portes?.[z.id]) ? euros(en.portes[z.id]) : 'a confirmar'}`).join(' · ');
   const levantamento = (en.zonas || []).find((z) => z.id === 'levantamento');
@@ -302,7 +303,7 @@ export function produto(ctx, p) {
     <summary>${ico('caixa')}<span>Entrega e pagamento</span>${ico('baixo', { classe: 'ficha__seta' })}</summary>
     <div class="ficha__detalhe-corpo">
       <p><strong>Prazo:</strong> ${en.prazo ? esc(en.prazo) : ctx.marcador('quanto tempo leva a fazer e a entregar')}</p>
-      <p><strong>Portes, por encomenda:</strong> ${portes}${levantamento ? ` · ${esc(levantamento.curto)}: sem portes` : ''}.</p>
+      <p><strong>Portes:</strong> ${portes}${levantamento ? ` · ${esc(levantamento.curto)}: ${en.levantamento ? 'sem portes' : ctx.marcador('se fazem levantamento e como se combina')}` : ''}.</p>
       <p><strong>Pagamento:</strong> ${en.pagamento ? esc(en.pagamento) : ctx.marcador('as formas de pagamento')}</p>
       ${personalizacaoDe(p).length ? '<p>Peça personalizada: não tem direito de livre resolução.</p>' : ''}
     </div>
@@ -421,7 +422,7 @@ export function encomenda(ctx) {
             <legend>Como quer receber?</legend>
             ${zonas.map((z, i) => `<label class="entrega"><input type="radio" name="zona" value="${esc(z.id)}"${i === 0 ? ' checked' : ''}><span class="entrega__nome">${esc(z.curto)}</span><span class="entrega__preco">${precoZona(z)}</span></label>`).join('\n            ')}
           </fieldset>
-          ${en.levantamento ? `<p class="campo__ajuda" data-so-levantamento>${esc(en.levantamento)}</p>` : ''}
+          ${zonas.some((z) => z.id === 'levantamento') ? `<p class="campo__ajuda" data-so-levantamento>${en.levantamento ? esc(en.levantamento) : ctx.marcador('se fazem levantamento em Rio Tinto e como se combina')}</p>` : ''}
           <div class="campo"><label for="e-nome">Nome <span class="campo__obrig" aria-hidden="true">*</span></label><input id="e-nome" name="nome" type="text" autocomplete="name" required maxlength="80"></div>
           <div data-so-envio hidden>
             <div class="campo"><label for="e-morada">Morada <span class="campo__obrig" aria-hidden="true">*</span></label><input id="e-morada" name="morada" type="text" autocomplete="address-line1" maxlength="160" data-obrigatorio-envio></div>
@@ -436,7 +437,6 @@ export function encomenda(ctx) {
           <ul class="antes" role="list" aria-label="Antes de encomendar">
             <li>${ico('relogio')}<span><strong>Prazo:</strong> ${en.prazo ? esc(en.prazo) : ctx.marcador('quanto tempo leva a fazer e a entregar')}</span></li>
             <li>${ico('cartao')}<span><strong>Pagamento:</strong> ${en.pagamento ? esc(en.pagamento) : ctx.marcador('as formas de pagamento')}</span></li>
-            <li>${ico('caixa')}<span>Os portes são por encomenda, não por peça.</span></li>
             <li>${ico('info')}<span>As peças personalizadas não têm direito de livre resolução.${temTermos ? ` <a href="${ctx.url('/termos-e-condicoes/')}">Termos e condições</a>` : ''}</span></li>
           </ul>
           <p class="juntar__erro" data-erro-encomenda role="alert" hidden></p>
@@ -446,8 +446,9 @@ export function encomenda(ctx) {
         <div class="enviada" data-enviada hidden>
           <span class="enviada__icone">${ico('certo')}</span>
           <h2 class="cartao-form__titulo" id="t-enviada" tabindex="-1">Encomenda enviada</h2>
-          <p>Abrimos o WhatsApp com a sua encomenda<span data-enviada-quando></span>. Se ainda não a enviou, envie-a por lá: respondemos a confirmar.</p>
+          <p>Abrimos o WhatsApp com a sua encomenda<span data-enviada-quando></span>. Se ainda não a enviou, pode enviá-la agora: respondemos a confirmar.</p>
           <a class="botao botao--verde botao--largo" href="${ctx.whatsapp('')}" target="_blank" rel="noopener" data-continuar>${ico('whatsapp')}<span>Abrir o WhatsApp</span></a>
+          <button class="botao botao--verde botao--largo" type="button" data-reenviar hidden>${ico('whatsapp')}<span>Enviar outra vez</span></button>
           <div class="enviada__mais">
             <button class="botao botao--contorno" type="button" data-alterar>Alterar a encomenda</button>
             <button class="botao botao--texto" type="button" data-esvaziar>Fazer outra encomenda</button>
@@ -478,7 +479,7 @@ export function favoritos(ctx) {
     <div class="vazio" data-favoritos-vazio hidden>
       <span class="vazio__icone">${ico('coracao')}</span>
       <p class="vazio__titulo">Ainda sem favoritos.</p>
-      <p>Toque no coração de uma peça para a guardar aqui.</p>
+      <p>Carregue no coração de uma peça para a guardar aqui.</p>
       ${botao(ctx.url('/loja/'), 'Ver a loja', { classe: 'botao botao--verde' })}
     </div>
     <noscript><p class="vazio">Os favoritos precisam de JavaScript.</p></noscript>
@@ -582,7 +583,7 @@ export function contactos(ctx) {
 }
 
 export function erro404(ctx) {
-  const conteudo = `${cabecaDePagina(ctx, { titulo: 'Esta página não existe', sub: '<p>Pode ter mudado de sítio, ou o endereço tem um erro.</p>' })}
+  const conteudo = `${cabecaDePagina(ctx, { titulo: 'Esta página não existe', sub: '<p>Pode ter mudado de sítio ou o endereço tem um erro.</p>' })}
 <section class="separadores separadores--erro" aria-label="Separadores">
   <div class="contentor">
     ${circulos(ctx, { titulo: 'p' })}

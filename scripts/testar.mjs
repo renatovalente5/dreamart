@@ -540,7 +540,7 @@ await construcao('na pré-visualização do conteúdo de agora, cada dado legal 
     [s.empresa.iva, 'se os preços incluem IVA'],
     [s.empresa.morada, resto ? 'a rua e o número' : 'a morada'],
     // os portes só contam ditos quando são um número (é o que o gerador escreve)
-    ...s.entrega.zonas.filter((z) => z.morada).map((z) => [Number.isFinite(s.entrega.portes?.[z.id]) ? s.entrega.portes[z.id] : null, `os portes para ${z.curto}`]),
+    ...s.entrega.zonas.filter((z) => z.morada).map((z) => [Number.isFinite(s.entrega.portes?.[z.id]) ? s.entrega.portes[z.id] : null, `os portes para ${R.NOMES_ZONAS[z.id] || z.curto}`]),
   ];
   for (const [valor, desc] of casos) {
     if (vazio(valor)) assert.ok(termos.includes(marca(desc)), `os termos não marcam «[por confirmar: ${desc}]»`);
@@ -720,6 +720,13 @@ await construcao('em produção, o que ainda pode faltar (os portes, o IVA, o le
   const envio = site.entrega.zonas.filter((z) => z.morada);
   for (const z of envio) assert.ok(termos.includes(`${esc(z.curto)}: a confirmar`), `os termos não dizem «${z.curto}: a confirmar»`);
   assert.deepEqual(envio.map((z) => catalogoDe(pasta).portes[z.id]), envio.map(() => null), 'no catálogo, os portes por dizer têm de ir vazios (a encomenda diz «a confirmar»)');
+  // sem o texto do levantamento, o domínio não o oferece: nem na encomenda, nem no catálogo, nem nos termos, nem nas fichas
+  const encomenda = lerSaida(pasta, 'encomenda/index.html');
+  assert.ok(!encomenda.includes('value="levantamento"') && !encomenda.includes('data-so-levantamento'), 'a encomenda oferece o levantamento');
+  assert.ok(!catalogoDe(pasta).zonas.some((z) => z.id === 'levantamento'), 'o catálogo tem o levantamento');
+  const nome = site.entrega.zonas.find((z) => z.id === 'levantamento').curto;
+  assert.ok(!termos.includes(esc(nome)), `os termos falam de «${nome}»`);
+  assert.ok(!lerSaida(pasta, 'produtos/vela-tulipa/index.html').includes(esc(nome)), `a ficha fala de «${nome}»`);
 });
 await construcao('em produção, um artigo com toalha sem a composição sai do site (a lei pede-a antes da compra), e o resto publica-se', () => {
   let toalhas = [];
@@ -745,9 +752,8 @@ await construcao('uma fotografia que não existe (na capa ou num separador) pár
   assert.match(r.saida, /✗ Página inicial: Esta fotografia já não está na biblioteca/);
   assert.match(r.saida, /✗ Categorias: A fotografia da categoria .* não existe na biblioteca/);
 });
-await defeitoConhecido(
+await construcao(
   'a frase «obrigação de pagar» numa página de texto pára a construção',
-  'o build.mjs não tem esta guarda na verificação do que saiu (a LF Mobile tem: /obriga[çc][ãa]o de pagar/i em cada página)',
   () => {
     const pasta = copia('frase', (p) => acrescentar(p, 'content/paginas/perguntas-frequentes.md', '\n\n## Teste\n\nEncomenda com obrigação de pagar.\n'));
     const r = construir(pasta);
@@ -827,9 +833,8 @@ await construcao('a faixa de confiança desenha o ícone de cada frase; um desco
 });
 /* «O que o painel deixa gravar é o que a publicação aceita» (o build.mjs, ao ler as regras): dois casos
    em que não é assim. */
-await defeitoConhecido(
+await construcao(
   'o que o painel deixa gravar, a produção aceita: sem o telefone (as regras deixam-no vazio), não pára com um erro técnico',
-  'o {{telefone}} dos termos escreve «[por confirmar: o telefone]» também em produção, e a verificação do fim pára com «termos-e-condicoes/index.html: ainda tem texto por confirmar» («Só o Renato pode corrigir»); ou as regras o pedem em produção, ou o marcador o cala',
   () => {
     let site = null;
     const pasta = copia('sem-telefone', (p) => {
@@ -841,9 +846,8 @@ await defeitoConhecido(
     assert.ok(r.codigo === 0 || pedeTelefone, `a produção parou: ${r.saida.split('\n').find((l) => l.includes('✗')) || ''}`);
   },
 );
-await defeitoConhecido(
+await construcao(
   'o que o painel deixa gravar, a pré-visualização aceita: o nome de uma cliente («Susana») na descrição de um artigo',
-  'a guarda dos restos da Mimices (RESTOS, /mimices|susana|azeit[ãa]o|tons? de linho|localhost:4830/i) corre sobre todo o HTML, também sobre o que a Dream Art escreve no painel: um nome («Susana») ou um queijo («de Azeitão») param a publicação com «resto de outro site» e «Só o Renato pode corrigir»',
   () => {
     let artigo = null;
     const pasta = copia('nome-de-cliente', (p) => {
@@ -856,9 +860,8 @@ await defeitoConhecido(
   },
 );
 
-await defeitoConhecido(
+await construcao(
   'o que a Dream Art escreve no pagamento ou no prazo («MB WAY & transferência») aparece tal e qual nas páginas de texto',
-  'os marcadores de texto simples do build.mjs (resolverMarcadores: {{prazo}}, {{pagamento}}, {{empresa.iva}}, {{levantamento}}, {{marca}}, {{localidade}}) metem esc(valor) no Markdown, que o markdown() volta a escapar: «&» chega à página como «&amp;amp;» e lê-se «&amp;» (nos termos, em «Como encomendar» e nas perguntas; a encomenda e as fichas estão certas)',
   () => {
     const pasta = copia('e-comercial', (p) => json(p, 'content/site.json', (s) => { s.entrega.pagamento = 'MB WAY & transferência bancária.'; }));
     const r = construir(pasta);
@@ -897,6 +900,9 @@ class Elemento {
   addEventListener(tipo, f) { (this.ouvintes[tipo] ||= []).push(f); }
   focus() {}
   closest() { return null; }
+  // o carrinho muda a frase do erro de sítio (para junto do campo que falta, ou do botão)
+  before() {}
+  append() {}
 }
 /* Um seletor simples existe no HTML? ([data-x], #id, tag[attr="v"], tag; os compostos não se conferem) */
 function noHtml(html, s) {
@@ -940,7 +946,7 @@ function paginaDaEncomenda(html) {
   unicos.set('input', campos.pais);   // o único campo do [data-so-europa]
   return { pagina, form, campos, radios, pedidos, unicos };
 }
-async function encomendar(pasta, { linhas, zona, dados = {}, mudarCatalogo = () => {} }) {
+async function encomendar(pasta, { linhas, zona, dados = {}, mudarCatalogo = () => {}, estado = null, semEnviar = false }) {
   const html = lerSaida(pasta, 'encomenda/index.html');
   const urlCatalogo = /data-catalogo="([^"]+)"/.exec(html)[1];
   const raiz = /data-base="([^"]+)"/.exec(html)[1];
@@ -949,7 +955,7 @@ async function encomendar(pasta, { linhas, zona, dados = {}, mudarCatalogo = () 
   const p = paginaDaEncomenda(html);
   assert.deepEqual(p.radios.map((r) => r.value), catalogo.zonas.map((z) => z.id), 'as zonas da página não são as do catálogo');
   for (const [k, v] of Object.entries(dados)) { assert.ok(p.campos[k], `a página da encomenda não tem o campo «${k}»`); p.campos[k].value = v; }
-  const armazem = new Map([['dreamart:carrinho', JSON.stringify({ v: 1, linhas, zona })]]);
+  const armazem = new Map([['dreamart:carrinho', JSON.stringify(estado || { v: 1, linhas, zona })]]);
   const abertos = [];
   const janela = {
     document: { querySelector: (s) => p.pagina.um(s), querySelectorAll: (s) => p.pagina.varios(s), body: { dataset: { catalogo: urlCatalogo, base: raiz } } },
@@ -970,12 +976,14 @@ async function encomendar(pasta, { linhas, zona, dados = {}, mudarCatalogo = () 
   await new Promise((r) => setImmediate(r));
   const enviar = p.form.ouvintes.submit?.[0];
   assert.ok(enviar, 'o carrinho.js não ligou o envio da encomenda');
-  await enviar({ preventDefault() {}, target: p.form });
-  await new Promise((r) => setImmediate(r));
+  if (!semEnviar) {
+    await enviar({ preventDefault() {}, target: p.form });
+    await new Promise((r) => setImmediate(r));
+  }
   assert.deepEqual([...p.pedidos].filter((s) => !noHtml(html, s)), [], 'o carrinho procura na página da encomenda o que ela não tem');
   const url = abertos[0] || '';
   const i = url.indexOf('?text=');
-  return { url, mensagem: i < 0 ? '' : decodeURIComponent(url.slice(i + 6)), guardado: armazem.get('dreamart:carrinho'), catalogo, unicos: p.unicos };
+  return { url, mensagem: i < 0 ? '' : decodeURIComponent(url.slice(i + 6)), guardado: armazem.get('dreamart:carrinho'), catalogo, unicos: p.unicos, janela, armazem };
 }
 /* As linhas esperadas estão na mensagem, por esta ordem. */
 function emOrdem(mensagem, esperadas) {
@@ -1078,6 +1086,32 @@ await construcao('sem o nome (ou, num envio, sem a morada), não abre o WhatsApp
   assert.ok(erro && erro.hidden === false && /^Falta preencher/.test(erro.textContent), 'não diz o que falta');
   const semMorada = await encomendar(pasta, { linhas: PECAS, zona: 'continente', dados: { ...CLIENTE, morada: '' } });
   assert.equal(semMorada.url, '');
+});
+await construcao('depois de recarregar, a encomenda enviada não abre um WhatsApp vazio: «Enviar outra vez» volta ao formulário', async () => {
+  const { pasta } = construida('ensaio');
+  const primeira = await encomendar(pasta, { linhas: PECAS, zona: 'continente', dados: CLIENTE });
+  // na página que a enviou, «Abrir o WhatsApp» leva a mensagem, e não há «Enviar outra vez»
+  assert.ok(primeira.unicos.get('[data-continuar]').href.includes('?text='), '«Abrir o WhatsApp» sem a mensagem');
+  assert.equal(primeira.unicos.get('[data-reenviar]').hidden, true);
+  // a mesma encomenda, numa página nova: a mensagem (com o nome e a morada) só vivia na memória da outra
+  const r = await encomendar(pasta, { estado: JSON.parse(primeira.guardado), semEnviar: true });
+  assert.equal(r.unicos.get('[data-enviada]').hidden, false, 'não diz «Encomenda enviada»');
+  assert.equal(r.unicos.get('[data-continuar]').hidden, true, '«Abrir o WhatsApp» abria a conversa sem a mensagem');
+  assert.equal(r.unicos.get('[data-reenviar]').hidden, false, 'falta «Enviar outra vez»');
+  await r.unicos.get('[data-reenviar]').ouvintes.click[0]();
+  assert.equal(JSON.parse(r.armazem.get('dreamart:carrinho')).enviada, undefined, '«Enviar outra vez» não voltou ao formulário');
+});
+await construcao('uma peça juntada depois de enviada começa outra encomenda (a que seguiu não se repete); o mesmo nome com outra maiúscula é outra linha', async () => {
+  const { pasta } = construida('ensaio');
+  const primeira = await encomendar(pasta, { linhas: PECAS, zona: 'continente', dados: CLIENTE });
+  const r = await encomendar(pasta, { estado: JSON.parse(primeira.guardado), semEnviar: true });
+  const { juntar } = r.janela.DA.carrinho;
+  assert.equal(juntar({ produto: 'ensaio-vela', pers: { nome: 'Rita' }, qtd: 1 }).nova, true, 'não disse que é uma encomenda nova');
+  assert.equal(juntar({ produto: 'ensaio-vela', pers: { nome: 'rita' }, qtd: 1 }).nova, false);
+  const g = JSON.parse(r.armazem.get('dreamart:carrinho'));
+  assert.deepEqual(g.linhas.map((l) => [l.produto, l.pers.nome, l.qtd]), [['ensaio-vela', 'Rita', 1], ['ensaio-vela', 'rita', 1]]);
+  assert.equal(g.zona, 'continente', 'a encomenda nova perdeu a entrega escolhida');
+  assert.equal(g.enviada, undefined);
 });
 
 // ---------------------------------------------------------------- fim

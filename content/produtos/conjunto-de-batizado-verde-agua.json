@@ -23,7 +23,7 @@
     "frase": true,
     "rotuloNome": "Nome da criança",
     "rotuloData": "Data do batizado",
-    "rotuloFrase": "Frase para a toalha (opcional)"
+    "rotuloFrase": "Frase para a toalha"
   },
   "quantidadeMinima": 1,
   "categoria": "conjuntos-de-batizado",

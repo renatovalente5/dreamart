@@ -17,7 +17,7 @@
     "data": false,
     "frase": true,
     "rotuloNome": "Para quem é",
-    "rotuloFrase": "Mensagem de Natal (opcional)"
+    "rotuloFrase": "Mensagem de Natal"
   },
   "quantidadeMinima": 1,
   "categoria": "colecoes",

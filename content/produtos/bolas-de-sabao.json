@@ -17,7 +17,7 @@
     "data": false,
     "frase": true,
     "rotuloNome": "Nome",
-    "rotuloFrase": "Tema ou idade (opcional)"
+    "rotuloFrase": "Tema ou idade"
   },
   "quantidadeMinima": 1,
   "categoria": "lembrancas",

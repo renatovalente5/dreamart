@@ -78,9 +78,12 @@
     ev.preventDefault();
     window.DA.paineis.fechar(painel);
   });
-  // Enter abre a primeira peça encontrada
-  form.addEventListener('submit', (ev) => {
+  // Enter abre a primeira peça encontrada (também logo a seguir a escrever, antes da espera de 80 ms)
+  form.addEventListener('submit', async (ev) => {
     ev.preventDefault();
+    window.clearTimeout(espera);
+    try { await preparar(); } catch (_) { return; }
+    desenhar(procurar(campo.value), campo.value);
     if (primeiro) window.location.href = primeiro.p.url;
   });
   painel.addEventListener('da:aberto', () => {

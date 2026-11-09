@@ -102,6 +102,10 @@ for (const e of neutro.efeitos) {
 }
 
 const site = JSON.parse(dadosRegras.site);
+/* O levantamento só se oferece depois de a Dream Art dizer como se combina (entrega.levantamento): na
+   pré-visualização aparece com «[por confirmar]»; no domínio aberto, sem esse texto, não há levantamento
+   (nem na encomenda, nem nas fichas, nem nos termos). */
+if (producao && !String(site.entrega.levantamento || '').trim()) site.entrega.zonas = site.entrega.zonas.filter((z) => z.id !== 'levantamento');
 const inicio = JSON.parse(dadosRegras.inicio);
 const categorias = JSON.parse(dadosRegras.categorias);
 const fotos = JSON.parse(dadosRegras.fotos);
@@ -304,17 +308,18 @@ fs.writeFileSync(path.join(SAIDA, 'assets', ficheiros.catalogo), catalogoBuf);
    regras já pararam a construção antes do que a lei pede, e o resto diz «a confirmar». */
 const porConfirmar = (desc, emProducao = 'a confirmar') => (producao ? esc(emProducao) : ctx.marcador(desc));
 
-/* Os portes da loja (por encomenda, não por peça), como frase: «Portugal Continental: 5,00 €; Madeira
-   e Açores: …». O levantamento só diz o que a Dream Art escrever em entrega.levantamento (a cliente ainda
-   não confirmou se o faz, nem em que condições: nada de «grátis» ou «sem custos» escrito por nós). */
+/* Os portes da loja, uma frase por zona: «Portugal Continental: 5,00 €. Madeira e Açores: …». Nada de
+   «por encomenda» ou «por peça»: a cliente ainda não disse como os cobra. O levantamento só diz o que a
+   Dream Art escrever em entrega.levantamento (ainda não confirmou se o faz, nem em que condições: nada de
+   «grátis» ou «sem custos» escrito por nós). */
 function textoPortes() {
   const p = site.entrega.portes || {};
   const zonas = site.entrega.zonas.filter((z) => z.morada);
-  const partes = zonas.map((z) => `${esc(z.curto)}: ${Number.isFinite(p[z.id]) ? euros(p[z.id]) : porConfirmar(`os portes para ${z.curto}`)}`);
+  const partes = zonas.map((z) => `${esc(z.curto)}: ${Number.isFinite(p[z.id]) ? euros(p[z.id]) : porConfirmar(`os portes para ${R.NOMES_ZONAS[z.id] || z.curto}`)}.`);
   const gratis = Number.isFinite(p.gratisAPartirDe) ? ` Portes grátis em Portugal Continental a partir de ${euros(p.gratisAPartirDe)} em peças.` : '';
   const levantamento = site.entrega.zonas.find((z) => z.id === 'levantamento');
-  const textoLevantamento = !levantamento ? '' : site.entrega.levantamento ? ` ${esc(site.entrega.levantamento)}` : producao ? '' : ` Levantamento em ${esc(site.local.localidade)}: ${ctx.marcador('se fazem levantamento e como se combina')}.`;
-  return `${partes.join('; ')}.${gratis}${textoLevantamento}`;
+  const textoLevantamento = !levantamento ? '' : site.entrega.levantamento ? ` ${esc(levantamento.curto)}: ${esc(site.entrega.levantamento)}` : producao ? '' : ` ${esc(levantamento.curto)}: ${ctx.marcador('se fazem levantamento e como se combina')}.`;
+  return `${partes.join(' ')}${gratis}${textoLevantamento}`;
 }
 
 function identificacao() {
@@ -359,17 +364,26 @@ function resolverMarcadores(fonte, onde) {
   const tokens = [];
   const guardar = (html) => { tokens.push(html); return `\u0000${tokens.length - 1}\u0000`; };
   const valores = {
-    marca: () => esc(site.marca),
-    localidade: () => esc(site.local.localidade),
+    /* O texto da Dream Art vai sempre por guardar(): o markdown() escaparia outra vez o que o esc() já
+       escapou («MB WAY &amp;amp; transferência»). */
+    marca: () => guardar(esc(site.marca)),
+    localidade: () => guardar(esc(site.local.localidade)),
     email: () => (c.email ? guardar(`<a href="mailto:${esc(c.email)}">${esc(c.email)}</a>`) : guardar(ctx.marcador('o email'))),
     // o WhatsApp só como ligação, sem o número (o Renato, 17 out 2026); o telefone com o número e a nota
     whatsapp: () => (c.whatsapp ? guardar(`<a href="https://wa.me/${numero}" target="_blank" rel="noopener">WhatsApp</a>`) : guardar(`WhatsApp ${ctx.marcador('o número')}`)),
     telefone: () => (R.numeroPortugues(c.telefone) ? guardar(`<a href="tel:+351${R.numeroPortugues(c.telefone)}">${esc(numeroLegivel(c.telefone))}</a> ${notaChamada(c.telefone)}`) : guardar(ctx.marcador('o telefone'))),
+    /* Os contactos dos termos: o email, o WhatsApp e o telefone. O telefone só se existir (DL 24/2014,
+       art. 4.º, n.º 1, al. c): «caso existam»): sem ele, o domínio aberto constrói na mesma. */
+    contactos: () => guardar([
+      c.email ? `<a href="mailto:${esc(c.email)}">${esc(c.email)}</a>` : ctx.marcador('o email'),
+      c.whatsapp ? `<a href="https://wa.me/${numero}" target="_blank" rel="noopener">WhatsApp</a>` : `WhatsApp ${ctx.marcador('o número')}`,
+      R.numeroPortugues(c.telefone) ? `telefone <a href="tel:+351${R.numeroPortugues(c.telefone)}">${esc(numeroLegivel(c.telefone))}</a> ${notaChamada(c.telefone)}` : producao ? '' : `telefone ${ctx.marcador('o telefone')}`,
+    ].filter(Boolean).join(' · ')),
     'empresa.identificacao': () => guardar(identificacao()),
-    'empresa.iva': () => (site.empresa.iva ? esc(site.empresa.iva) : guardar(porConfirmar('se os preços incluem IVA ou se há isenção', ''))),
-    prazo: () => (site.entrega.prazo ? esc(site.entrega.prazo) : guardar(ctx.marcador('quanto tempo leva a fazer e a entregar uma peça'))),
-    pagamento: () => (site.entrega.pagamento ? esc(site.entrega.pagamento) : guardar(ctx.marcador('as formas de pagamento (MB WAY, transferência, no levantamento…)'))),
-    levantamento: () => (site.entrega.levantamento ? esc(site.entrega.levantamento) : guardar(porConfirmar('se fazem levantamento em Rio Tinto e como se combina', ''))),
+    'empresa.iva': () => guardar(site.empresa.iva ? esc(site.empresa.iva) : porConfirmar('se os preços incluem IVA ou se há isenção', '')),
+    prazo: () => guardar(site.entrega.prazo ? esc(site.entrega.prazo) : ctx.marcador('quanto tempo leva a fazer e a entregar uma peça')),
+    pagamento: () => guardar(site.entrega.pagamento ? esc(site.entrega.pagamento) : ctx.marcador('as formas de pagamento (MB WAY, transferência, no levantamento…)')),
+    levantamento: () => guardar(site.entrega.levantamento ? esc(site.entrega.levantamento) : porConfirmar('se fazem levantamento em Rio Tinto e como se combina', '')),
     portes: () => guardar(textoPortes()),
     botoesDesistencia: () => guardar(botoesDesistencia()),
     /* A política de privacidade (RGPD, art. 13.º), pela biblioteca legal-comum: os destinatários reais,
@@ -481,8 +495,10 @@ const problemas = [];
 const todosHtml = [];
 (function andar(d) { for (const f of fs.readdirSync(d)) { const p = path.join(d, f); if (fs.statSync(p).isDirectory()) andar(p); else if (f.endsWith('.html')) todosHtml.push(p); } })(SAIDA);
 /* Nada da Mimices (o site da Dream Art nasceu sobre o código dela e o Renato rejeitou a mistura, 8 nov
-   2026): nem o nome, nem a dona, nem a terra, nem os tons de linho. */
+   2026): nem o nome, nem a dona, nem a terra, nem os tons de linho. Nas páginas, que levam o texto que a
+   Dream Art escreve no painel, só o que nunca seria dela (uma cliente pode chamar-se Susana). */
 const RESTOS = /mimices|susana|azeit[ãa]o|tons? de linho|localhost:4830/i;
+const RESTOS_NAS_PAGINAS = /mimices|tons? de linho|localhost:4830/i;
 for (const [nome, buf] of [[ficheiros.css, css], [ficheiros.js, js]]) {
   const m = buf.toString('utf8').match(RESTOS);
   if (m) problemas.push(`assets/${nome}: tem «${m[0]}» (resto de outro site)`);
@@ -492,8 +508,9 @@ for (const f of todosHtml) {
   const onde = path.relative(SAIDA, f);
   const reencaminha = html.includes('http-equiv="refresh"');
   for (const lixo of ['{{', 'undefined', 'NaN', '[object Object]']) if (html.includes(lixo)) problemas.push(`${onde}: contém «${lixo}»`);
-  const resto = html.match(RESTOS);
+  const resto = html.match(RESTOS_NAS_PAGINAS);
   if (resto) problemas.push(`${onde}: tem «${resto[0]}» (resto de outro site)`);
+  if (/obriga[çc][ãa]o de pagar/i.test(html)) problemas.push(`${onde}: tem a fórmula «obrigação de pagar», que o Renato não quer em nenhum site`);
   if (producao && html.includes('por-confirmar')) problemas.push(`${onde}: ainda tem texto por confirmar`);
   if (!reencaminha && !html.includes('<!-- legal-comum:livro ')) problemas.push(`${onde}: falta a ligação ao Livro de Reclamações`);
   if (!reencaminha && (html.match(/<h1[\s>]/g) || []).length !== 1) problemas.push(`${onde}: tem ${(html.match(/<h1[\s>]/g) || []).length} títulos h1 (tem de ter um)`);

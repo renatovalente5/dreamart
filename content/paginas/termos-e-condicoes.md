@@ -6,7 +6,7 @@ atualizado: 2026-11-09
 
 {{empresa.identificacao}}
 
-Contactos: {{email}} · {{whatsapp}} · telefone {{telefone}}.
+Contactos: {{contactos}}.
 
 Estas condições valem para as encomendas feitas a partir deste site. Nada nelas afasta os direitos que a lei lhe dá como consumidor.
 
@@ -18,13 +18,13 @@ Fazemos as peças à mão, uma a uma. Por isso, cada peça pode ter pequenas dif
 
 Os preços estão em euros, são por unidade e são finais. {{empresa.iva}}
 
-Os portes são por encomenda e não estão incluídos no preço das peças. {{portes}}
+Os portes não estão incluídos no preço das peças. {{portes}}
 
 ## Como se faz uma encomenda
 
-1. Junta à encomenda as peças, com a quantidade e a personalização de cada uma.
-2. Escolhe a entrega e vê os portes e o total.
-3. Carrega em «Encomendar pelo WhatsApp»: abre-se o WhatsApp com a encomenda escrita (as peças, a personalização, a entrega, o total e a forma de pagamento) e envia-a.
+1. Junte à encomenda as peças, com a quantidade e a personalização de cada uma.
+2. Escolha a entrega e veja os portes e o total.
+3. Carregue em «Encomendar pelo WhatsApp» e envie a mensagem que se abre, já com a encomenda escrita (as peças, a personalização, a entrega, o total e a forma de pagamento).
 4. Respondemos com o resumo: as peças e a personalização exatamente como as vamos fazer, o total com os portes, o prazo e a forma de pagamento.
 5. A encomenda fica feita quando nos responder a confirmar esse resumo.
 

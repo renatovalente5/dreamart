@@ -77,27 +77,28 @@
         if (!i) continue;
         const v = i.value.trim();
         const rotulo = ($(`label[for="${i.id}"]`, form).firstChild.textContent || '').trim();
-        if (i.required && !v) { errar(i, k === 'data' ? `Escolha a ${rotulo.toLowerCase()}.` : `Escreva: ${rotulo.toLowerCase()}.`); return; }
+        if (i.required && !v) { errar(i, k === 'data' ? `Escolha a ${rotulo.toLowerCase()}.` : `Falta preencher: ${rotulo.toLowerCase()}.`); return; }
         if (k === 'data' && v && v < hojeLisboa()) { errar(i, 'Essa data já passou.'); return; }
         if (v) pers[k] = v;
       }
       const q = quantidade();
-      window.DA.carrinho.juntar({ produto: slug, opcoes: escolhas(), pers, qtd: q });
+      const { nova } = window.DA.carrinho.juntar({ produto: slug, opcoes: escolhas(), pers, qtd: q });
       for (const k of ['nome', 'data', 'frase']) if (form.elements[k]) form.elements[k].value = '';
       form.elements.quantidade.value = minimo;
       mostrarTotal();
-      juntou(slug, q, $('button[type="submit"]', form));
+      juntou(slug, q, $('button[type="submit"]', form), nova);
       if (depois) depois();
     });
   }
 
-  /* Depois de juntar: o recado com a fotografia e «Ver a encomenda». */
-  async function juntou(slug, q, botao) {
+  /* Depois de juntar: o recado com a fotografia e «Ver a encomenda» («Nova encomenda» quando a anterior
+     já tinha seguido pelo WhatsApp). */
+  async function juntou(slug, q, botao, nova = false) {
     let cat = null;
     try { cat = await catalogo(); } catch (_) { /* sem catálogo, o recado vai sem fotografia */ }
     const p = cat && cat.produtos[slug];
     const encomenda = (cat && cat.encomenda) || `${document.body.dataset.base}encomenda/`;
-    window.DA.recado(`${p ? miniaturaHtml(cat, p.img, 44) : ''}<span class="recado__texto"><strong>Juntou-se à encomenda</strong>${p ? `<span>${q > 1 ? `${q} × ` : ''}${esc(p.curto || p.nome)}</span>` : ''}</span><a href="${esc(encomenda)}">Ver<span class="recado__mais"> a encomenda</span></a>`);
+    window.DA.recado(`${p ? miniaturaHtml(cat, p.img, 44) : ''}<span class="recado__texto"><strong>${nova ? 'Nova encomenda' : 'Juntou-se à encomenda'}</strong>${p ? `<span>${q > 1 ? `${q} × ` : ''}${esc(p.curto || p.nome)}</span>` : ''}</span><a href="${esc(encomenda)}">Ver<span class="recado__mais"> a encomenda</span></a>`);
     if (botao && botao.classList.contains('artigo__mais')) { botao.classList.add('is-feito'); window.setTimeout(() => botao.classList.remove('is-feito'), 600); }
   }
 
@@ -117,8 +118,8 @@
     if (!p) return;
     // sem nada para escrever nem escolher, junta-se logo
     if (!(p.pers || []).length && !(p.opcoes || []).length && (p.minimo || 1) === 1) {
-      window.DA.carrinho.juntar({ produto: slug, qtd: 1 });
-      juntou(slug, 1, b);
+      const { nova } = window.DA.carrinho.juntar({ produto: slug, qtd: 1 });
+      juntou(slug, 1, b, nova);
       return;
     }
     origem = b;

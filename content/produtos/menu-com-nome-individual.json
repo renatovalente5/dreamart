@@ -17,7 +17,7 @@
     "data": true,
     "frase": true,
     "rotuloData": "Data da celebração",
-    "rotuloFrase": "Notas (opcional)"
+    "rotuloFrase": "Notas"
   },
   "quantidadeMinima": 1,
   "categoria": "menus-e-mesas",
