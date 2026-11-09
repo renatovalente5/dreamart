@@ -494,7 +494,7 @@ export function favoritos(ctx) {
 }
 
 // ---------------------------------------------------------------- páginas de texto
-/* As páginas de texto (content/paginas/*.md): a cabeça com o título em Gilda e o arco dourado, e o
+/* As páginas de texto (content/paginas/*.md): a cabeça com o título em EB Garamond e o arco dourado, e o
    texto numa coluna confortável de ler. Dois modelos próprios, escolhidos no cabeçalho do Markdown
    («modelo:»): «passos» (os passos numerados, ligados por um fio, e o resto em cartões) e
    «perguntas» (as perguntas abrem e fecham). */

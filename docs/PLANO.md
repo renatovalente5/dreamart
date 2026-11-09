@@ -26,7 +26,9 @@ diz «dúvida».
   (`~/Websites/dreamart-propostas/a/`, com as capturas), que é a fonte da verdade do aspeto:
   - as cores do logótipo: verde #556045 (fundos fortes, títulos, botões), creme #F6F2E8 (o papel) e dourado
     #C8B07C só no arco fino;
-  - Gilda Display nos títulos e Montserrat no texto, servidas pelo próprio site;
+  - EB Garamond (600) nos títulos e Mulish no texto, servidas pelo próprio site (escolhidas pelo Renato a
+    9 nov 2026 entre as provas; antes, Gilda Display e Montserrat). A Cormorant Garamond ficou de fora: é a
+    letra dos títulos da Mimices;
   - a fotografia num medalhão redondo com o arco dourado, os separadores em círculos, cartões de cantos
     redondos;
   - o cabeçalho com o menu e a procura à esquerda, o logótipo ao centro, os favoritos e a encomenda à direita;

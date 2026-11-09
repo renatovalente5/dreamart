@@ -179,7 +179,7 @@ export function circulos(ctx, { titulo = 'h3' } = {}) {
 }
 
 // ---------------------------------------------------------------- cabeças
-/* A cabeça de uma secção: o título em Gilda e o arco dourado por baixo (e uma frase, se houver). */
+/* A cabeça de uma secção: o título em EB Garamond e o arco dourado por baixo (e uma frase, se houver). */
 export function cabecaSeccao({ id, titulo, texto = '', etiqueta = 'h2', classe = '' }) {
   return `<div class="cabeca${classe ? ` ${classe}` : ''}">
   <${etiqueta} class="titulo-secao" id="${id}">${esc(titulo)}</${etiqueta}>
@@ -188,7 +188,7 @@ export function cabecaSeccao({ id, titulo, texto = '', etiqueta = 'h2', classe =
 </div>`;
 }
 
-/* A cabeça de uma página: um rótulo pequeno (o caminho de volta), o título em Gilda, o arco dourado e
+/* A cabeça de uma página: um rótulo pequeno (o caminho de volta), o título em EB Garamond, o arco dourado e
    uma frase curta; nas páginas legais, a data. Com «foto», o medalhão por cima (os separadores). */
 export function cabecaDePagina(ctx, { rotulo = null, titulo, sub = '', data = '', foto = '', extra = '' }) {
   const r = rotulo ? `<a class="cabeca-pagina__rotulo rotulo" href="${ctx.url(rotulo.caminho)}">${ico('voltar')}<span>${esc(rotulo.nome)}</span></a>` : '';
