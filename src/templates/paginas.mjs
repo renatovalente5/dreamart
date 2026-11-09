@@ -167,7 +167,7 @@ export function loja(ctx, slug = null) {
 <section class="vitrine" aria-label="${c ? esc(c.titulo) : 'Todos os artigos'}">
   <div class="contentor">
     ${pastilhas(ctx, caminho)}
-    ${grelha(ctx, lista, { titulo: 'h2' })}
+    ${grelha(ctx, lista, { titulo: 'h2', cedo: 4 })}
   </div>
 </section>`;
   const ld = [

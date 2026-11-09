@@ -52,7 +52,7 @@ export function escalarSizes(sizes, f) {
    aumenta). «tamanhos» é o atributo sizes, MEDIDO no browser (a largura a que a fotografia aparece):
    é com ele que o browser escolhe a versão. Fora do primeiro ecrã, loading="lazy". O ponto de foco
    (content/fotos.json) diz onde se corta quando a moldura é de outra forma. */
-export function imagem(ctx, nome, { tamanhos = '100vw', classe = '', prioridade = false, alt, foco, ate = Infinity, baixa = false, moldura = 0 } = {}) {
+export function imagem(ctx, nome, { tamanhos = '100vw', classe = '', prioridade = false, alt, foco, ate = Infinity, baixa = false, moldura = 0, cedo = false } = {}) {
   const m = ctx.manifesto.fotos[nome] || ctx.manifesto.posters[nome];
   if (!m) throw new Error(`imagem «${nome}» não existe em media/fotos`);
   // «moldura»: a forma (largura/altura) da caixa onde a fotografia é cortada
@@ -66,7 +66,8 @@ export function imagem(ctx, nome, { tamanhos = '100vw', classe = '', prioridade 
   const fontes = m.formatos.filter((f) => f !== 'webp').map((f) => `<source type="image/${f}" srcset="${srcset(f)}" sizes="${tamanhos}">`).join('');
   const meio = larguras.find((w) => w >= 720) || larguras[larguras.length - 1];
   const estilo = ponto !== '50% 50%' ? ` style="object-position:${esc(ponto)}"` : '';
-  const carga = prioridade ? ' fetchpriority="high"' : baixa ? ' fetchpriority="low"' : ' loading="lazy"';
+  // no primeiro ecrã, sem «lazy» (prioridade: a fotografia principal; cedo: a primeira fila de uma grelha)
+  const carga = prioridade ? ' fetchpriority="high"' : baixa ? ' fetchpriority="low"' : cedo ? '' : ' loading="lazy"';
   return `<picture${classe ? ` class="${esc(classe)}"` : ''}>${fontes}<img src="${ctx.asset(`img/${nome}-${m.resumo}-${meio}.webp`)}" srcset="${srcset('webp')}" sizes="${tamanhos}" width="${m.largura}" height="${m.altura}" alt="${esc(texto)}"${carga} decoding="async"${estilo}></picture>`;
 }
 
@@ -132,12 +133,12 @@ export function promocaoNota(ctx, p) {
    Sem JavaScript, os botões não aparecem (o CSS, com html:not(.js)). O site.js desenha o mesmo
    cartão nos favoritos (cartaoHtml): mudar um é mudar o outro. */
 export const TAMANHOS_CARTAO = '(min-width: 1296px) 266px, (min-width: 1024px) calc(25vw - 58px), (min-width: 640px) calc(33.3vw - 49px), calc(50vw - 38px)';
-export function cartao(ctx, p, { titulo = 'h3', tamanhos = TAMANHOS_CARTAO, prioridade = false } = {}) {
+export function cartao(ctx, p, { titulo = 'h3', tamanhos = TAMANHOS_CARTAO, prioridade = false, cedo = false } = {}) {
   const v = precoDe(p, ctx.hoje);
   const pct = v.anterior && v.atual !== null ? Math.round((1 - v.atual / v.anterior) * 100) : 0;
   const nome = esc(p.nome);
   return `<li class="artigo">
-  <div class="artigo__foto">${imagem(ctx, p.fotos[0], { tamanhos, prioridade, ate: 1280, moldura: 1 })}${pct ? `<span class="selo">−${pct}%</span>` : p.novidade ? '<span class="selo">Novidade</span>' : ''}
+  <div class="artigo__foto">${imagem(ctx, p.fotos[0], { tamanhos, prioridade, cedo, ate: 1280, moldura: 1 })}${pct ? `<span class="selo">−${pct}%</span>` : p.novidade ? '<span class="selo">Novidade</span>' : ''}
     <button class="artigo__fav" type="button" aria-pressed="false" data-fav="${esc(p.slug)}" aria-label="Guardar nos favoritos: ${nome}">${ico('coracao')}</button>
     <button class="artigo__mais" type="button" data-juntar="${esc(p.slug)}" aria-label="Juntar à encomenda: ${nome}">${ico('mais')}</button>
   </div>
@@ -147,7 +148,8 @@ export function cartao(ctx, p, { titulo = 'h3', tamanhos = TAMANHOS_CARTAO, prio
   </div>
 </li>`;
 }
-export const grelha = (ctx, lista, opcoes = {}) => `<ul class="grelha-artigos" role="list">${lista.map((p) => cartao(ctx, p, opcoes)).join('\n')}</ul>`;
+/* «cedo»: quantos cartões, do princípio, estão no primeiro ecrã (sem «lazy»). */
+export const grelha = (ctx, lista, { cedo = 0, ...opcoes } = {}) => `<ul class="grelha-artigos" role="list">${lista.map((p, i) => cartao(ctx, p, { ...opcoes, cedo: i < cedo })).join('\n')}</ul>`;
 
 // ---------------------------------------------------------------- separadores
 /* Os separadores que têm artigos (os vazios — hoje Padrinhos e Decoração e eventos — não aparecem
