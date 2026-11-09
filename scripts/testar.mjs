@@ -623,17 +623,20 @@ await construcao('a página inicial: os separadores em monogramas (a letra e a p
   assert.match(index, /<img class="gaveta__logo" src="\/dreamart\/assets\/img\/logo-cabecalho-/);
   assert.match(index, /<a class="rodape__logo" href="\/dreamart\/"><img src="\/dreamart\/assets\/img\/logo-rodape-[0-9a-f]{10}-\d+\.webp"[^>]* alt="Dream Art — página inicial"/);
   for (const peca of ['logo-cabecalho', 'logo-rodape']) assert.ok(fs.readdirSync(path.join(pasta, '_site/assets/img')).some((f) => f.startsWith(`${peca}-`)), `falta ${peca} em assets/img`);
-  // o selo no canto da fotografia da apresentação: a letra da marca e a última palavra do título — do
-  // conteúdo de agora, que a dona muda no painel (com «Uma família, um sonho» o selo diz «sonho»; o
-  // painel provou-o no ensaio: com «família» escrito aqui, mudar o título parava a publicação)
+  // o selo no canto da fotografia da apresentação: a última palavra do título com a 1.ª letra dela em
+  // grande («F» + «família»; sem palavra, só a letra da marca) — do conteúdo de agora, que a dona muda
+  // no painel (com «Uma família, um sonho» o selo diz «S» + «sonho»; o painel provou-o no ensaio: com
+  // «família» escrito aqui, mudar o título parava a publicação)
   const ap = JSON.parse(ler(pasta, 'content/inicio.json')).apresentacao ?? {};
   const marca = String(JSON.parse(ler(pasta, 'content/site.json')).marca ?? '');
   const ultima = String(ap.titulo || '').trim().split(/\s+/).pop().toLocaleLowerCase('pt-PT');
-  const palavra = /^\p{L}{2,12}$/u.test(ultima) ? ultima : ' ';
+  const palavra = /^\p{L}{2,12}$/u.test(ultima) ? ultima : '';
+  const letra = (palavra || marca.trim()).charAt(0).toLocaleUpperCase('pt-PT');
   const re = (t) => esc(t).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   if (ap.foto) {
-    assert.match(index, new RegExp(`<figure class="moldura-foto moldura-foto--selo revela"><picture>[\\s\\S]*?</picture><span class="moldura-foto__selo"><span class="monograma" aria-hidden="true"><span class="monograma__letra">${re(marca.trim().charAt(0).toLocaleUpperCase('pt-PT'))}</span><span class="monograma__palavra">${re(palavra)}</span></span></span></figure>`, 'u'),
-      `o selo da apresentação não é «${marca.trim().charAt(0)}» + «${palavra}»`);
+    assert.match(index, new RegExp(`<figure class="moldura-foto moldura-foto--selo revela"><picture>[\\s\\S]*?</picture><span class="moldura-foto__selo"><span class="monograma" aria-hidden="true"><span class="monograma__letra">${re(letra)}</span><span class="monograma__palavra">${re(palavra || ' ')}</span></span></span></figure>`, 'u'),
+      `o selo da apresentação não é «${letra}» + «${palavra}»`);
+    if (palavra) assert.equal(letra, palavra.charAt(0).toLocaleUpperCase('pt-PT'), 'a letra grande do selo não é a 1.ª da palavra');
   }
 });
 await construcao('o catálogo da encomenda leva, de cada artigo publicado, o preço, as escolhas, a personalização e o mínimo; e as zonas e os portes; a ficha mostra o preço da regra', () => {

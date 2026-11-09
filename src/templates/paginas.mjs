@@ -123,12 +123,14 @@ export function inicio(ctx) {
 </section>` : '';
 
   const a = h.apresentacao || {};
-  // o selo no canto da fotografia, como os círculos das secções: a letra da marca e a última palavra do
-  // título («Um sonho de família» → «família»), se for uma palavra curta; sem ela, só a letra
-  const palavraDoSelo = String(a.titulo || '').trim().split(/\s+/).pop().toLocaleLowerCase('pt-PT');
+  // o selo no canto da fotografia, como os círculos das secções: a última palavra do título («Um sonho de
+  // família» → «família»), se for uma palavra curta, com a 1.ª letra DELA em grande («F»: com o «D» da
+  // marca, a letra e a palavra não condiziam — o Renato, 9 nov 2026); sem palavra, só a letra da marca
+  const ultima = String(a.titulo || '').trim().split(/\s+/).pop().toLocaleLowerCase('pt-PT');
+  const palavraDoSelo = /^\p{L}{2,12}$/u.test(ultima) ? ultima : '';
   const selo = monograma({ nome: ctx.site.marca, monograma: {
-    letra: ctx.site.marca.trim().charAt(0).toLocaleUpperCase('pt-PT'),
-    palavra: /^\p{L}{2,12}$/u.test(palavraDoSelo) ? palavraDoSelo : ' ',
+    letra: (palavraDoSelo || ctx.site.marca.trim()).charAt(0).toLocaleUpperCase('pt-PT'),
+    palavra: palavraDoSelo || ' ',
   } });
   const apresentacao = a.titulo ? `<section class="apresentacao" aria-labelledby="t-apresentacao">
   <div class="contentor apresentacao__grelha">
