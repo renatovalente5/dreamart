@@ -975,7 +975,7 @@ html:not(.js) .artigo__fav, html:not(.js) .artigo__mais, html:not(.js) .juntar__
 }
 .prosa table { width: 100%; border-collapse: collapse; font-size: 14px; line-height: 1.5; }
 .prosa th, .prosa td { text-align: left; vertical-align: top; padding: 11px 14px; border-bottom: 1px solid var(--linha); }
-.prosa thead th { background: var(--creme); font-weight: 600; color: var(--tinta); }
+.prosa thead th { background: var(--salvia); font-weight: 600; color: var(--tinta); }
 .prosa tbody tr:last-child td { border-bottom: 0; }
 .prosa .botoes { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 18px; }
 .prosa .nota { font-size: 14px; color: var(--tinta-2); }
@@ -984,13 +984,13 @@ html:not(.js) .artigo__fav, html:not(.js) .artigo__mais, html:not(.js) .juntar__
 .aviso-garantia figcaption { margin-top: 12px; font-size: 13.5px; text-align: center; color: var(--tinta-2); }
 .aviso-garantia figcaption a { display: inline-flex; align-items: center; min-height: 44px; }
 
-.leitura { background: var(--branco); padding: 44px 0 var(--secao); }
+/* no creme da cabeça, sem faixa branca (o Renato, 9 nov 2026): o espaço por cima é o de baixo da cabeça */
+.leitura { padding: 8px 0 var(--secao); }
 .leitura__grelha { display: grid; grid-template-columns: minmax(0, 1fr); gap: 44px; justify-items: center; }
 .leitura__texto { width: 100%; max-width: 42em; }
 .leitura__foto { margin-top: 0; }
 .leitura__fim { display: flex; justify-content: center; margin-top: 52px; }
 @media (min-width: 900px) {
-  .leitura { padding-top: 64px; }
   .leitura--foto .leitura__grelha { grid-template-columns: 360px minmax(0, 42em); justify-content: center; align-items: start; gap: 80px; }
   .leitura--foto .leitura__foto { width: 100%; position: sticky; top: calc(var(--topo-h) + 8px); margin-top: 12px; }
   .leitura--foto .leitura__fim { justify-content: flex-start; }
@@ -1016,8 +1016,8 @@ html:not(.js) .artigo__fav, html:not(.js) .artigo__mais, html:not(.js) .juntar__
   .notas { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .notas > :last-child:nth-child(odd) { grid-column: 1 / -1; }
 }
-.nota-cartao { background: var(--creme); border-radius: var(--raio); padding: 22px 22px 24px; }
-.nota-cartao__icone { display: grid; place-items: center; width: 48px; height: 48px; border-radius: 50%; background: var(--branco); color: var(--verde); margin-bottom: 12px; }
+.nota-cartao { background: var(--salvia); border-radius: var(--raio); padding: 22px 22px 24px; }
+.nota-cartao__icone { display: grid; place-items: center; width: 48px; height: 48px; border-radius: 50%; background: var(--creme); color: var(--verde); margin-bottom: 12px; }
 .nota-cartao__icone .ico { width: 24px; height: 24px; }
 .nota-cartao h2 { margin-top: 0; font-size: 23px; }
 .nota-cartao > * + * { margin-top: 8px; }
@@ -1128,9 +1128,10 @@ html:not(.js) .artigo__fav, html:not(.js) .artigo__mais, html:not(.js) .juntar__
 .vazio .botao { margin-top: 8px; }
 
 /* ---------- Contactos ---------- */
-.contactos { background: var(--branco); padding: 40px 0 var(--secao); }
+/* no creme da cabeça, sem faixa branca, como as páginas de texto */
+.contactos { padding: 8px 0 var(--secao); }
 .contactos__grelha { display: grid; grid-template-columns: minmax(0, 1fr); gap: 28px; max-width: 980px; }
-@media (min-width: 900px) { .contactos { padding-top: 64px; } .contactos__grelha { grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); gap: 48px; align-items: start; } }
+@media (min-width: 900px) { .contactos__grelha { grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); gap: 48px; align-items: start; } }
 .contactos__principal { background: var(--verde); color: var(--creme); border-radius: var(--raio-g); padding: 32px 24px; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 12px; }
 .contactos__icone { display: grid; place-items: center; width: 64px; height: 64px; border-radius: 50%; background: rgba(246, 242, 232, 0.12); }
 .contactos__icone .ico { width: 30px; height: 30px; }
@@ -1140,7 +1141,7 @@ html:not(.js) .artigo__fav, html:not(.js) .artigo__mais, html:not(.js) .juntar__
 .contactos__lista { display: grid; }
 .contacto { display: flex; gap: 16px; align-items: center; padding: 16px 0; border-bottom: 1px solid var(--linha); }
 .contacto:first-child { padding-top: 4px; }
-.contacto__icone { display: grid; place-items: center; width: 48px; height: 48px; flex: none; border-radius: 50%; background: var(--creme); color: var(--verde); }
+.contacto__icone { display: grid; place-items: center; width: 48px; height: 48px; flex: none; border-radius: 50%; background: var(--salvia); color: var(--verde); }
 .contacto__icone .ico { width: 22px; height: 22px; }
 .contacto__nome { font-size: 11px; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: var(--tinta-2); }
 .contacto p { font-size: 16px; color: var(--tinta); margin-top: 2px; overflow-wrap: anywhere; }

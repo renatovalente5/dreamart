@@ -36,7 +36,9 @@ diz «dúvida».
     cima trocam o separador sem a página subir (`src/scripts/loja.js`). Os favoritos e as sugestões da
     ficha ficaram iguais. Depois, a página inicial: a seguir à capa verde, tudo no creme (sem as faixas
     brancas das lembranças, da coleção e da confiança), com um só espaço entre secções; só os cartões da
-    coleção, no bloco verde, mantêm o creme à volta.
+    coleção, no bloco verde, mantêm o creme à volta. E por fim as páginas de texto e os Contactos: sem a faixa
+    branca por baixo da cabeça; os cartões das notas, o cabeçalho dos quadros e os círculos dos ícones (que
+    eram creme sobre o branco) passaram ao salva. O branco fica só nos campos e nos cartões da encomenda.
 
   Nada pode voltar a ter o aspeto, as cores ou a arrumação da Mimices.
 - **Da base da Mimices fica só o invisível**: o gerador em Node sem dependências (`scripts/build.mjs`), as
