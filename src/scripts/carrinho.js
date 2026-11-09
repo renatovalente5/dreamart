@@ -166,7 +166,7 @@
   }
 
   function resumoHtml(c, cat, zona) {
-    const portes = zona === 'levantamento' ? 'Grátis' : (c.portesPorConfirmar ? 'a confirmar' : euros(c.portes));
+    const portes = zona === 'levantamento' ? 'Sem portes' : (c.portesPorConfirmar ? 'a confirmar' : euros(c.portes));
     const pecas = c.porConfirmar ? (c.pecas ? `${euros(c.pecas)} + a confirmar` : 'a confirmar') : euros(c.pecas);
     let total;
     if (c.porConfirmar) total = 'a confirmar';
@@ -237,7 +237,7 @@
       linhas.push('');
     }
     linhas.push(`Subtotal: ${c.porConfirmar ? (c.pecas ? `${euros(c.pecas)} + a confirmar` : 'a confirmar') : euros(c.pecas)}`);
-    if (estado.zona === 'levantamento') linhas.push(`Entrega: ${z.nome} (grátis)`);
+    if (estado.zona === 'levantamento') linhas.push(`Entrega: ${z.nome}`);
     else linhas.push(`Entrega: ${z.nome} — portes ${c.portesPorConfirmar ? 'a confirmar' : euros(c.portes)}`);
     if (c.porConfirmar) linhas.push('*Total: a confirmar consigo*');
     else if (estado.zona !== 'levantamento' && c.portesPorConfirmar) linhas.push(`*Total: ${euros(c.pecas)} + portes*`);

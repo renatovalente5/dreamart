@@ -302,7 +302,7 @@ export function produto(ctx, p) {
     <summary>${ico('caixa')}<span>Entrega e pagamento</span>${ico('baixo', { classe: 'ficha__seta' })}</summary>
     <div class="ficha__detalhe-corpo">
       <p><strong>Prazo:</strong> ${en.prazo ? esc(en.prazo) : ctx.marcador('quanto tempo leva a fazer e a entregar')}</p>
-      <p><strong>Portes, por encomenda:</strong> ${portes}${levantamento ? ` · ${esc(levantamento.curto)}: grátis` : ''}.</p>
+      <p><strong>Portes, por encomenda:</strong> ${portes}${levantamento ? ` · ${esc(levantamento.curto)}: sem portes` : ''}.</p>
       <p><strong>Pagamento:</strong> ${en.pagamento ? esc(en.pagamento) : ctx.marcador('as formas de pagamento')}</p>
       ${personalizacaoDe(p).length ? '<p>Peça personalizada: não tem direito de livre resolução.</p>' : ''}
     </div>
@@ -403,7 +403,7 @@ function video(ctx, p) {
 export function encomenda(ctx) {
   const en = ctx.site.entrega || {};
   const zonas = en.zonas || [];
-  const precoZona = (z) => (z.id === 'levantamento' ? 'Grátis' : Number.isFinite(en.portes?.[z.id]) ? euros(en.portes[z.id]) : 'a confirmar');
+  const precoZona = (z) => (z.id === 'levantamento' ? 'Sem portes' : Number.isFinite(en.portes?.[z.id]) ? euros(en.portes[z.id]) : 'a confirmar');
   const temTermos = ctx.existe('/termos-e-condicoes/');
   const conteudo = `${cabecaDePagina(ctx, { titulo: 'A sua encomenda' })}
 <section class="encomenda" data-encomenda>

@@ -1,7 +1,7 @@
 {
   "seo": {
     "titulo": "Dream Art — Lembranças e convites personalizados para batizados, casamentos e comunhões",
-    "descricao": "Lembranças, convites, conjuntos de batizado e livros de honra personalizados, feitos à mão em Rio Tinto (Gondomar). Escolha no site e encomende pelo WhatsApp. Envios para todo o país, ilhas e Europa."
+    "descricao": "Lembranças, convites e conjuntos de batizado personalizados, feitos à mão em Rio Tinto. Escolha no site e encomende pelo WhatsApp."
   },
   "capa": [
     {
@@ -54,9 +54,21 @@
     "foto": "vela-coracao"
   },
   "confianca": [
-    { "icone": "mao", "texto": "Feito à mão" },
-    { "icone": "etiqueta", "texto": "Personalizado com nomes e datas" },
-    { "icone": "caixa", "texto": "Envios para todo o país, ilhas e Europa" },
-    { "icone": "mensagem", "texto": "Encomenda pelo WhatsApp" }
+    {
+      "icone": "mao",
+      "texto": "Feito à mão"
+    },
+    {
+      "icone": "etiqueta",
+      "texto": "Personalizado com nomes e datas"
+    },
+    {
+      "icone": "caixa",
+      "texto": "Envios para todo o país, ilhas e Europa"
+    },
+    {
+      "icone": "mensagem",
+      "texto": "Encomenda pelo WhatsApp"
+    }
   ]
 }

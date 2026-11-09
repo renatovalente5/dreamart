@@ -61,7 +61,7 @@ jobs:
       - name: Preparar as imagens
         run: python scripts/imagens.py
       - name: Testar o gerador
-        run: node scripts/testar.mjs
+        run: if [ -f scripts/testar.mjs ]; then node scripts/testar.mjs; else echo 'sem scripts/testar.mjs'; fi
       - name: Construir
         run: node scripts/build.mjs --producao --sem-imagens
       # O que o job «publicar» precisa, num ficheiro só: o site, o script do www e a

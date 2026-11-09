@@ -53,7 +53,7 @@
  *             por isso UMA CHAVE TEM SEMPRE A MESMA CLASSE (o que muda com a
  *             produção tem uma chave própria, com «:producao» ou «:previa»).
  *   ficheiro: o caminho do ficheiro;
- *   ecra:     o ecrã do painel onde se corrige («Artigos › Vela de Batismo»);
+ *   ecra:     o ecrã do painel onde se corrige («Artigos › Vela tulipa»);
  *   mensagem: para a dona, em português simples, sem caminhos de JSON;
  *   campo?:   o campo onde o painel mostra o erro ('preco', 'opcoes.0.nome');
  *   efeito?:  só nos «neutraliza»: 'esconder' | 'sem_fotografia';

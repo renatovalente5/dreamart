@@ -144,7 +144,8 @@ for (const p of produtos) {
   for (const x of r.problemas) avisos.push(`Ficha › ${p.nome}: ${x.mensagem}`);
 }
 
-// As páginas de texto (content/paginas/*.md) não passam pelo painel: só o Renato as muda.
+// As páginas de texto (content/paginas/*.md) são do Renato, menos a «Sobre nós» (sobre-nos.md), que a
+// Dream Art edita no painel (com as mesmas guardas no browser e no Worker do painel).
 // Conferem-se aqui as alegações.
 for (const f of fs.readdirSync(path.join(CONTEUDO, 'paginas'))) {
   const t = lerTexto(`content/paginas/${f}`);
@@ -304,14 +305,16 @@ fs.writeFileSync(path.join(SAIDA, 'assets', ficheiros.catalogo), catalogoBuf);
 const porConfirmar = (desc, emProducao = 'a confirmar') => (producao ? esc(emProducao) : ctx.marcador(desc));
 
 /* Os portes da loja (por encomenda, não por peça), como frase: «Portugal Continental: 5,00 €; Madeira
-   e Açores: …. O levantamento em Rio Tinto não tem custos.» */
+   e Açores: …». O levantamento só diz o que a Dream Art escrever em entrega.levantamento (a cliente ainda
+   não confirmou se o faz, nem em que condições: nada de «grátis» ou «sem custos» escrito por nós). */
 function textoPortes() {
   const p = site.entrega.portes || {};
   const zonas = site.entrega.zonas.filter((z) => z.morada);
   const partes = zonas.map((z) => `${esc(z.curto)}: ${Number.isFinite(p[z.id]) ? euros(p[z.id]) : porConfirmar(`os portes para ${z.curto}`)}`);
   const gratis = Number.isFinite(p.gratisAPartirDe) ? ` Portes grátis em Portugal Continental a partir de ${euros(p.gratisAPartirDe)} em peças.` : '';
   const levantamento = site.entrega.zonas.find((z) => z.id === 'levantamento');
-  return `${partes.join('; ')}.${gratis}${levantamento ? ` O levantamento em ${esc(site.local.localidade)} não tem custos.` : ''}`;
+  const textoLevantamento = !levantamento ? '' : site.entrega.levantamento ? ` ${esc(site.entrega.levantamento)}` : producao ? '' : ` Levantamento em ${esc(site.local.localidade)}: ${ctx.marcador('se fazem levantamento e como se combina')}.`;
+  return `${partes.join('; ')}.${gratis}${textoLevantamento}`;
 }
 
 function identificacao() {
@@ -366,7 +369,7 @@ function resolverMarcadores(fonte, onde) {
     'empresa.iva': () => (site.empresa.iva ? esc(site.empresa.iva) : guardar(porConfirmar('se os preços incluem IVA ou se há isenção', ''))),
     prazo: () => (site.entrega.prazo ? esc(site.entrega.prazo) : guardar(ctx.marcador('quanto tempo leva a fazer e a entregar uma peça'))),
     pagamento: () => (site.entrega.pagamento ? esc(site.entrega.pagamento) : guardar(ctx.marcador('as formas de pagamento (MB WAY, transferência, no levantamento…)'))),
-    levantamento: () => esc(site.entrega.levantamento || ''),
+    levantamento: () => (site.entrega.levantamento ? esc(site.entrega.levantamento) : guardar(porConfirmar('se fazem levantamento em Rio Tinto e como se combina', ''))),
     portes: () => guardar(textoPortes()),
     botoesDesistencia: () => guardar(botoesDesistencia()),
     /* A política de privacidade (RGPD, art. 13.º), pela biblioteca legal-comum: os destinatários reais,
@@ -375,6 +378,7 @@ function resolverMarcadores(fonte, onde) {
     'privacidade.prazos': () => guardar(pecaLegal('privacidade-prazos', `<ul>${[
       'Pedidos de informação que não chegam a encomenda: 12 meses depois da última mensagem.',
       'Conversas e dados de uma encomenda: enquanto forem precisos para ela e para a garantia, até 3 anos depois da entrega.',
+      'Faturas e dados de faturação: 10 anos, por obrigação fiscal (artigo 52.º do Código do IVA).',
       PRAZOS_LEGAIS.registosTecnicos.texto,
     ].map((t) => `<li>${esc(t)}</li>`).join('')}</ul>`)),
     'privacidade.frases': () => guardar(pecaLegal('privacidade-frases', frasesPrivacidade(CONFIG_PRIVACIDADE).map((t) => `<p>${esc(t)}</p>`).join(''))),
