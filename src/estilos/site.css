@@ -361,8 +361,14 @@ main { padding-top: var(--topo-h); }
   .capa__barra { min-width: 72px; }
 }
 
+/* ---------- A página inicial: depois da capa, tudo no creme ---------- */
+/* Sem faixas brancas (o Renato, 9 nov 2026): as secções seguem no mesmo creme, e o espaço entre duas
+   é um só --secao, o de baixo de cada uma (com duas cores, eram dois). */
+.pagina-inicio main > section:not(.capa) { padding-top: 0; padding-bottom: var(--secao); }
+.pagina-inicio main > .capa + section, .pagina-inicio main > section:not(.capa):first-of-type { padding-top: var(--secao); }
+
 /* ---------- Separadores em círculos ---------- */
-.separadores { padding: var(--secao) 0; background: var(--creme); }
+.separadores { padding: var(--secao) 0; }
 .circulos {
   display: flex; gap: 18px;
   overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x mandatory;
@@ -394,9 +400,9 @@ main { padding-top: var(--topo-h); }
 }
 
 /* ---------- Cartões de artigo ---------- */
-/* O cartão: a fotografia de cantos redondos e, por baixo, o nome e o preço, no fundo da própria
-   página (a loja, os favoritos, as sugestões da ficha). Na página inicial, sobre o branco das
-   lembranças e o verde da coleção, leva o creme à volta (mais abaixo). */
+/* O cartão: a fotografia de cantos redondos e, por baixo, o nome e o preço, no creme da página (sem
+   faixas brancas em lado nenhum, a pedido do Renato). Só no verde da coleção leva o creme à volta
+   (mais abaixo). */
 .grelha-artigos { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px 12px; }
 @media (min-width: 640px) { .grelha-artigos { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 36px 18px; } }
 @media (min-width: 1024px) { .grelha-artigos { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 44px 24px; } }
@@ -448,25 +454,15 @@ html:not(.js) .artigo__fav, html:not(.js) .artigo__mais, html:not(.js) .juntar__
   .artigo__mais { right: 8px; bottom: 8px; }
 }
 
-/* Na página inicial: no branco das lembranças e no verde da coleção, o cartão leva o creme à volta. */
-.lembrancas .grelha-artigos { gap: 12px; }
-.lembrancas .artigo, .destaque__lista .artigo {
-  background: var(--creme); border-radius: 20px; padding: 6px;
+/* No verde da coleção (página inicial), o cartão leva o creme à volta: o texto não se lia no verde. */
+.destaque__lista .artigo {
+  background: var(--creme); border-radius: var(--raio); padding: 8px;
   transition: box-shadow 0.3s var(--ease), transform 0.3s var(--ease);
 }
-.lembrancas .artigo:hover, .destaque__lista .artigo:hover { box-shadow: var(--sombra); transform: translateY(-2px); }
-.lembrancas .artigo__info { padding: 12px 6px 6px; }
-.lembrancas .artigo__nome a:focus-visible::after, .destaque__lista .artigo__nome a:focus-visible::after { outline-offset: 2px; border-radius: 20px; }
-@media (min-width: 640px) {
-  .lembrancas .grelha-artigos { gap: 18px; }
-  .lembrancas .artigo { border-radius: var(--raio); padding: 8px; }
-  .lembrancas .artigo__info { padding: 14px 8px 8px; }
-  .lembrancas .artigo__nome a:focus-visible::after, .destaque__lista .artigo__nome a:focus-visible::after { border-radius: var(--raio); }
-}
-@media (min-width: 1024px) { .lembrancas .grelha-artigos { gap: 24px; } }
+.destaque__lista .artigo:hover { box-shadow: var(--sombra); transform: translateY(-2px); }
+.destaque__lista .artigo__nome a:focus-visible::after { outline-offset: 2px; border-radius: var(--raio); }
 
 /* ---------- O destaque (a coleção de Natal) ---------- */
-.destaque { background: var(--branco); padding: var(--secao) 0 0; }
 .destaque__bloco {
   background: var(--verde); color: var(--creme);
   border-radius: var(--raio-g); padding: 36px 20px 20px;
@@ -499,7 +495,6 @@ html:not(.js) .artigo__fav, html:not(.js) .artigo__mais, html:not(.js) .juntar__
 }
 
 /* ---------- Lembranças ---------- */
-.lembrancas { background: var(--branco); padding: var(--secao) 0; }
 .lembrancas__mais { display: flex; justify-content: center; margin-top: 36px; }
 
 /* ---------- Um sonho de família (e as fotografias em arco) ---------- */
@@ -530,13 +525,11 @@ html:not(.js) .artigo__fav, html:not(.js) .artigo__mais, html:not(.js) .juntar__
 }
 
 /* ---------- Faixa de confiança ---------- */
-.confianca { background: var(--branco); padding: 48px 0; }
 .confianca__lista { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px 16px; }
 .confianca__item { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 12px; font-size: 14px; font-weight: 500; line-height: 1.45; color: var(--tinta); }
-.confianca__icone { flex: none; display: grid; place-items: center; width: 56px; height: 56px; border-radius: 50%; background: var(--creme); color: var(--verde); }
+.confianca__icone { flex: none; display: grid; place-items: center; width: 56px; height: 56px; border-radius: 50%; background: var(--salvia); color: var(--verde); }
 .confianca__icone .ico { width: 26px; height: 26px; }
 @media (min-width: 900px) {
-  .confianca { padding: 64px 0; }
   .confianca__lista { grid-template-columns: repeat(var(--n, 4), minmax(0, 1fr)); gap: 32px; }
   .confianca__item { flex-direction: row; text-align: left; gap: 16px; font-size: 15px; }
   .confianca__icone { width: 64px; height: 64px; }
