@@ -8,8 +8,9 @@ arte mais parecida: o creme ou o dourado), e pinta-se F, não a mistura.
 
 Escreve em media/marca/:
   logo-rodape.png      o desenho inteiro, creme e dourado (o rodapé verde)
-  logo-cabecalho.png   o nome com as flores, sem o arco, a verde (o cabeçalho claro; o Renato escolheu-o
-                       a 9 nov 2026: o creme passa ao verde do logótipo, e o «|» a um dourado mais fundo)
+  logo-cabecalho.png   o desenho inteiro, com o semicírculo, a verde (o cabeçalho claro; o Renato escolheu-o
+                       a 9 nov 2026: o creme passa ao verde do logótipo, e o dourado do arco e do «|» a um
+                       dourado mais fundo, para se ver no creme)
   logo-nome.png        só o nome e o «LEMBRANÇAS | EVENTOS», a verde (o cabeçalho no telemóvel)
 
     python3 scripts/logo-sem-circulo.py
@@ -24,7 +25,7 @@ RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 ORIGEM = os.path.join(RAIZ, '_cliente', 'logo', 'logo-quadrado-verde.jpg')
 MARCA = os.path.join(RAIZ, 'media', 'marca')
 VERDE = (0x55, 0x60, 0x45)        # o verde do logótipo (o --verde do site)
-DOURADO_FUNDO = (0xB8, 0x9A, 0x5E)  # o «|» no creme: o dourado do arco não se via
+DOURADO_FUNDO = (0xB8, 0x9A, 0x5E)  # o arco e o «|» no creme: o dourado claro do logótipo não se via
 
 
 def sem_o_verde(im):
@@ -87,7 +88,7 @@ def main():
             flores |= lab == i
     os.makedirs(MARCA, exist_ok=True)
     recortar(rgba).save(os.path.join(MARCA, 'logo-rodape.png'), optimize=True)
-    a_verde(recortar(rgba, arco), dourado).save(os.path.join(MARCA, 'logo-cabecalho.png'), optimize=True)
+    a_verde(recortar(rgba), dourado).save(os.path.join(MARCA, 'logo-cabecalho.png'), optimize=True)
     a_verde(recortar(rgba, arco | flores), dourado).save(os.path.join(MARCA, 'logo-nome.png'), optimize=True)
     for f in ('logo-rodape.png', 'logo-cabecalho.png', 'logo-nome.png'):
         im = Image.open(os.path.join(MARCA, f))

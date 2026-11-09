@@ -31,8 +31,9 @@ diz «dúvida».
     os preços em chocolate, as pastilhas e os cartões em rosa, o Natal em chocolate; o verde do logótipo
     fica no logótipo, nos ícones do cabeçalho e no rodapé. O logótipo sem a bola verde
     (`scripts/logo-sem-circulo.py`, a partir do logótipo quadrado da cliente: tira-se só o verde): no
-    cabeçalho claro, o nome com as flores a verde (escolhido por ele entre as provas, com o creme trocado
-    pelo verde); no telemóvel e no cabeçalho encolhido, só o nome; no rodapé verde, o desenho inteiro. As
+    cabeçalho claro, o desenho inteiro a verde, com o semicírculo num dourado mais fundo (escolhido por ele
+    entre as provas; «faltou o semi círculo» quando o tirei); no menu, só o nome; no rodapé verde, o desenho
+    inteiro em creme e dourado. As
     secções da página inicial em monogramas, como as capas das histórias (a letra em Bodoni Moda, a
     palavra em Ms Madi; «monograma» em content/categorias.json);
   - EB Garamond (600) nos títulos e Mulish no texto, servidas pelo próprio site (escolhidas pelo Renato a

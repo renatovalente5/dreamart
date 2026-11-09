@@ -256,24 +256,16 @@ main:focus { outline: none; }
 }
 .topo__lado { display: flex; align-items: center; gap: 2px; }
 .topo__lado--dir { justify-content: flex-end; }
-/* O logótipo sem a bola, a verde: no telemóvel só o nome; no computador o nome com as flores, que dá lugar
-   só ao nome quando o cabeçalho encolhe. As duas imagens estão uma sobre a outra (a do nome tem o alt). */
-.topo__logo { display: grid; place-items: center; border-radius: 8px; }
-.topo__logo img { grid-area: 1 / 1; width: auto; transition: opacity 0.3s var(--ease), height 0.35s var(--ease); }
-.topo__logo-flores { display: none; }
-.topo__logo-nome { height: 34px; }
+/* O logótipo sem a bola, a verde, com o semicírculo dourado por baixo (o desenho inteiro da Dream Art);
+   encolhe com o cabeçalho, como encolhia o redondo. */
+.topo__logo { display: block; border-radius: 8px; }
+.topo__logo img { width: auto; height: 80px; transition: height 0.35s var(--ease); }
 .topo.is-compacto .topo__barra { height: calc(var(--topo-h) - 24px); }
-.topo.is-compacto .topo__logo-nome { height: 28px; }
-@media (min-width: 640px) {
-  .topo__logo-flores { display: block; height: 76px; }
-  .topo__logo-nome { opacity: 0; }
-  .topo.is-compacto .topo__logo-flores { opacity: 0; }
-  .topo.is-compacto .topo__logo-nome { opacity: 1; height: 32px; }
-}
+.topo.is-compacto .topo__logo img { height: 58px; }
 @media (min-width: 1024px) {
-  .topo__logo-flores { height: 100px; }
+  .topo__logo img { height: 110px; }
   .topo.is-compacto .topo__barra { height: calc(var(--topo-h) - 40px); }
-  .topo.is-compacto .topo__logo-nome { height: 38px; }
+  .topo.is-compacto .topo__logo img { height: 76px; }
 }
 .topo .icone-botao { color: var(--verde); }
 .topo .icone-botao:hover { background: rgba(85, 96, 69, 0.08); }

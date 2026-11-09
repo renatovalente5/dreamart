@@ -86,16 +86,17 @@ export function medalhao(ctx, nome, { tamanhos, prioridade = false, baixa = fals
 // ---------------------------------------------------------------- o logótipo
 /* O logótipo redondo (media/marca/logo.png) fica para os ícones e o cartão de partilha (imagens.py).
    As peças do logótipo sem a bola verde (scripts/logo-sem-circulo.py, nas versões do imagens.py):
-   «logo-cabecalho» (o nome com as flores, a verde), «logo-nome» (só o nome, a verde) e «logo-rodape» (o
-   desenho inteiro, creme e dourado). «alto» é a altura em CSS; a largura sai da proporção da peça. */
-export function pecaDoLogo(ctx, nome, { alto, classe = '', alt = '', prioridade = false } = {}) {
+   «logo-cabecalho» (o desenho inteiro com o semicírculo, a verde), «logo-nome» (só o nome, a verde: o menu)
+   e «logo-rodape» (o desenho inteiro, creme e dourado). «alto» é a altura em CSS (a largura sai da proporção
+   da peça); «tamanhos» troca o sizes, quando a altura muda com o ecrã. */
+export function pecaDoLogo(ctx, nome, { alto, classe = '', alt = '', prioridade = false, tamanhos = '' } = {}) {
   const m = ctx.manifesto.marca[nome];
   const alturas = Object.keys(m.altura).map(Number).sort((a, b) => a - b);
   const largo = Math.round((m.w * alto) / m.h);
   const src = m.altura[alturas.find((h) => h >= alto * 2) || alturas[alturas.length - 1]];
   const srcset = alturas.map((h) => `${ctx.asset(`img/${m.altura[h].webp}`)} ${m.altura[h].largura}w`).join(', ');
   const carga = prioridade ? ' fetchpriority="high"' : ' loading="lazy"';
-  return `<img${classe ? ` class="${esc(classe)}"` : ''} src="${ctx.asset(`img/${src.webp}`)}" srcset="${srcset}" sizes="${largo}px" width="${largo}" height="${alto}" alt="${esc(alt)}"${carga} decoding="async">`;
+  return `<img${classe ? ` class="${esc(classe)}"` : ''} src="${ctx.asset(`img/${src.webp}`)}" srcset="${srcset}" sizes="${tamanhos || `${largo}px`}" width="${largo}" height="${alto}" alt="${esc(alt)}"${carga} decoding="async">`;
 }
 
 // ---------------------------------------------------------------- preços

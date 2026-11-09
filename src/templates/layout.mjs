@@ -1,5 +1,5 @@
 // A moldura de todas as páginas: o cabeçalho claro (menu e lupa à esquerda, o logótipo sem a bola ao
-// centro, a verde, favoritos e encomenda à direita), a gaveta do menu, o painel da procura, a folha de
+// centro, a verde, com o semicírculo, favoritos e encomenda à direita), a gaveta do menu, o painel da procura, a folha de
 // «juntar à encomenda», o rodapé verde (com o logótipo inteiro, creme e dourado) e o botão do WhatsApp.
 // O logótipo sem a bola e o rosa e o chocolate das histórias: pedidos do Renato a 9 nov 2026.
 import { esc, numeroWhatsApp } from './util.mjs';
@@ -25,7 +25,7 @@ function cabecalho(ctx, caminho) {
       <button class="icone-botao" type="button" id="abrir-menu" aria-label="Abrir o menu" aria-haspopup="dialog" aria-controls="gaveta" aria-expanded="false">${ico('menu')}</button>
       <button class="icone-botao" type="button" id="abrir-procura" aria-label="Procurar" aria-haspopup="dialog" aria-controls="procura" aria-expanded="false">${ico('lupa')}</button>
     </div>
-    <a class="topo__logo" href="${ctx.url('/')}"${caminho === '/' ? ' aria-current="page"' : ''}>${pecaDoLogo(ctx, 'logo-cabecalho', { alto: 92, classe: 'topo__logo-flores', prioridade: true })}${pecaDoLogo(ctx, 'logo-nome', { alto: 34, classe: 'topo__logo-nome', alt: `${ctx.site.marca}, Lembranças e Eventos — página inicial`, prioridade: true })}</a>
+    <a class="topo__logo" href="${ctx.url('/')}"${caminho === '/' ? ' aria-current="page"' : ''}>${pecaDoLogo(ctx, 'logo-cabecalho', { alto: 110, classe: 'topo__logo-img', alt: `${ctx.site.marca}, Lembranças e Eventos — página inicial`, prioridade: true, tamanhos: '(min-width: 1024px) 116px, 84px' })}</a>
     <div class="topo__lado topo__lado--dir">
       <a class="icone-botao" href="${ctx.url('/favoritos/')}" id="favoritos-topo" aria-label="Favoritos"${caminho === '/favoritos/' ? ' aria-current="page"' : ''}>${ico('coracao')}</a>
       <a class="icone-botao saco" href="${ctx.url('/encomenda/')}" id="saco" aria-label="A encomenda"${caminho === '/encomenda/' ? ' aria-current="page"' : ''}>${ico('saco')}<span class="saco__n" data-conta hidden></span></a>

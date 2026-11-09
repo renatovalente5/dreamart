@@ -149,7 +149,7 @@ def cartao_logotipo(logo):
 
 PECAS_DA_MARCA = {
     # media/marca/<nome>.png (do scripts/logo-sem-circulo.py): as alturas em px que o site pede (1x, 2x, 3x)
-    'logo-cabecalho': (92, 184, 276),   # o nome com as flores, a verde: o cabeçalho no computador
+    'logo-cabecalho': (80, 110, 160, 220, 330),  # o desenho inteiro com o semicírculo, a verde: o cabeçalho
     'logo-nome': (34, 68, 102),         # só o nome, a verde: o cabeçalho no telemóvel e encolhido, o menu
     'logo-rodape': (128, 256, 384),     # o desenho inteiro, creme e dourado: o rodapé verde
 }

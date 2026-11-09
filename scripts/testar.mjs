@@ -618,8 +618,8 @@ await construcao('a página inicial: os separadores em monogramas (a letra e a p
     const esperado = monogramaDe(c);
     assert.deepEqual([Boolean(m[1]), m[2], m[3]], [esperado.escuro, esc(esperado.letra), esc(esperado.palavra)], c.slug);
   }
-  // as peças do logótipo (scripts/logo-sem-circulo.py): a do nome leva o alt (a das flores é a mesma marca)
-  assert.match(index, /<a class="topo__logo" href="\/dreamart\/" aria-current="page"><img class="topo__logo-flores" src="\/dreamart\/assets\/img\/logo-cabecalho-[0-9a-f]{10}-\d+\.webp"[^>]* alt=""[^>]*><img class="topo__logo-nome" src="\/dreamart\/assets\/img\/logo-nome-[0-9a-f]{10}-\d+\.webp"[^>]* alt="Dream Art, Lembranças e Eventos — página inicial"/);
+  // as peças do logótipo (scripts/logo-sem-circulo.py): no cabeçalho, o desenho inteiro com o semicírculo
+  assert.match(index, /<a class="topo__logo" href="\/dreamart\/" aria-current="page"><img class="topo__logo-img" src="\/dreamart\/assets\/img\/logo-cabecalho-[0-9a-f]{10}-\d+\.webp"[^>]* sizes="\(min-width: 1024px\) 116px, 84px"[^>]* alt="Dream Art, Lembranças e Eventos — página inicial" fetchpriority="high"/);
   assert.match(index, /<img class="gaveta__logo" src="\/dreamart\/assets\/img\/logo-nome-/);
   assert.match(index, /<a class="rodape__logo" href="\/dreamart\/"><img src="\/dreamart\/assets\/img\/logo-rodape-[0-9a-f]{10}-\d+\.webp"[^>]* alt="Dream Art — página inicial"/);
   for (const peca of ['logo-cabecalho', 'logo-nome', 'logo-rodape']) assert.ok(fs.readdirSync(path.join(pasta, '_site/assets/img')).some((f) => f.startsWith(`${peca}-`)), `falta ${peca} em assets/img`);
