@@ -609,6 +609,8 @@ html:not(.js) .artigo__fav, html:not(.js) .artigo__mais, html:not(.js) .juntar__
 .whats:hover { transform: translateY(-2px); background: var(--verde-escuro); }
 .whats .ico { width: 28px; height: 28px; }
 @media (min-width: 1024px) { .whats { right: 28px; bottom: 28px; width: 62px; height: 62px; } }
+/* fora da frente dos campos da ficha (interface.js), no telemóvel e no tablet */
+.whats--fora { opacity: 0; visibility: hidden; transform: translateY(14px); transition: opacity 0.2s var(--ease), transform 0.2s var(--ease), visibility 0s linear 0.2s; }
 
 /* ---------- Painéis: gaveta, procura e folha (dialog nativo) ---------- */
 .gaveta, .procura, .folha { padding: 0; border: 0; max-width: none; max-height: none; background: transparent; color: var(--tinta); }

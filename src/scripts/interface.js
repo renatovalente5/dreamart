@@ -19,6 +19,19 @@
     ver();
   }
 
+  /* ---------- O botão flutuante do WhatsApp sai da frente dos campos da ficha ---------- */
+  // No telemóvel, o botão fixo em baixo à direita tapava a ponta dos campos da personalização: sai
+  // enquanto o formulário «Juntar à encomenda» está no ecrã, e volta quando se rola para fora dele.
+  const whats = $('.whats');
+  const formFicha = $('form.juntar');
+  if (whats && formFicha && 'IntersectionObserver' in window) {
+    const estreito = window.matchMedia('(max-width: 1023px)');
+    let visivel = false;
+    const aplicar = () => whats.classList.toggle('whats--fora', visivel && estreito.matches);
+    new IntersectionObserver((entradas) => { visivel = entradas.some((e) => e.isIntersecting); aplicar(); }).observe(formFicha);
+    estreito.addEventListener('change', aplicar);
+  }
+
   /* ---------- O aviso do topo com data: sai sozinho no dia seguinte ---------- */
   $$('.aviso[data-ate]').forEach((a) => { if (window.DA.hojeLisboa() > a.dataset.ate) a.hidden = true; });
 
