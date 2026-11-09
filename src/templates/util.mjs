@@ -1,4 +1,4 @@
-// Utilitários dos modelos: escapar HTML, Markdown mínimo, dinheiro, datas e moradas do site.
+// Utilitários dos modelos: escapar HTML, Markdown mínimo, dinheiro, datas, telefones e moradas.
 import { precoDe as precoDasRegras } from '../lib/regras.mjs';
 
 export const esc = (s) =>
@@ -8,12 +8,14 @@ export const esc = (s) =>
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;');
 
-// Euros à portuguesa: «45 €», «1 234,50 €». Sem casas decimais quando é um número redondo.
+/* Euros à portuguesa, sempre com as duas casas (como na proposta A: «3,00 €», «2,20 €», «120,00 €»):
+   numa grelha, «3 €» ao lado de «3,80 €» parecia outro preço. Os milhares com espaço fino que não
+   parte («1 234,50 €»). A mesma conta está no site.js (euros), para o carrinho e a procura. */
 export function euros(v) {
-  const n = Number(v);
-  const redondo = Number.isInteger(n);
-  const t = n.toLocaleString('pt-PT', { minimumFractionDigits: redondo ? 0 : 2, maximumFractionDigits: 2 });
-  return `${t.replace(/\s/g, '\u00a0')}\u00a0€`;
+  const n = Math.round(Number(v) * 100) / 100;
+  const [int, dec] = Math.abs(n).toFixed(2).split('.');
+  const milhares = int.replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+  return `${n < 0 ? '−' : ''}${milhares},${dec} €`;
 }
 
 const MESES = ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'];
@@ -36,8 +38,8 @@ export const precoDe = precoDasRegras;
 
 // Markdown mínimo para as páginas de texto: títulos ##/###, parágrafos, listas (- e 1.),
 // **negrito**, *itálico*, [ligações](url) e quadros simples (| a | b |). Mais do que isto não
-// é preciso e cada coisa a mais é uma coisa a mais para o backoffice explicar.
-const idBase = (t) => t.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/\*|_|\[|\]\([^)]*\)/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '') || 'seccao';
+// é preciso e cada coisa a mais é uma coisa a mais para explicar.
+const idBase = (t) => t.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/\*|_|\[|\]\([^)]*\)/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '') || 'seccao';
 function idDoTitulo(t, ids) {
   const base = idBase(t);
   let id = base;
@@ -47,7 +49,7 @@ function idDoTitulo(t, ids) {
 }
 export function markdown(src, url = (u) => u) {
   const ids = new Set();
-  const linhas = src.replace(/\r/g, '').split('\n');
+  const linhas = String(src || '').replace(/\r/g, '').split('\n');
   const out = [];
   let para = [];
   let lista = null;
@@ -58,7 +60,7 @@ export function markdown(src, url = (u) => u) {
     if (!quadro) return;
     const [cab, ...corpo] = quadro.filter((l) => !/^\|\s*-/.test(l));
     const cel = (l) => l.replace(/^\||\|$/g, '').split('|').map((c) => c.trim());
-    out.push(`<div class="quadro"><table><thead><tr>${cel(cab).map((c) => `<th scope="col">${inline(c, url)}</th>`).join('')}</tr></thead><tbody>${corpo.map((l) => `<tr>${cel(l).map((c) => `<td>${inline(c, url)}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`);
+    out.push(`<div class="quadro" tabindex="0" role="region" aria-label="Quadro"><table><thead><tr>${cel(cab).map((c) => `<th scope="col">${inline(c, url)}</th>`).join('')}</tr></thead><tbody>${corpo.map((l) => `<tr>${cel(l).map((c) => `<td>${inline(c, url)}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`);
     quadro = null;
   };
   for (const linha of linhas) {
@@ -67,7 +69,7 @@ export function markdown(src, url = (u) => u) {
     fecharQuadro();
     if (!t) { fecharPara(); fecharLista(); continue; }
     const h = t.match(/^(#{2,4})\s+(.*)$/);
-    // cada título leva um id (o texto sem acentos), para se poder ligar a ele: /politica-de-privacidade/#opinioes
+    // cada título leva um id (o texto sem acentos), para se poder ligar a ele: /politica-de-privacidade/#direitos
     if (h) { fecharPara(); fecharLista(); out.push(`<h${h[1].length} id="${idDoTitulo(h[2], ids)}">${inline(h[2], url)}</h${h[1].length}>`); continue; }
     const li = t.match(/^(-|\d+\.)\s+(.*)$/);
     if (li) {
@@ -93,6 +95,13 @@ export function textoSimples(src) {
   return b.replace(/\[([^\]]+)\]\([^)]*\)/g, '$1').replace(/\*\*?([^*]+)\*\*?/g, '$1').replace(/^#{1,4}\s+/gm, '').replace(/\s+/g, ' ').trim();
 }
 
+/* Uma descrição para o Google: até ~155 caracteres, cortada numa palavra, com reticências. */
+export function resumir(texto, max = 155) {
+  const t = String(texto || '').replace(/\s+/g, ' ').trim();
+  if (t.length <= max) return t;
+  return `${t.slice(0, max - 1).replace(/[\s,;:.–—-]+\S*$/, '')}…`;
+}
+
 export function inline(s, url = (u) => u) {
   let r = esc(s);
   r = r.replace(/\[([^\]]+)\]\(([^)\s]+)\)/g, (_, texto, destino) => {
@@ -106,7 +115,7 @@ export function inline(s, url = (u) => u) {
   return r;
 }
 
-// Número português para o WhatsApp: «912 345 678» → «351912345678». Um número já com o
+// Número português para o WhatsApp: «914 995 783» → «351914995783». Um número já com o
 // indicativo (+351…, 00351…, ou de outro país) fica como está, só com os algarismos.
 export function numeroWhatsApp(n) {
   let d = String(n || '').replace(/[^\d+]/g, '');
@@ -116,7 +125,7 @@ export function numeroWhatsApp(n) {
   return d.replace(/\D/g, '');
 }
 
-// «351912345678» → «912 345 678» (para mostrar)
+// «351914995783» → «914 995 783» (para mostrar)
 export function numeroLegivel(n) {
   const d = numeroWhatsApp(n);
   const local = d.startsWith('351') ? d.slice(3) : d;
@@ -131,13 +140,13 @@ export function custoChamada(n) {
   return 'Chamada para a rede nacional';
 }
 
-// A nota junto de um número, como o Renato a quer em todo o site (17 out 2026): entre parênteses e em
-// letra mais pequena. O WhatsApp vai só como ligação, sem o número, e por isso sem nota.
+// A nota junto de um número, como o Renato a quer (17 out 2026): entre parênteses e em letra mais
+// pequena. O WhatsApp vai só como ligação, sem o número, e por isso sem nota.
 export function notaChamada(n) {
   return `<span class="chamada">(${esc(custoChamada(n))})</span>`;
 }
 
-// A morada da sede por extenso: «Rua …, n.º …, 2925-000 Azeitão, Setúbal»
+// A morada por extenso: «Rua …, n.º …, 4435-397 Rio Tinto, Gondomar»
 export function moradaCompleta(e) {
   return [e.morada, [e.codigoPostal, e.localidade].filter(Boolean).join(' '), e.concelho].filter(Boolean).join(', ');
 }
