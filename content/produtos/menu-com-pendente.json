@@ -1,0 +1,28 @@
+{
+  "nome": "Menu com pendente",
+  "nomeCurto": "Menu com pendente",
+  "fotos": [
+    "menu-com-pendente"
+  ],
+  "resumo": "Menu de mesa personalizado com os pratos e o nome, com um pendente.",
+  "descricao": "Um menu de mesa personalizado com os pratos da celebração e o nome, com um pendente.\n\nNa fotografia, para um batizado. Os pratos enviam-se depois pelo WhatsApp.",
+  "preco": 1.5,
+  "precoAnterior": null,
+  "promocaoAte": "",
+  "inclui": [],
+  "medidas": [],
+  "opcoes": [],
+  "personalizacao": {
+    "nome": true,
+    "data": true,
+    "frase": false,
+    "rotuloNome": "Nome",
+    "rotuloData": "Data da celebração"
+  },
+  "quantidadeMinima": 1,
+  "categoria": "menus-e-mesas",
+  "video": "",
+  "novidade": false,
+  "publicado": true,
+  "ordem": 2
+}

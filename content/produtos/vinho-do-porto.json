@@ -1,0 +1,29 @@
+{
+  "nome": "Vinho do Porto",
+  "nomeCurto": "Vinho do Porto",
+  "fotos": [
+    "vinho-do-porto"
+  ],
+  "resumo": "Garrafa miniatura de vinho do Porto, com laço e uma etiqueta personalizada com os nomes e a data.",
+  "descricao": "Uma garrafa miniatura de vinho do Porto, com laço e uma etiqueta personalizada com os nomes e a data da celebração.\n\nNa fotografia, Porto Cruz Tawny, 19 % vol., para um casamento. Contém sulfitos.",
+  "preco": 4,
+  "precoAnterior": null,
+  "promocaoAte": "",
+  "inclui": [],
+  "medidas": [],
+  "opcoes": [],
+  "personalizacao": {
+    "nome": true,
+    "data": true,
+    "frase": false,
+    "rotuloNome": "Nomes",
+    "rotuloData": "Data da celebração"
+  },
+  "quantidadeMinima": 1,
+  "avisos": "Venda proibida a menores de 18 anos.",
+  "categoria": "lembrancas",
+  "video": "",
+  "novidade": false,
+  "publicado": true,
+  "ordem": 21
+}

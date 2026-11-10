@@ -154,5 +154,13 @@
   "conjunto-de-batizado-estampado": {
     "alt": "Conjunto de batizado estampado: caixa branca e toalha com uma coroa de folhas azuis, um anjinho, o nome Lucas e a data, vela com fita azul e concha com laço azul",
     "foco": "45% 50%"
+  },
+  "vinho-do-porto": {
+    "alt": "Três garrafas miniatura de vinho do Porto Tawny com laço dourado e uma etiqueta redonda com os nomes Carina e Tiago e a data",
+    "foco": "50% 45%"
+  },
+  "menu-com-pendente": {
+    "alt": "Menu de batizado com um ursinho com balões, os pratos e o nome Dinis, com um pendente azul, sobre um guardanapo branco num prato",
+    "foco": "50% 45%"
   }
 }
