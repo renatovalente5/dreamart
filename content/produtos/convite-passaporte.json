@@ -1,0 +1,28 @@
+{
+  "nome": "Convite passaporte",
+  "nomeCurto": "Convite passaporte",
+  "fotos": [
+    "convite-passaporte"
+  ],
+  "resumo": "Convite em forma de bilhete de embarque, personalizado com o nome, a data e os pormenores da celebração.",
+  "descricao": "Um convite em forma de bilhete de embarque, personalizado com o nome, a data, a hora e os locais da celebração.\n\nNa fotografia, para um batizado, com o envelope com o nome e um laço. O texto e as cores combinam-se pelo WhatsApp.",
+  "preco": 2.4,
+  "precoAnterior": null,
+  "promocaoAte": "",
+  "inclui": [],
+  "medidas": [],
+  "opcoes": [],
+  "personalizacao": {
+    "nome": true,
+    "data": true,
+    "frase": false,
+    "rotuloNome": "Nome",
+    "rotuloData": "Data da celebração"
+  },
+  "quantidadeMinima": 1,
+  "categoria": "convites",
+  "video": "",
+  "novidade": false,
+  "publicado": true,
+  "ordem": 5
+}

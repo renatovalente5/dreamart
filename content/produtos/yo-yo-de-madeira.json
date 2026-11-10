@@ -1,0 +1,28 @@
+{
+  "nome": "Yo-yo de madeira",
+  "nomeCurto": "Yo-yo",
+  "fotos": [
+    "yo-yo-de-madeira"
+  ],
+  "resumo": "Yo-yo de madeira com uma etiqueta personalizada com o nome e a data.",
+  "descricao": "Um yo-yo de madeira com uma etiqueta personalizada com o nome e a data da celebração.\n\nNa fotografia, para um batizado.",
+  "preco": 2,
+  "precoAnterior": null,
+  "promocaoAte": "",
+  "inclui": [],
+  "medidas": [],
+  "opcoes": [],
+  "personalizacao": {
+    "nome": true,
+    "data": true,
+    "frase": false,
+    "rotuloNome": "Nome",
+    "rotuloData": "Data da celebração"
+  },
+  "quantidadeMinima": 1,
+  "categoria": "lembrancas",
+  "video": "",
+  "novidade": false,
+  "publicado": true,
+  "ordem": 19
+}

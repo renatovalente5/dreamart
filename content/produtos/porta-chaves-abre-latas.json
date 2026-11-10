@@ -1,0 +1,28 @@
+{
+  "nome": "Porta-chaves abre-latas personalizado",
+  "nomeCurto": "Porta-chaves",
+  "fotos": [
+    "porta-chaves-abre-latas"
+  ],
+  "resumo": "Porta-chaves de metal com abre-latas e um medalhão com as iniciais ou os nomes e a data.",
+  "descricao": "Um porta-chaves de metal com abre-latas e um medalhão personalizado com as iniciais ou os nomes e a data da celebração.\n\nNa fotografia, para um casamento.",
+  "preco": 2,
+  "precoAnterior": null,
+  "promocaoAte": "",
+  "inclui": [],
+  "medidas": [],
+  "opcoes": [],
+  "personalizacao": {
+    "nome": true,
+    "data": true,
+    "frase": false,
+    "rotuloNome": "Iniciais ou nomes",
+    "rotuloData": "Data da celebração"
+  },
+  "quantidadeMinima": 1,
+  "categoria": "lembrancas",
+  "video": "",
+  "novidade": false,
+  "publicado": true,
+  "ordem": 20
+}

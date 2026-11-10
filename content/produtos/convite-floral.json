@@ -1,0 +1,28 @@
+{
+  "nome": "Convite floral",
+  "nomeCurto": "Convite floral",
+  "fotos": [
+    "convite-floral"
+  ],
+  "resumo": "Convite com flores, personalizado com os nomes, a data e os pormenores da celebração.",
+  "descricao": "Um convite com flores, personalizado com os nomes, a data e os pormenores da cerimónia e da receção.\n\nNa fotografia, para um casamento, com envelope verde, lacre dourado e flores secas. O texto, as cores e os acabamentos combinam-se pelo WhatsApp.",
+  "preco": 2.6,
+  "precoAnterior": null,
+  "promocaoAte": "",
+  "inclui": [],
+  "medidas": [],
+  "opcoes": [],
+  "personalizacao": {
+    "nome": true,
+    "data": true,
+    "frase": false,
+    "rotuloNome": "Nomes",
+    "rotuloData": "Data da celebração"
+  },
+  "quantidadeMinima": 1,
+  "categoria": "convites",
+  "video": "",
+  "novidade": false,
+  "publicado": true,
+  "ordem": 6
+}

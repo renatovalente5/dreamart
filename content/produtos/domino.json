@@ -1,0 +1,28 @@
+{
+  "nome": "Dominó",
+  "nomeCurto": "Dominó",
+  "fotos": [
+    "domino"
+  ],
+  "resumo": "Dominó numa caixa de madeira, com a tampa personalizada com o nome e a data, e um laço.",
+  "descricao": "Um dominó numa caixa de madeira, com a tampa personalizada com o nome e a data da celebração, e um laço.\n\nNa fotografia, para uma profissão de fé.",
+  "preco": 2.6,
+  "precoAnterior": null,
+  "promocaoAte": "",
+  "inclui": [],
+  "medidas": [],
+  "opcoes": [],
+  "personalizacao": {
+    "nome": true,
+    "data": true,
+    "frase": false,
+    "rotuloNome": "Nome",
+    "rotuloData": "Data da celebração"
+  },
+  "quantidadeMinima": 1,
+  "categoria": "lembrancas",
+  "video": "",
+  "novidade": false,
+  "publicado": true,
+  "ordem": 18
+}

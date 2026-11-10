@@ -118,5 +118,41 @@
   "vela-campanula-com-mensagem": {
     "alt": "Vela com uma árvore de Natal dourada numa campânula de vidro com borla dourada, ao lado de uma lata com um urso de Natal e uma mensagem para a educadora",
     "foco": "50% 50%"
+  },
+  "andorinha-em-gesso-perfumado": {
+    "alt": "Andorinha branca em gesso perfumado com laço lilás, ao lado de outra num saco de organza com uma etiqueta «O Meu Pai Nosso» com o nome Margarida e a data",
+    "foco": "62% 45%"
+  },
+  "jogo-do-galo": {
+    "alt": "Jogo do galo em madeira com uma cinta cor-de-rosa «O meu Batizado» com um ursinho com balões, o nome Benedita e a data",
+    "foco": "50% 50%"
+  },
+  "domino": {
+    "alt": "Três caixas de dominó em madeira com laço dourado e um raminho seco, com a tampa «A minha profissão de fé» com o nome Sandro e a data; numa delas veem-se as peças pretas",
+    "foco": "55% 50%"
+  },
+  "yo-yo-de-madeira": {
+    "alt": "Quatro yo-yos de madeira com uma etiqueta redonda cor-de-rosa «O meu Batizado» com um ursinho com balões, o nome Olívia e a data",
+    "foco": "50% 50%"
+  },
+  "porta-chaves-abre-latas": {
+    "alt": "Três porta-chaves de metal com abre-latas e um medalhão branco com as iniciais S e JD e a data",
+    "foco": "40% 50%"
+  },
+  "convite-passaporte": {
+    "alt": "Convite de batizado em forma de bilhete de embarque, com uma coelhinha entre flores cor-de-rosa, e o envelope com o nome Maria e um laço cor-de-rosa",
+    "foco": "45% 55%"
+  },
+  "convite-floral": {
+    "alt": "Convite de casamento com rosas e folhagem, os nomes Diana e Afonso, a data e a hora, ao lado de um envelope verde fechado com lacre dourado e flores secas",
+    "foco": "35% 65%"
+  },
+  "livro-de-honra": {
+    "alt": "Livro de honra com capa cor-de-rosa «O meu Batizado» com um ursinho com balões, o nome Matilde e a data, e renda e laço cor-de-rosa na lombada",
+    "foco": "50% 50%"
+  },
+  "conjunto-de-batizado-estampado": {
+    "alt": "Conjunto de batizado estampado: caixa branca e toalha com uma coroa de folhas azuis, um anjinho, o nome Lucas e a data, vela com fita azul e concha com laço azul",
+    "foco": "45% 50%"
   }
 }

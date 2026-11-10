@@ -1,0 +1,28 @@
+{
+  "nome": "Livro de honra",
+  "nomeCurto": "Livro de honra com renda",
+  "fotos": [
+    "livro-de-honra"
+  ],
+  "resumo": "Livro de honra com a capa personalizada com o nome e a data, renda e laço.",
+  "descricao": "Um livro de honra com a capa personalizada com o nome e a data, renda na lombada e um laço, para guardar as mensagens de quem esteve presente.\n\nNa fotografia, para um batizado.",
+  "preco": 22,
+  "precoAnterior": null,
+  "promocaoAte": "",
+  "inclui": [],
+  "medidas": [],
+  "opcoes": [],
+  "personalizacao": {
+    "nome": true,
+    "data": true,
+    "frase": false,
+    "rotuloNome": "Nome ou nomes",
+    "rotuloData": "Data da celebração"
+  },
+  "quantidadeMinima": 1,
+  "categoria": "livros-de-honra",
+  "video": "",
+  "novidade": false,
+  "publicado": true,
+  "ordem": 2
+}
