@@ -9,6 +9,7 @@
     "email": "dreamartatelier@gmail.com",
     "instagram": "dreamartatelier",
     "facebook": "dreamartatelier",
+    "pinterest": "dreamartatelier",
     "horario": ""
   },
   "local": {
@@ -20,7 +21,7 @@
     "tipo": "Empresário em nome individual",
     "nif": "252896580",
     "morada": "",
-    "codigoPostal": "4435-397",
+    "codigoPostal": "4435-386",
     "localidade": "Rio Tinto",
     "concelho": "Gondomar",
     "iva": ""
@@ -58,13 +59,13 @@
       }
     ],
     "portes": {
-      "continente": null,
+      "continente": 5.2,
       "ilhas": null,
       "europa": null,
       "gratisAPartirDe": null
     },
     "prazo": "",
-    "pagamento": "",
+    "pagamento": "Transferência bancária ou MB WAY",
     "levantamento": ""
   }
 }

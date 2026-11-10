@@ -39,7 +39,7 @@ export function organizacao(ctx) {
     },
     areaServed: ['Portugal', 'Europa'],
     currenciesAccepted: 'EUR',
-    sameAs: [c.instagram && `https://www.instagram.com/${c.instagram}/`, c.facebook && `https://www.facebook.com/${c.facebook}`].filter(Boolean),
+    sameAs: [c.instagram && `https://www.instagram.com/${c.instagram}/`, c.facebook && `https://www.facebook.com/${c.facebook}`, c.pinterest && `https://pt.pinterest.com/${c.pinterest}/`].filter(Boolean),
   };
   if (ctx.site.entrega?.pagamento) ld.paymentAccepted = ctx.site.entrega.pagamento;
   if (c.email) ld.email = c.email;
@@ -572,6 +572,7 @@ export function contactos(ctx) {
   if (c.email) outros.push(linha('carta', 'Email', `<p><a href="mailto:${esc(c.email)}">${esc(c.email)}</a></p>`));
   if (c.instagram) outros.push(linha('instagram', 'Instagram', `<p><a href="https://www.instagram.com/${esc(c.instagram)}/" target="_blank" rel="noopener">@${esc(c.instagram)}</a></p>`));
   if (c.facebook) outros.push(linha('facebook', 'Facebook', `<p><a href="https://www.facebook.com/${esc(c.facebook)}" target="_blank" rel="noopener">${esc(ctx.site.marca)}</a></p>`));
+  if (c.pinterest) outros.push(linha('pinterest', 'Pinterest', `<p><a href="https://pt.pinterest.com/${esc(c.pinterest)}/" target="_blank" rel="noopener">${esc(ctx.site.marca)}</a></p>`));
   outros.push(linha('local', 'Onde estamos', `<p>${esc([e.localidade || ctx.site.local.localidade, e.concelho].filter(Boolean).join(', '))}</p>`));
   const principal = c.whatsapp
     ? `<div class="contactos__principal">

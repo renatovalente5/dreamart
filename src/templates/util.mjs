@@ -146,7 +146,7 @@ export function notaChamada(n) {
   return `<span class="chamada">(${esc(custoChamada(n))})</span>`;
 }
 
-// A morada por extenso: «Rua …, n.º …, 4435-397 Rio Tinto, Gondomar»
+// A morada por extenso: «Rua …, n.º …, 4435-386 Rio Tinto, Gondomar»
 export function moradaCompleta(e) {
   return [e.morada, [e.codigoPostal, e.localidade].filter(Boolean).join(' '), e.concelho].filter(Boolean).join(', ');
 }

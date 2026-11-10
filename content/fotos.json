@@ -96,8 +96,8 @@
     "foco": "50% 45%"
   },
   "vela-floco-de-neve-e-iman": {
-    "alt": "Caixa de Natal com uma vela em forma de floco de neve, um íman «Feliz Natal» e uma mensagem personalizada",
-    "foco": "55% 50%"
+    "alt": "Caixa de Natal com uma vela verde em forma de floco de neve, um íman «Feliz Natal» e uma mensagem para os padrinhos, com outra vela e outro íman ao lado",
+    "foco": "60% 50%"
   },
   "presepio-pintado-a-mao": {
     "alt": "Caixa de Natal com presépio e uma mensagem personalizada",
@@ -113,6 +113,10 @@
   },
   "caixa-padrinho-pascoa": {
     "alt": "Caixa para o padrinho com ovo em acrílico dourado «És o melhor padrinho do mundo» e chocolate",
+    "foco": "50% 50%"
+  },
+  "vela-campanula-com-mensagem": {
+    "alt": "Vela com uma árvore de Natal dourada numa campânula de vidro com borla dourada, ao lado de uma lata com um urso de Natal e uma mensagem para a educadora",
     "foco": "50% 50%"
   }
 }

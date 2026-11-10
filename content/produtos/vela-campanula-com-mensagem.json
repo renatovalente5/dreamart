@@ -1,0 +1,28 @@
+{
+  "nome": "Vela campânula com mensagem especial",
+  "nomeCurto": "Vela campânula",
+  "fotos": [
+    "vela-campanula-com-mensagem"
+  ],
+  "resumo": "Uma vela numa campânula de vidro, acompanhada de uma mensagem especial.",
+  "descricao": "Uma vela numa campânula de vidro, acompanhada de uma mensagem especial personalizada.",
+  "preco": 12,
+  "precoAnterior": null,
+  "promocaoAte": "",
+  "inclui": [],
+  "medidas": [],
+  "opcoes": [],
+  "personalizacao": {
+    "nome": true,
+    "data": false,
+    "frase": true,
+    "rotuloNome": "Para quem é",
+    "rotuloFrase": "Mensagem de Natal"
+  },
+  "quantidadeMinima": 1,
+  "categoria": "colecoes",
+  "video": "",
+  "novidade": true,
+  "publicado": true,
+  "ordem": 4
+}

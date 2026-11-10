@@ -71,6 +71,7 @@ function redes(ctx) {
   const r = [];
   if (c.instagram) r.push(`<a href="https://www.instagram.com/${esc(c.instagram)}/" target="_blank" rel="noopener" aria-label="Instagram da ${esc(ctx.site.marca)}">${ico('instagram')}</a>`);
   if (c.facebook) r.push(`<a href="https://www.facebook.com/${esc(c.facebook)}" target="_blank" rel="noopener" aria-label="Facebook da ${esc(ctx.site.marca)}">${ico('facebook')}</a>`);
+  if (c.pinterest) r.push(`<a href="https://pt.pinterest.com/${esc(c.pinterest)}/" target="_blank" rel="noopener" aria-label="Pinterest da ${esc(ctx.site.marca)}">${ico('pinterest')}</a>`);
   return r.length ? `<div class="redes">${r.join('')}</div>` : '';
 }
 
