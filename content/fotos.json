@@ -162,5 +162,25 @@
   "menu-com-pendente": {
     "alt": "Menu de batizado com um ursinho com balões, os pratos e o nome Dinis, com um pendente azul, sobre um guardanapo branco num prato",
     "foco": "50% 45%"
+  },
+  "conjunto-de-batizado-estampado-sem-caixa": {
+    "alt": "Conjunto de batizado estampado sem caixa: toalha branca com uma coroa de folhas verdes, um anjinho, o nome Iysandro e a data, renda e laço verde, vela com laço verde e concha com laço verde",
+    "foco": "50% 50%"
+  },
+  "menina-a-rezar-em-gesso-perfumado": {
+    "alt": "Medalhões ovais em gesso perfumado com uma menina a rezar e laço cor-de-rosa, três em sacos de organza, com uma etiqueta «Primeira Comunhão» com o nome Maria e a data",
+    "foco": "60% 50%"
+  },
+  "pote-de-gomas-acucaradas": {
+    "alt": "Potes transparentes com gomas açucaradas coloridas, com a tampa «A minha Comunhão» com o nome João Pedro e a data e uma fita cor de creme; um deles aberto",
+    "foco": "50% 50%"
+  },
+  "sereias-em-sabonete-perfumado": {
+    "alt": "Três sereias cor-de-rosa em sabonete perfumado, a dormir, com a cauda em tons cintilantes de rosa, azul e dourado",
+    "foco": "45% 55%"
+  },
+  "menino-crescido-a-rezar": {
+    "alt": "Medalhões ovais em gesso com um menino crescido a rezar e laço azul, três em sacos de organza com etiquetas «Primeira Comunhão» com o nome Guilherme e a data",
+    "foco": "40% 50%"
   }
 }

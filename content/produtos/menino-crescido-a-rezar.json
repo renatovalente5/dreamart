@@ -1,0 +1,28 @@
+{
+  "nome": "Menino crescido a rezar",
+  "nomeCurto": "Menino crescido",
+  "fotos": [
+    "menino-crescido-a-rezar"
+  ],
+  "resumo": "Menino crescido a rezar, num medalhão oval em gesso, com laço.",
+  "descricao": "Um menino crescido a rezar, num medalhão oval em gesso, com laço.\n\nNa fotografia, para uma primeira comunhão, em sacos de organza com etiquetas personalizadas com o nome e a data.",
+  "preco": 1.9,
+  "precoAnterior": null,
+  "promocaoAte": "",
+  "inclui": [],
+  "medidas": [],
+  "opcoes": [],
+  "personalizacao": {
+    "nome": true,
+    "data": true,
+    "frase": false,
+    "rotuloNome": "Nome",
+    "rotuloData": "Data da celebração"
+  },
+  "quantidadeMinima": 1,
+  "categoria": "lembrancas",
+  "video": "",
+  "novidade": false,
+  "publicado": true,
+  "ordem": 25
+}

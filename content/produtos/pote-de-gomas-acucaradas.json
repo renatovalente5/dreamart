@@ -1,0 +1,28 @@
+{
+  "nome": "Pote de gomas açucaradas",
+  "nomeCurto": "Pote de gomas",
+  "fotos": [
+    "pote-de-gomas-acucaradas"
+  ],
+  "resumo": "Pote com gomas açucaradas, com a tampa personalizada com o nome e a data, e uma fita.",
+  "descricao": "Um pote com gomas açucaradas, com a tampa personalizada com o nome e a data da celebração, e uma fita.\n\nNa fotografia, para uma comunhão.",
+  "preco": 1.9,
+  "precoAnterior": null,
+  "promocaoAte": "",
+  "inclui": [],
+  "medidas": [],
+  "opcoes": [],
+  "personalizacao": {
+    "nome": true,
+    "data": true,
+    "frase": false,
+    "rotuloNome": "Nome",
+    "rotuloData": "Data da celebração"
+  },
+  "quantidadeMinima": 1,
+  "categoria": "lembrancas",
+  "video": "",
+  "novidade": false,
+  "publicado": true,
+  "ordem": 23
+}

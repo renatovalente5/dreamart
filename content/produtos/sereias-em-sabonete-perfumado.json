@@ -1,0 +1,26 @@
+{
+  "nome": "Sereias em sabonete perfumado",
+  "nomeCurto": "Sereias em sabonete",
+  "fotos": [
+    "sereias-em-sabonete-perfumado"
+  ],
+  "resumo": "Sereia cor-de-rosa em sabonete perfumado, com a cauda em tons cintilantes.",
+  "descricao": "Uma sereia cor-de-rosa em sabonete perfumado, com a cauda pintada em tons cintilantes.\n\nO preço é de cada sereia.",
+  "preco": 2.5,
+  "precoAnterior": null,
+  "promocaoAte": "",
+  "inclui": [],
+  "medidas": [],
+  "opcoes": [],
+  "personalizacao": {
+    "nome": false,
+    "data": false,
+    "frase": false
+  },
+  "quantidadeMinima": 1,
+  "categoria": "lembrancas",
+  "video": "",
+  "novidade": false,
+  "publicado": true,
+  "ordem": 24
+}
