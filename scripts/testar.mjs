@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // Testes do site da Dream Art (Node 22, sem dependências nem browser). Correm no CI antes de cada
-// publicação: o passo «Testar o gerador» do pre-visualizacao.yml e do publicar.yml.
+// publicação: o passo «Testar o gerador» do publicar.yml.
 //
 //   node scripts/testar.mjs          (precisa da cache das imagens: python3 scripts/imagens.py)
 //

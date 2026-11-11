@@ -1,15 +1,14 @@
-# Constrói o site da Dream Art e publica-o na Cloudflare, em dreamart.pt — QUANDO O HOUVER.
+# Constrói o site da Dream Art e publica-o na Cloudflare, em dreamart.pt (no ar desde 11 nov 2026).
 #
 # O site é o Worker «dreamart-site» (wrangler.jsonc): os ficheiros que o build escreve em _site/,
 # nos Custom Domains do domínio e do www (o www vai para o domínio sem www, e os vídeos respondem
 # por intervalos para o iPhone: worker/www.js). Os termos do GitHub Pages proíbem lá uma loja; por
-# isso a loja a sério vive aqui, e o Pages fica com a pré-visualização (pre-visualizacao.yml).
+# isso a loja vive aqui, e o Pages só reencaminha para o domínio (reencaminhar-pre-visualizacao.yml).
 #
-# AINDA NÃO CORRE SOZINHO: só à mão (workflow_dispatch). Falta o domínio (dreamart.pt, aprovado pela
-# cliente a 8 nov 2026; o Renato compra-o no fim) e faltam dados que a lei pede (a morada completa, o
-# prazo, o pagamento), e o --producao RECUSA publicar enquanto faltarem (regras.mjs). Quando o domínio existir: comprar, pôr a zona na Cloudflare, ligar os Custom
-# Domains com um `wrangler deploy --config wrangler.jsonc` à mão (uma vez), passar o `on:` para
-# push + schedule como no pre-visualizacao.yml, e pôr o SITE_PRODUCAO do painel a "1".
+# Publica a cada envio para a main e todas as noites, com --producao: aberto aos motores de busca, e
+# RECUSA publicar se faltar um dado que a lei pede (regras.mjs). Os Custom Domains (dreamart.pt e o
+# www) ligaram-se uma vez, com um `wrangler deploy --config wrangler.jsonc` à mão, a 11 nov 2026; o
+# SITE_PRODUCAO do painel é "1".
 #
 # O PAINEL (renatovalente5/dreamart-painel) acompanhará este workflow: o job «publicar» acabado
 # bem quer dizer «publicado»; o nome do passo que falha aparece à dona (por isso os nomes são em
@@ -23,7 +22,15 @@
 name: Publicar o site na Cloudflare
 
 on:
+  push:
+    branches: [main]
   workflow_dispatch:
+  # Todos os dias às 00:15 de Lisboa: as promoções e o aviso do topo têm data de fim, e o site só
+  # muda quando se publica. O cron é em UTC e Lisboa muda de hora: 23:15 UTC é a 00:15 de verão e
+  # 00:15 UTC a de inverno.
+  schedule:
+    - cron: '15 23 * * *'
+    - cron: '15 0 * * *'
 
 permissions: {}
 

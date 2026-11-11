@@ -7,13 +7,12 @@ batizado, livros de honra e menus personalizados, feitos à mão. Instagram @dre
 e segue pelo WhatsApp («Encomendar pelo WhatsApp»), com a mensagem já escrita para a Dream Art. A
 encomenda fica feita quando a Dream Art a confirma por lá.
 
-- **Pré-visualização**: https://renatovalente5.github.io/dreamart/ (noindex; `pre-visualizacao.yml`, a
-  cada envio para a `main`). Os dados por confirmar aparecem como «[por confirmar]».
-- **Produção**: no domínio **dreamart.pt** (aprovado pela cliente a 8 nov 2026), só no fim — um Worker
-  da Cloudflare (`wrangler.jsonc`, `worker/www.js`, `publicar.yml`): os termos do GitHub Pages não deixam
-  lá uma loja. Até lá o `publicar.yml` só corre à mão.
-- **Painel (backoffice)**: `~/Websites/dreamart-painel` (ainda só no Mac), onde a Dream Art muda o site
-  sozinha. Fica no ar com o domínio (o código de entrada vai por email).
+- **No ar**: https://dreamart.pt (desde 11 nov 2026), um Worker da Cloudflare (`wrangler.jsonc`,
+  `worker/www.js`), publicado pelo `publicar.yml` com `--producao` a cada envio para a `main` e todas
+  as noites. Os termos do GitHub Pages não deixam lá uma loja: a pré-visualização antiga
+  (https://renatovalente5.github.io/dreamart/) só reencaminha para o domínio.
+- **Painel (backoffice)**: https://backoffice.dreamart.pt (`~/Websites/dreamart-painel`), onde a Dream
+  Art muda o site sozinha (o código de entrada vai por email).
 - **O desenho é próprio**: a proposta A («Verde da marca», escolhida pelo Renato a 9 nov 2026), com as
   cores e as letras do logótipo. O gerador, as regras e a legal-comum são os dos outros sites do Renato.
   Plano e decisões em [docs/PLANO.md](docs/PLANO.md).
