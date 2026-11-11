@@ -1,6 +1,6 @@
 titulo: Termos e condições
 descricao: As condições das encomendas da Dream Art: quem vende, preços e portes, como se encomenda pelo WhatsApp, prazos, peças personalizadas, desistência e garantia.
-atualizado: 2026-11-09
+atualizado: 2026-11-11
 ---
 ## Quem vende
 

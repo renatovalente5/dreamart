@@ -1,6 +1,6 @@
 titulo: Política de privacidade
 descricao: Que dados pessoais tratamos, para quê e por quanto tempo. As encomendas seguem pelo WhatsApp: este site não guarda nada do que escreve.
-atualizado: 2026-11-09
+atualizado: 2026-11-11
 ---
 ## Quem trata os seus dados
 
