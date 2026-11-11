@@ -1184,6 +1184,7 @@ html:not(.js) .artigo__fav, html:not(.js) .artigo__mais, html:not(.js) .juntar__
 .cartao-form__titulo:focus { outline: none; }
 .entregas { margin-bottom: 20px; }
 .entregas + [data-so-levantamento] { margin: -8px 0 20px; }
+.entregas ~ [data-so-portes-a-confirmar] { margin: -8px 0 20px; }
 .entregas legend { margin-bottom: 10px; font-size: 14px; font-weight: 600; color: var(--tinta); }
 .entrega {
   display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 12px;

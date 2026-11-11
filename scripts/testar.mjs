@@ -198,6 +198,10 @@ await teste('os portes: por dizer, um lembrete com as zonas que faltam («a conf
   assert.match(europa.mensagem, /outros países da Europa/);
   assert.doesNotMatch(europa.mensagem, /Continental|Açores/);
   assert.ok(chaves(R.problemasDoSite(siteDeEnsaio((s) => { s.entrega.portes.continente = '4,50 €'; })), 'avisa').includes('site:entrega.portes.continente'));
+  // com a nota de como se calculam, os portes por dizer são a resposta: nada a lembrar; uma nota comprida avisa
+  const comNota = R.problemasDoSite(siteDeEnsaio((s) => { s.entrega.portes.ilhas = null; s.entrega.portes.europa = null; s.entrega.portesNota = 'Pelo peso e pela morada.'; }));
+  assert.ok(!chaves(comNota).includes('site:entrega.portes:por-preencher'), JSON.stringify(comNota));
+  assert.ok(chaves(R.problemasDoSite(siteDeEnsaio((s) => { s.entrega.portesNota = 'x'.repeat(R.TAMANHOS.portesNota + 1); }))).some((k) => k.startsWith('site:entrega.portesNota')));
 });
 await teste('o que a lei pede: na pré-visualização lembra (prazo, pagamento, IVA, morada) sem parar; em produção o prazo e o pagamento param', () => {
   const vazios = (s) => { Object.assign(s.entrega, { prazo: '', pagamento: '' }); Object.assign(s.empresa, { iva: '', morada: '' }); };
@@ -271,7 +275,7 @@ await teste('o conteúdo do repositório não tem problemas que parem a pré-vis
   const esperados = [];
   if (vazio(s.entrega.prazo)) esperados.push('site:entrega.prazo:vazio');
   if (vazio(s.entrega.pagamento)) esperados.push('site:entrega.pagamento:vazio');
-  if (R.ZONAS_ENVIO.some((z) => vazio(s.entrega.portes?.[z]))) esperados.push('site:entrega.portes:por-preencher');
+  if (vazio(s.entrega.portesNota) && R.ZONAS_ENVIO.some((z) => vazio(s.entrega.portes?.[z]))) esperados.push('site:entrega.portes:por-preencher');
   if (vazio(s.empresa.iva)) esperados.push('site:empresa.iva:vazio');
   if (vazio(s.empresa.nif)) esperados.push('site:empresa.nif:vazio');
   if (vazio(s.empresa.morada) || vazio(s.empresa.codigoPostal)) esperados.push('site:empresa.morada:incompleta');
@@ -462,7 +466,7 @@ const PAGAMENTO = 'MB WAY ou transferência bancária.';
 const COMPOSICAO = 'Toalha: 100 % algodão';
 function dadosLegaisVazios(s) {
   Object.assign(s.empresa, { morada: '', iva: '', codigoPostal: s.empresa.codigoPostal || '4435-000', localidade: s.empresa.localidade || 'Rio Tinto' });
-  Object.assign(s.entrega, { prazo: '', pagamento: '', levantamento: '', portes: { continente: null, ilhas: null, espanha: null, europa: null, gratisAPartirDe: null } });
+  Object.assign(s.entrega, { prazo: '', pagamento: '', levantamento: '', portesNota: '', portes: { continente: null, ilhas: null, espanha: null, europa: null, gratisAPartirDe: null } });
 }
 function dadosLegaisDeEnsaio(s) {
   Object.assign(s.contactos, {
@@ -572,8 +576,8 @@ await construcao('na pré-visualização do conteúdo de agora, cada dado legal 
     [s.entrega.pagamento, 'as formas de pagamento'],
     [s.empresa.iva, 'se os preços incluem IVA'],
     [s.empresa.morada, resto ? 'a rua e o número' : 'a morada'],
-    // os portes só contam ditos quando são um número (é o que o gerador escreve)
-    ...s.entrega.zonas.filter((z) => z.morada).map((z) => [Number.isFinite(s.entrega.portes?.[z.id]) ? s.entrega.portes[z.id] : null, `os portes para ${R.NOMES_ZONAS[z.id] || z.curto}`]),
+    // os portes contam ditos quando são um número, ou quando a nota diz como se calculam (é o que o gerador escreve)
+    ...s.entrega.zonas.filter((z) => z.morada).map((z) => [Number.isFinite(s.entrega.portes?.[z.id]) ? s.entrega.portes[z.id] : (vazio(s.entrega.portesNota) ? null : s.entrega.portesNota), `os portes para ${R.NOMES_ZONAS[z.id] || z.curto}`]),
   ];
   for (const [valor, desc] of casos) {
     if (vazio(valor)) assert.ok(termos.includes(marca(desc)), `os termos não marcam «[por confirmar: ${desc}]»`);
@@ -1126,6 +1130,18 @@ await construcao('para a Europa: a morada leva o país', async () => {
   const dados = { ...CLIENTE, morada: 'Calle de Prueba, 1', codigoPostal: '28001', localidade: 'Madrid', pais: 'Espanha' };
   const r = await encomendar(construida('ensaio').pasta, { linhas: PECAS.slice(0, 1), zona: 'europa', dados });
   emOrdem(r.mensagem, [`*20 × Vela de ensaio* — ${euros(76)}`, `Entrega: ${zonaNome(r.catalogo, 'europa')} — portes a confirmar`, `*Total: ${euros(76)} + portes*`, 'Morada: Calle de Prueba, 1, 28001 Madrid, Espanha']);
+});
+await construcao('a nota dos portes «a confirmar»: as zonas sem valor dizem «a confirmar» sem a marca, e a nota vai nos termos, nas fichas e na encomenda (só num envio sem portes)', async () => {
+  const NOTA = 'Nota de ensaio: pelo peso e pela morada.';
+  const pasta = copia('portes-nota', (p) => json(p, 'content/site.json', (s) => { s.entrega.portes.ilhas = null; s.entrega.portes.europa = null; s.entrega.portesNota = NOTA; }));
+  const r = construir(pasta);
+  assert.equal(r.codigo, 0, r.saida);
+  const termos = lerSaida(pasta, 'termos-e-condicoes/index.html').replace(/\u00a0/g, ' ');
+  assert.ok(termos.includes('Madeira e Açores: a confirmar.') && termos.includes(NOTA), 'os termos não dizem «a confirmar» com a nota');
+  assert.ok(!termos.includes('[por confirmar: os portes para'), 'os termos marcam os portes que a nota já explica');
+  const p = publicados(pasta)[0];
+  assert.ok(lerSaida(pasta, `produtos/${p.slug}/index.html`).includes(NOTA), 'a ficha não leva a nota dos portes');
+  assert.ok(lerSaida(pasta, 'encomenda/index.html').includes(`data-so-portes-a-confirmar hidden>${NOTA}</p>`), 'a encomenda não leva a nota (escondida até se escolher um envio sem portes)');
 });
 await construcao('para Espanha: os portes de Espanha, e a morada leva o país sem o campo «País»', async () => {
   const dados = { ...CLIENTE, morada: 'Calle de Prueba, 1', codigoPostal: '28001', localidade: 'Madrid' };

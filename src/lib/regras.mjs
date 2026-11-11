@@ -137,7 +137,7 @@ export const TAMANHOS = Object.freeze({
   fotos: 16, nomeFoto: 120, alt: 300,
   marca: 60, descricaoSite: 300, assinatura: 100, fundadores: 80, email: 160, telefone: 20, rede: 60, horario: 120,
   empresaNome: 160, empresaTipo: 80, nif: 20, morada: 160, codigoPostal: 12, localidade: 60, concelho: 60, iva: 200,
-  avisoTexto: 140, ligacao: 200, prazo: 400, pagamento: 400, levantamento: 300,
+  avisoTexto: 140, ligacao: 200, prazo: 400, pagamento: 400, levantamento: 300, portesNota: 300,
   catNome: 40, catTitulo: 80, catResumo: 2000, catPalavra: 12,
   inicioAba: 24, inicioCurto: 60, inicioTitulo: 120, inicioTexto: 600, inicioLongo: 1200,
 });
@@ -695,12 +695,15 @@ export function problemasDoSite(d, { producao = false } = {}) {
   if (!ausente(gratis) && gratis !== '' && (typeof gratis !== 'number' || !Number.isFinite(gratis) || gratis < 0 || gratis > LIMITES.portes[1] || !duasCasas(gratis))) {
     avisa('entrega.portes.gratisAPartirDe', 'entrega', 'entrega.portes.gratisAPartirDe', 'Portes grátis a partir de: só o número, sem € (ex.: 100), ou vazio (sem portes grátis).');
   }
-  if (faltamPortes.length) avisa('entrega.portes:por-preencher', 'entrega', `entrega.portes.${faltamPortes[0]}`, `Faltam os portes para ${faltamPortes.map((z) => NOMES_ZONAS[z]).join(' e ')}: no carrinho aparece «a confirmar».`, { lembrete: true });
+  /* Uns portes por dizer são «a confirmar». Com a nota (entrega.portesNota: como se calculam, ex.: pelo
+     peso e pela morada), é a resposta: já não se lembra. */
+  if (faltamPortes.length && vazio(en.portesNota)) avisa('entrega.portes:por-preencher', 'entrega', `entrega.portes.${faltamPortes[0]}`, `Faltam os portes para ${faltamPortes.map((z) => NOMES_ZONAS[z]).join(' e ')}: no carrinho aparece «a confirmar».`, { lembrete: true });
   if (vazio(en.prazo)) legal('entrega.prazo:vazio', 'entrega', 'entrega.prazo', 'Falta o prazo de produção e entrega: a lei pede que o cliente o saiba antes de encomendar.');
   if (vazio(en.pagamento)) legal('entrega.pagamento:vazio', 'entrega', 'entrega.pagamento', 'Faltam as formas de pagamento: a lei pede que o cliente as saiba antes de encomendar.');
   textoSimples(en.prazo, 'entrega.prazo', 'entrega', 'entrega.prazo', 'Prazo', TAMANHOS.prazo, { linha: false });
   textoSimples(en.pagamento, 'entrega.pagamento', 'entrega', 'entrega.pagamento', 'Pagamento', TAMANHOS.pagamento, { linha: false });
   textoSimples(en.levantamento, 'entrega.levantamento', 'entrega', 'entrega.levantamento', 'Levantamento', TAMANHOS.levantamento, { linha: false });
+  textoSimples(en.portesNota, 'entrega.portesNota', 'entrega', 'entrega.portesNota', 'Como se calculam os portes «a confirmar»', TAMANHOS.portesNota, { linha: false });
 
   // --- a marca ----------------------------------------------------------------------
   textoSimples(d.descricao, 'descricao', 'marca', 'descricao', 'Descrição da marca', TAMANHOS.descricaoSite, { linha: false });

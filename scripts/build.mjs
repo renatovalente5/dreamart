@@ -317,17 +317,20 @@ fs.writeFileSync(path.join(SAIDA, 'assets', ficheiros.catalogo), catalogoBuf);
 const porConfirmar = (desc, emProducao = 'a confirmar') => (producao ? esc(emProducao) : ctx.marcador(desc));
 
 /* Os portes da loja, uma frase por zona: «Portugal Continental: 5,00 €. Madeira e Açores: …». Nada de
-   «por encomenda» ou «por peça»: a cliente ainda não disse como os cobra. O levantamento só diz o que a
+   «por encomenda» ou «por peça»: a cliente ainda não disse como os cobra. Uma zona sem valor é «a
+   confirmar»; com a nota da Dream Art (entrega.portesNota: como se calculam), a frase segue-a e a
+   pré-visualização já não a marca «[por confirmar]». O levantamento só diz o que a
    Dream Art escrever em entrega.levantamento (ainda não confirmou se o faz, nem em que condições: nada de
    «grátis» ou «sem custos» escrito por nós). */
 function textoPortes() {
   const p = site.entrega.portes || {};
   const zonas = site.entrega.zonas.filter((z) => z.morada);
-  const partes = zonas.map((z) => `${esc(z.curto)}: ${Number.isFinite(p[z.id]) ? euros(p[z.id]) : porConfirmar(`os portes para ${R.NOMES_ZONAS[z.id] || z.curto}`)}.`);
+  const nota = String(site.entrega.portesNota || '').trim();
+  const partes = zonas.map((z) => `${esc(z.curto)}: ${Number.isFinite(p[z.id]) ? euros(p[z.id]) : nota ? 'a confirmar' : porConfirmar(`os portes para ${R.NOMES_ZONAS[z.id] || z.curto}`)}.`);
   const gratis = Number.isFinite(p.gratisAPartirDe) ? ` Portes grátis em Portugal Continental a partir de ${euros(p.gratisAPartirDe)} em peças.` : '';
   const levantamento = site.entrega.zonas.find((z) => z.id === 'levantamento');
   const textoLevantamento = !levantamento ? '' : site.entrega.levantamento ? ` ${esc(levantamento.curto)}: ${esc(site.entrega.levantamento)}` : producao ? '' : ` ${esc(levantamento.curto)}: ${ctx.marcador('se fazem levantamento e como se combina')}.`;
-  return `${partes.join(' ')}${gratis}${textoLevantamento}`;
+  return `${partes.join(' ')}${nota ? ` ${esc(nota)}` : ''}${gratis}${textoLevantamento}`;
 }
 
 function identificacao() {

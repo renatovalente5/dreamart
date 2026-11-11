@@ -317,7 +317,7 @@ export function produto(ctx, p) {
     <summary>${ico('caixa')}<span>Entrega e pagamento</span>${ico('baixo', { classe: 'ficha__seta' })}</summary>
     <div class="ficha__detalhe-corpo">
       <p><strong>Prazo:</strong> ${en.prazo ? esc(en.prazo) : ctx.marcador('quanto tempo leva a fazer e a entregar')}</p>
-      <p><strong>Portes:</strong> ${portes}${levantamento ? ` · ${esc(levantamento.curto)}: ${en.levantamento ? 'sem portes' : ctx.marcador('se fazem levantamento e como se combina')}` : ''}.</p>
+      <p><strong>Portes:</strong> ${portes}${levantamento ? ` · ${esc(levantamento.curto)}: ${en.levantamento ? 'sem portes' : ctx.marcador('se fazem levantamento e como se combina')}` : ''}.${en.portesNota ? ` ${esc(en.portesNota)}` : ''}</p>
       <p><strong>Pagamento:</strong> ${en.pagamento ? esc(en.pagamento) : ctx.marcador('as formas de pagamento')}</p>
       ${personalizacaoDe(p).length ? '<p>Peça personalizada: não tem direito de livre resolução.</p>' : ''}
     </div>
@@ -437,6 +437,7 @@ export function encomenda(ctx) {
             ${zonas.map((z, i) => `<label class="entrega"><input type="radio" name="zona" value="${esc(z.id)}"${i === 0 ? ' checked' : ''}><span class="entrega__nome">${esc(z.curto)}</span><span class="entrega__preco">${precoZona(z)}</span></label>`).join('\n            ')}
           </fieldset>
           ${zonas.some((z) => z.id === 'levantamento') ? `<p class="campo__ajuda" data-so-levantamento>${en.levantamento ? esc(en.levantamento) : ctx.marcador('se fazem levantamento em Rio Tinto e como se combina')}</p>` : ''}
+          ${en.portesNota ? `<p class="campo__ajuda" data-so-portes-a-confirmar hidden>${esc(en.portesNota)}</p>` : ''}
           <div class="campo"><label for="e-nome">Nome <span class="campo__obrig" aria-hidden="true">*</span></label><input id="e-nome" name="nome" type="text" autocomplete="name" required maxlength="80"></div>
           <div data-so-envio hidden>
             <div class="campo"><label for="e-morada">Morada <span class="campo__obrig" aria-hidden="true">*</span></label><input id="e-morada" name="morada" type="text" autocomplete="address-line1" maxlength="160" data-obrigatorio-envio></div>

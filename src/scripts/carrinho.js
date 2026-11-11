@@ -229,6 +229,8 @@
     const europa = $('[data-so-europa]', form);
     if (europa) { europa.hidden = estado.zona !== 'europa'; $('input', europa).required = estado.zona === 'europa'; }
     $$('[data-so-levantamento]', form).forEach((x) => { x.hidden = estado.zona !== 'levantamento'; });
+    // a nota dos portes «a confirmar» (como se calculam), só num envio sem portes escritos
+    $$('[data-so-portes-a-confirmar]', form).forEach((x) => { x.hidden = !(zona.morada && typeof (cat.portes || {})[estado.zona] !== 'number'); });
     // Já abriu o WhatsApp com esta encomenda: a página diz isso (também quando a pessoa volta mais
     // tarde, ou recarrega), em vez de pedir os dados outra vez.
     const env = enviada();
