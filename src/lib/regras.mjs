@@ -81,9 +81,10 @@ export const ficheiroDaFoto = (nome) => `${PASTAS.fotos}/${nome}.jpg`;
 /* As zonas de envio (as de content/site.json, entrega.zonas, menos o
    levantamento). Os portes são da encomenda (entrega.portes), não de cada
    artigo: as peças da Dream Art são pequenas e seguem juntas. A Dream Art envia
-   «para todo o país, ilhas e Europa» (a bio do Instagram). */
-export const ZONAS_ENVIO = Object.freeze(['continente', 'ilhas', 'europa']);
-export const NOMES_ZONAS = Object.freeze({ continente: 'Portugal Continental', ilhas: 'Madeira e Açores', europa: 'outros países da Europa' });
+   «para todo o país, ilhas e Europa» (a bio do Instagram); Espanha tem portes próprios (10 nov 2026:
+   «Portugal continental/Espanha 5,20 €»), por isso é uma zona à parte do resto da Europa. */
+export const ZONAS_ENVIO = Object.freeze(['continente', 'ilhas', 'espanha', 'europa']);
+export const NOMES_ZONAS = Object.freeze({ continente: 'Portugal Continental', ilhas: 'Madeira e Açores', espanha: 'Espanha', europa: 'outros países da Europa' });
 
 /* Os campos de um artigo, PELA ORDEM DO FORMULÁRIO. Uma chave nova entra por esta
    ordem (ordenarComo()); as que já estão no ficheiro ficam onde estão. */

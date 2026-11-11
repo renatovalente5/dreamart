@@ -267,7 +267,7 @@
     if (cat.pagamento) linhas.push(`Pagamento: ${cat.pagamento}`);
     linhas.push('');
     linhas.push(`Nome: ${dados.nome}`);
-    if (z.morada) linhas.push(`Morada: ${[dados.morada, [dados.codigoPostal, dados.localidade].filter(Boolean).join(' '), estado.zona === 'europa' ? dados.pais : ''].filter(Boolean).join(', ')}`);
+    if (z.morada) linhas.push(`Morada: ${[dados.morada, [dados.codigoPostal, dados.localidade].filter(Boolean).join(' '), estado.zona === 'europa' ? dados.pais : estado.zona === 'espanha' ? 'Espanha' : ''].filter(Boolean).join(', ')}`);
     if (dados.notas) linhas.push(`Observações: ${dados.notas}`);
     return linhas.join('\n').replace(/\n{3,}/g, '\n\n');
   }

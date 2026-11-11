@@ -106,6 +106,7 @@ const ZONAS = [
   { id: 'levantamento', nome: 'Levantamento em Rio Tinto', curto: 'Levantamento em Rio Tinto', morada: false },
   { id: 'continente', nome: 'Envio para Portugal Continental', curto: 'Portugal Continental', morada: true },
   { id: 'ilhas', nome: 'Envio para a Madeira e os Açores', curto: 'Madeira e Açores', morada: true },
+  { id: 'espanha', nome: 'Envio para Espanha', curto: 'Espanha', morada: true },
   { id: 'europa', nome: 'Envio para outros países da Europa', curto: 'Outros países da Europa', morada: true },
 ];
 /* Uns dados da loja completos (nada a lembrar, nada a parar, nem em produção); cada teste estraga o seu. */
@@ -116,7 +117,7 @@ function siteDeEnsaio(mudar = () => {}) {
     local: { localidade: 'Rio Tinto', distrito: 'Porto' },
     empresa: { nome: 'Nome de Ensaio', tipo: 'Empresário em nome individual', nif: '123456789', morada: 'Rua do Ensaio, 1', codigoPostal: '4435-000', localidade: 'Rio Tinto', concelho: 'Gondomar', iva: 'Os preços incluem IVA à taxa legal em vigor.' },
     aviso: { texto: '', ate: '', ligacao: '' },
-    entrega: { zonas: structuredClone(ZONAS), portes: { continente: 4.5, ilhas: 7.5, europa: 12, gratisAPartirDe: null }, prazo: 'Duas semanas.', pagamento: 'MB WAY.', levantamento: '' },
+    entrega: { zonas: structuredClone(ZONAS), portes: { continente: 4.5, ilhas: 7.5, espanha: 6, europa: 12, gratisAPartirDe: null }, prazo: 'Duas semanas.', pagamento: 'MB WAY.', levantamento: '' },
   };
   mudar(s);
   return s;
@@ -179,8 +180,8 @@ await teste('personalizacaoDe: os campos ligados, pela ordem nome, data, frase; 
 await teste('quantidadeMinimaDe: um inteiro de 1 a 1000; o resto é 1 (sem mínimo)', () => {
   for (const [q, esperado] of [[10, 10], [1000, 1000], [undefined, 1], [0, 1], [2.5, 1], ['10', 1], [1001, 1], [-3, 1]]) assert.equal(R.quantidadeMinimaDe({ quantidadeMinima: q }), esperado, String(q));
 });
-await teste('as zonas: o levantamento e o envio para o continente, as ilhas e a Europa; sem uma delas (ou sem nome), a publicação pára', () => {
-  assert.deepEqual([...R.ZONAS_ENVIO], ['continente', 'ilhas', 'europa']);
+await teste('as zonas: o levantamento e o envio para o continente, as ilhas, Espanha e o resto da Europa; sem uma delas (ou sem nome), a publicação pára', () => {
+  assert.deepEqual([...R.ZONAS_ENVIO], ['continente', 'ilhas', 'espanha', 'europa']);
   assert.deepEqual(R.problemasDoSite(siteDeEnsaio(), { producao: true }), []);
   for (const id of ['levantamento', ...R.ZONAS_ENVIO]) {
     const p = R.problemasDoSite(siteDeEnsaio((s) => { s.entrega.zonas = s.entrega.zonas.filter((z) => z.id !== id); }));
@@ -189,7 +190,7 @@ await teste('as zonas: o levantamento e o envio para o continente, as ilhas e a 
   assert.ok(chaves(R.problemasDoSite(siteDeEnsaio((s) => { s.entrega.zonas[3].curto = ''; })), 'bloqueia').includes('site:entrega.zonas'));
 });
 await teste('os portes: por dizer, um lembrete com as zonas que faltam («a confirmar» na encomenda); ditos, nada; um que não é número avisa', () => {
-  const todos = R.problemasDoSite(siteDeEnsaio((s) => { s.entrega.portes = { continente: null, ilhas: null, europa: null, gratisAPartirDe: null }; }));
+  const todos = R.problemasDoSite(siteDeEnsaio((s) => { s.entrega.portes = { continente: null, ilhas: null, espanha: null, europa: null, gratisAPartirDe: null }; }));
   const l = todos.find((p) => p.chave === 'site:entrega.portes:por-preencher');
   assert.ok(l && l.lembrete === true && l.classe === 'avisa', JSON.stringify(todos));
   for (const z of Object.values(R.NOMES_ZONAS)) assert.ok(l.mensagem.includes(z), `o lembrete não diz «${z}»`);
@@ -461,7 +462,7 @@ const PAGAMENTO = 'MB WAY ou transferência bancária.';
 const COMPOSICAO = 'Toalha: 100 % algodão';
 function dadosLegaisVazios(s) {
   Object.assign(s.empresa, { morada: '', iva: '', codigoPostal: s.empresa.codigoPostal || '4435-000', localidade: s.empresa.localidade || 'Rio Tinto' });
-  Object.assign(s.entrega, { prazo: '', pagamento: '', levantamento: '', portes: { continente: null, ilhas: null, europa: null, gratisAPartirDe: null } });
+  Object.assign(s.entrega, { prazo: '', pagamento: '', levantamento: '', portes: { continente: null, ilhas: null, espanha: null, europa: null, gratisAPartirDe: null } });
 }
 function dadosLegaisDeEnsaio(s) {
   Object.assign(s.contactos, {
@@ -470,7 +471,7 @@ function dadosLegaisDeEnsaio(s) {
     email: R.emailValido(s.contactos.email) ? s.contactos.email : 'ensaio@exemplo.pt',
   });
   Object.assign(s.empresa, { nome: s.empresa.nome || 'Nome de Ensaio', morada: 'Rua do Ensaio, 1', codigoPostal: '4435-000', localidade: s.empresa.localidade || 'Rio Tinto', iva: 'Os preços incluem IVA à taxa legal em vigor.' });
-  Object.assign(s.entrega, { prazo: PRAZO, pagamento: PAGAMENTO, levantamento: 'Combinamos o dia e a hora pelo WhatsApp.', portes: { continente: 4.5, ilhas: 7.5, europa: 12, gratisAPartirDe: null } });
+  Object.assign(s.entrega, { prazo: PRAZO, pagamento: PAGAMENTO, levantamento: 'Combinamos o dia e a hora pelo WhatsApp.', portes: { continente: 4.5, ilhas: 7.5, espanha: 6, europa: 12, gratisAPartirDe: null } });
 }
 /* A composição de todos os artigos com toalha (os da Dream Art e os de ensaio). → os nomes deles */
 function composicaoDasToalhas(pasta, composicao) {
@@ -790,7 +791,7 @@ await construcao('em produção, o que ainda pode faltar (os portes, o IVA, o le
     json(p, 'content/site.json', (s) => {
       dadosLegaisDeEnsaio(s);
       s.empresa.iva = '';
-      Object.assign(s.entrega, { levantamento: '', portes: { continente: null, ilhas: null, europa: null, gratisAPartirDe: null } });
+      Object.assign(s.entrega, { levantamento: '', portes: { continente: null, ilhas: null, espanha: null, europa: null, gratisAPartirDe: null } });
       site = s;
     });
     composicaoDasToalhas(p, COMPOSICAO);
@@ -1125,6 +1126,12 @@ await construcao('para a Europa: a morada leva o país', async () => {
   const dados = { ...CLIENTE, morada: 'Calle de Prueba, 1', codigoPostal: '28001', localidade: 'Madrid', pais: 'Espanha' };
   const r = await encomendar(construida('ensaio').pasta, { linhas: PECAS.slice(0, 1), zona: 'europa', dados });
   emOrdem(r.mensagem, [`*20 × Vela de ensaio* — ${euros(76)}`, `Entrega: ${zonaNome(r.catalogo, 'europa')} — portes a confirmar`, `*Total: ${euros(76)} + portes*`, 'Morada: Calle de Prueba, 1, 28001 Madrid, Espanha']);
+});
+await construcao('para Espanha: os portes de Espanha, e a morada leva o país sem o campo «País»', async () => {
+  const dados = { ...CLIENTE, morada: 'Calle de Prueba, 1', codigoPostal: '28001', localidade: 'Madrid' };
+  const r = await encomendar(construida('producao').pasta, { linhas: PECAS, zona: 'espanha', dados });
+  assert.equal(r.catalogo.portes.espanha, 6);
+  emOrdem(r.mensagem, [`Subtotal: ${euros(100)}`, `Entrega: ${zonaNome(r.catalogo, 'espanha')} — portes ${euros(6)}`, `*Total: ${euros(106)}*`, 'Morada: Calle de Prueba, 1, 28001 Madrid, Espanha']);
 });
 await construcao('o preço de cada peça é o da regra (a promoção até ao fim, depois o normal); sem preço, «a confirmar» até ao total; uma peça que saiu da loja não entra', async () => {
   const { pasta } = construida('ensaio');

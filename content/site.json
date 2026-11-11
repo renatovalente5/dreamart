@@ -52,6 +52,12 @@
         "morada": true
       },
       {
+        "id": "espanha",
+        "nome": "Envio para Espanha",
+        "curto": "Espanha",
+        "morada": true
+      },
+      {
         "id": "europa",
         "nome": "Envio para outros países da Europa",
         "curto": "Outros países da Europa",
@@ -61,6 +67,7 @@
     "portes": {
       "continente": 5.2,
       "ilhas": null,
+      "espanha": 5.2,
       "europa": null,
       "gratisAPartirDe": null
     },
