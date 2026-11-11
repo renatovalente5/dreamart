@@ -2,6 +2,7 @@
 // e o build.mjs veste-a com a moldura (layout.mjs).
 import { esc, euros, precoDe, markdown, textoSimples, resumir, numeroWhatsApp, numeroLegivel, notaChamada, moradaCompleta } from './util.mjs';
 import { ico, arco } from './icones.mjs';
+import { tituloDoSeparador, tituloDoArtigo } from '../seo.mjs';
 import { numeroPortugues, opcoesDe, personalizacaoDe, quantidadeMinimaDe, temSuplementos, ICONES_CONFIANCA } from '../lib/regras.mjs';
 import {
   imagem, medalhao, preco, promocaoNota, porUnidade, cartao, grelha, pastilhas, circulos, cabecaSeccao, cabecaDePagina,
@@ -189,7 +190,7 @@ export function loja(ctx, slug = null) {
   ];
   return {
     caminho,
-    titulo: c ? c.titulo : 'Loja — lembranças, convites e conjuntos de batizado',
+    titulo: c ? tituloDoSeparador(c) : 'Loja — lembranças, convites e conjuntos de batizado',
     descricao: resumir(c ? textoSimples(c.resumo) : `${ctx.site.descricao} Encomendas pelo WhatsApp.`),
     jsonld: ld,
     conteudo,
@@ -395,8 +396,8 @@ ${relacionados.length ? `<section class="relacionados" aria-labelledby="t-relaci
   }
   return {
     caminho,
-    titulo: p.nome,
-    descricao: resumir(`${p.resumo || textoSimples(p.descricao)}${v.atual !== null ? ` ${temSuplementos(p) ? 'Desde ' : ''}${euros(v.atual).replace(' ', ' ')}${porUnidade(p) ? ' / unidade' : ''}.` : ''} Feito à mão pela ${ctx.site.marca}.`, 160),
+    titulo: tituloDoArtigo(p, c),
+    descricao: resumir(`${p.resumo || textoSimples(p.descricao)}${v.atual !== null ? ` ${temSuplementos(p) ? 'Desde ' : ''}${euros(v.atual).replace(' ', ' ')}${porUnidade(p) ? ' / unidade' : ''}.` : ''} ${personalizacaoDe(p).length ? `Personalização à mão pela ${ctx.site.marca}.` : `Da ${ctx.site.marca}, em Rio Tinto.`}`, 160),
     tipo: 'product',
     partilha: ctx.manifesto.partilha[p.slug],
     jsonld: [migalhasLd(ctx, [{ nome: 'Início', caminho: '/' }, { nome: 'Loja', caminho: '/loja/' }, { nome: c.titulo, caminho: `/loja/${c.slug}/` }, { nome: p.nome, caminho }]), ldProduto],
