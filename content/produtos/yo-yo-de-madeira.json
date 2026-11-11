@@ -20,6 +20,7 @@
     "rotuloData": "Data da celebração"
   },
   "quantidadeMinima": 1,
+  "idade": "A partir dos 5 anos",
   "categoria": "lembrancas",
   "video": "",
   "novidade": false,

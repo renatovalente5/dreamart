@@ -20,6 +20,7 @@
     "rotuloFrase": "Tema ou idade"
   },
   "quantidadeMinima": 1,
+  "idade": "A partir dos 2 anos",
   "categoria": "lembrancas",
   "video": "",
   "novidade": false,
