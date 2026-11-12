@@ -1,0 +1,28 @@
+{
+  "nome": "Tablete de chocolate personalizada",
+  "nomeCurto": "Tablete de chocolate",
+  "fotos": [
+    "tablete-de-chocolate-personalizada"
+  ],
+  "resumo": "Tablete de chocolate de leite com uma embalagem de Natal personalizada com o nome e a sua mensagem.",
+  "descricao": "Uma tablete de chocolate de leite Milka, de 90 g, com uma embalagem de Natal personalizada com o nome e a sua mensagem.\n\nIngredientes: açúcar, manteiga de cacau, pasta de cacau, LEITE em pó magro, soro de LEITE em pó, gordura do LEITE, emulsionante (lecitinas de SOJA), pasta de AVELÃS, aroma. Cacau: 33 % mínimo. Pode conter outros FRUTOS DE CASCA RIJA e TRIGO.",
+  "preco": 3.9,
+  "precoAnterior": null,
+  "promocaoAte": "",
+  "inclui": [],
+  "medidas": [],
+  "opcoes": [],
+  "personalizacao": {
+    "nome": true,
+    "data": false,
+    "frase": true,
+    "rotuloNome": "Para quem é",
+    "rotuloFrase": "Mensagem de Natal"
+  },
+  "quantidadeMinima": 1,
+  "categoria": "colecoes",
+  "video": "",
+  "novidade": true,
+  "publicado": true,
+  "ordem": 5
+}

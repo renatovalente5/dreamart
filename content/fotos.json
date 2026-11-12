@@ -100,8 +100,8 @@
     "foco": "60% 50%"
   },
   "presepio-pintado-a-mao": {
-    "alt": "Caixa de Natal com presépio e uma mensagem personalizada",
-    "foco": "50% 45%"
+    "alt": "Caixa de Natal aberta, com o presépio pintado à mão e a mensagem personalizada ao lado",
+    "foco": "50% 50%"
   },
   "caixa-com-iman-de-natal": {
     "alt": "Caixa com íman «Feliz Natal» e uma mensagem de Natal personalizada para a madrinha",
@@ -182,5 +182,9 @@
   "menino-crescido-a-rezar": {
     "alt": "Medalhões ovais em gesso com um menino crescido a rezar e laço azul, três em sacos de organza com etiquetas «Primeira Comunhão» com o nome Guilherme e a data",
     "foco": "40% 50%"
+  },
+  "tablete-de-chocolate-personalizada": {
+    "alt": "Duas tabletes de chocolate com embalagens de Natal personalizadas com o nome e uma mensagem",
+    "foco": "50% 50%"
   }
 }
